@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Windows Optimization — WHUB</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="auth.css" />
+  <link rel="stylesheet" href="windows.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="logo">W<span>HUB</span></a>
+    <div class="nav-right">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <span class="sun">☀</span>
+        <span class="moon">◑</span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <!-- HERO -->
+    <div class="page-hero">
+      <div class="win-hero-bg"></div>
+      <div class="page-hero-content">
+        <div class="breadcrumb">
+          <a href="index.html">Home</a>
+          <span>›</span>
+          <span>Windows Optimization</span>
+        </div>
+        <h1 class="page-title">Windows <span class="win-accent">Optimization</span></h1>
+        <p class="page-subtitle">Tools and tweaks to boost your PC performance, reduce latency, and maximize FPS.</p>
+      </div>
+    </div>
+
+    <!-- TOOLS SECTION -->
+    <div class="win-section">
+      <div class="section-label">// TOOLS</div>
+
+      <!-- WTWEAKER CARD -->
+      <div class="wtweaker-card">
+        <div class="wtweaker-glow"></div>
+
+        <div class="wtweaker-left">
+          <div class="wtweaker-icon">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="6" y="6" width="16" height="16" rx="3" fill="currentColor" opacity=".9"/>
+              <rect x="26" y="6" width="16" height="16" rx="3" fill="currentColor" opacity=".5"/>
+              <rect x="6" y="26" width="16" height="16" rx="3" fill="currentColor" opacity=".5"/>
+              <rect x="26" y="26" width="16" height="16" rx="3" fill="currentColor" opacity=".9"/>
+            </svg>
+          </div>
+          <div class="wtweaker-info">
+            <div class="wtweaker-badges">
+              <span class="win-badge win-badge--free">Free</span>
+              <span class="win-badge win-badge--version">v1.0</span>
+              <span class="win-badge win-badge--new">New</span>
+            </div>
+            <h2 class="wtweaker-title">WTweaker</h2>
+            <p class="wtweaker-desc">
+              A lightweight Windows optimization tool built for gamers. Apply system tweaks, 
+              disable telemetry, optimize network settings, and boost FPS — all in one place.
+            </p>
+            <div class="wtweaker-features">
+              <span class="win-feature">⚡ FPS Boost</span>
+              <span class="win-feature">🌐 Network Tweaks</span>
+              <span class="win-feature">🧹 Debloat</span>
+              <span class="win-feature">🔒 Privacy</span>
+              <span class="win-feature">🖥️ GPU Optimize</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="wtweaker-right">
+          <div class="wtweaker-stats">
+            <div class="wstat">
+              <span class="wstat-val">Windows</span>
+              <span class="wstat-label">Platform</span>
+            </div>
+            <div class="wstat">
+              <span class="wstat-val">10 / 11</span>
+              <span class="wstat-label">Supported</span>
+            </div>
+            <div class="wstat">
+              <span class="wstat-val">R1.0</span>
+              <span class="wstat-label">Release</span>
+            </div>
+          </div>
+
+          <button class="wtweaker-btn" id="downloadBtn" onclick="startDownload()">
+            <span class="btn-icon">↓</span>
+            <span class="btn-text">Download WTweaker</span>
+          </button>
+
+          <div class="wtweaker-progress" id="progressWrap">
+            <div class="progress-bar">
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <span class="progress-label" id="progressLabel">Preparing download...</span>
+          </div>
+
+          <p class="wtweaker-note">WLST.zip · ~5 MB · No installer required</p>
+        </div>
+      </div>
+
+      <!-- MORE TOOLS PLACEHOLDER -->
+      <div class="win-coming-soon">
+        <span class="win-cs-icon">🔧</span>
+        <div>
+          <p class="win-cs-title">More tools coming soon</p>
+          <p class="win-cs-sub">Additional optimization scripts and guides are being added.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-logo">W<span>HUB</span></div>
+    <p class="footer-text">Built for the community, by the community.</p>
+  </footer>
+
+  <script src="app.js"></script>
+  <script type="module" src="nav-auth.js"></script>
+  <script src="windows.js"></script>
+</body>
+</html>

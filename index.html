@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WHUB — Community Tools</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="auth.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <!-- NAV -->
+  <nav class="navbar">
+    <a href="index.html" class="logo">W<span>HUB</span></a>
+    <div class="nav-right">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <span class="sun">☀</span>
+        <span class="moon">◑</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg-grid"></div>
+    <div class="hero-content">
+      <div class="hero-badge">Community Tools Hub</div>
+      <h1 class="hero-title">Your <em>ultimate</em><br/>tools & resources</h1>
+      <p class="hero-sub">Everything your community needs — game tools, optimization guides, and more. All in one place.</p>
+      <div class="hero-arrow">↓ explore categories</div>
+    </div>
+  </section>
+
+  <!-- CARDS GRID -->
+  <section class="categories" id="categories">
+    <div class="section-label">// CATEGORIES</div>
+    <div class="cards-grid">
+
+      <!-- Roblox -->
+      <a href="roblox.html" class="card card--roblox">
+        <div class="card-glow"></div>
+        <div class="card-icon">
+          <svg viewBox="0 0 48 48" fill="none"><rect x="10" y="10" width="28" height="28" rx="4" fill="currentColor" opacity=".15"/><rect x="16" y="16" width="16" height="16" rx="2" fill="currentColor"/></svg>
+        </div>
+        <div class="card-body">
+          <span class="card-tag">Game Tools</span>
+          <h2 class="card-title">Roblox</h2>
+          <p class="card-desc">Scripts, exploits, tips, trading tools and more for Roblox players.</p>
+        </div>
+        <div class="card-arrow">→</div>
+      </a>
+
+      <!-- Genshin Impact -->
+      <a href="genshin.html" class="card card--genshin">
+        <div class="card-glow"></div>
+        <div class="card-icon">
+          <svg viewBox="0 0 48 48" fill="none"><path d="M24 6 L42 24 L24 42 L6 24 Z" fill="currentColor" opacity=".15"/><path d="M24 12 L36 24 L24 36 L12 24 Z" fill="currentColor"/></svg>
+        </div>
+        <div class="card-body">
+          <span class="card-tag">Game Tools</span>
+          <h2 class="card-title">Genshin Impact</h2>
+          <p class="card-desc">Team builders, damage calculators, resin trackers, and farming guides.</p>
+        </div>
+        <div class="card-arrow">→</div>
+      </a>
+
+      <!-- Windows Optimization -->
+      <a href="windows.html" class="card card--windows">
+        <div class="card-glow"></div>
+        <div class="card-icon">
+          <svg viewBox="0 0 48 48" fill="none"><rect x="8" y="8" width="14" height="14" rx="2" fill="currentColor" opacity=".15"/><rect x="26" y="8" width="14" height="14" rx="2" fill="currentColor" opacity=".15"/><rect x="8" y="26" width="14" height="14" rx="2" fill="currentColor" opacity=".15"/><rect x="26" y="26" width="14" height="14" rx="2" fill="currentColor"/></svg>
+        </div>
+        <div class="card-body">
+          <span class="card-tag">System</span>
+          <h2 class="card-title">Windows Optimization</h2>
+          <p class="card-desc">Speed up your PC, tweak settings, boost FPS and reduce latency.</p>
+        </div>
+        <div class="card-arrow">→</div>
+      </a>
+
+      <!-- Our Community -->
+      <a href="community.html" class="card card--community">
+        <div class="card-glow"></div>
+        <div class="card-icon">
+          <svg viewBox="0 0 48 48" fill="none"><circle cx="16" cy="18" r="6" fill="currentColor" opacity=".6"/><circle cx="32" cy="18" r="6" fill="currentColor" opacity=".6"/><circle cx="24" cy="14" r="7" fill="currentColor"/><path d="M6 38c0-6 4.5-10 10-10h16c5.5 0 10 4 10 10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none" opacity=".5"/></svg>
+        </div>
+        <div class="card-body">
+          <span class="card-tag">Community</span>
+          <h2 class="card-title">Our Community</h2>
+          <p class="card-desc">Join our Discord, watch our YouTube channels, and connect with the crew.</p>
+        </div>
+        <div class="card-arrow">→</div>
+      </a>
+
+      <!-- Coming Soon placeholder -->
+      <div class="card card--soon">
+        <div class="card-body">
+          <span class="card-tag">Coming Soon</span>
+          <h2 class="card-title">More Categories</h2>
+          <p class="card-desc">New tools and categories are being added regularly. Stay tuned!</p>
+        </div>
+        <div class="card-lock">🔒</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-logo">W<span>HUB</span></div>
+    <p class="footer-text">Built for the community, by the community.</p>
+  </footer>
+
+  <script src="app.js"></script>
+  <script type="module" src="nav-auth.js"></script>
+</body>
+</html>

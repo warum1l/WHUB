@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile — WHUB</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="auth.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="logo">W<span>HUB</span></a>
+    <div class="nav-right">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <span class="sun">☀</span>
+        <span class="moon">◑</span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="page-wrapper" id="profilePage" style="display:none">
+
+    <!-- PROFILE HERO -->
+    <div class="profile-hero">
+      <div class="profile-hero-bg"></div>
+      <div class="profile-hero-inner">
+
+        <!-- Avatar -->
+        <div class="profile-avatar-wrap">
+          <div class="profile-avatar" id="profileAvatar">W</div>
+          <div class="profile-avatar-ring"></div>
+        </div>
+
+        <!-- Info -->
+        <div class="profile-info">
+          <div class="profile-role-badge" id="profileRole">Member</div>
+          <h1 class="profile-username" id="profileUsername">—</h1>
+          <p class="profile-email" id="profileEmail">—</p>
+          <p class="profile-bio" id="profileBio"></p>
+          <p class="profile-joined" id="profileJoined"></p>
+        </div>
+
+        <!-- Actions -->
+        <div class="profile-actions">
+          <button class="profile-edit-btn" onclick="openEdit()">✏ Edit Profile</button>
+          <button class="profile-signout-btn" onclick="handleSignOut()">Sign Out</button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- EDIT PANEL -->
+    <div class="profile-edit-panel" id="editPanel">
+      <div class="profile-section-label">// EDIT PROFILE</div>
+      <div class="profile-edit-grid">
+
+        <div class="auth-field">
+          <label class="auth-label">Username</label>
+          <input type="text" class="auth-input" id="editUsername" maxlength="24" />
+        </div>
+
+        <div class="auth-field">
+          <label class="auth-label">Bio</label>
+          <input type="text" class="auth-input" id="editBio" placeholder="Something about yourself..." maxlength="120" />
+        </div>
+
+      </div>
+      <div class="profile-edit-footer">
+        <div class="auth-error" id="editError"></div>
+        <div class="profile-edit-btns">
+          <button class="profile-cancel-btn" onclick="closeEdit()">Cancel</button>
+          <button class="auth-btn profile-save-btn" id="saveBtn" onclick="handleSave()">
+            <span class="auth-btn-text">Save Changes</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS / ACTIVITY placeholder -->
+    <div class="profile-section">
+      <div class="profile-section-label">// ACTIVITY</div>
+      <div class="profile-empty-activity">
+        <span>📊</span>
+        <p>Activity tracking coming soon.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Loading state -->
+  <div class="auth-loading" id="authLoading">
+    <div class="auth-loading-spinner"></div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-logo">W<span>HUB</span></div>
+    <p class="footer-text">Built for the community, by the community.</p>
+  </footer>
+
+  <script src="app.js"></script>
+  <script type="module" src="profile.js"></script>
+</body>
+</html>

@@ -1,0 +1,223 @@
+/* =============================================
+   AOT:R Value List Styles
+   ============================================= */
+
+.vl-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 8px 48px 100px;
+}
+
+/* CONTROLS */
+.vl-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.vl-search {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 13px 20px;
+  font-size: 0.95rem;
+  color: var(--text);
+  font-family: var(--font-body);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.vl-search:focus { border-color: rgba(232,69,60,0.5); }
+.vl-search::placeholder { color: var(--text-dim); }
+
+.vl-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.vl-filter-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  padding: 5px 14px;
+  font-size: 0.73rem;
+  font-weight: 500;
+  font-family: var(--font-body);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.vl-filter-btn:hover { border-color: var(--border-hover); color: var(--text); }
+.vl-filter-btn.active {
+  background: rgba(232,69,60,0.12);
+  border-color: rgba(232,69,60,0.5);
+  color: var(--accent-roblox);
+}
+
+/* STATS */
+.vl-stats {
+  display: flex;
+  gap: 1px;
+  background: var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.vl-stat {
+  flex: 1;
+  background: var(--bg-card);
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.vl-stat-num {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.3rem;
+  color: var(--text);
+}
+.vl-stat-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* TABLE */
+.vl-table-wrap {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.vl-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.vl-table thead {
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--border);
+}
+
+.vl-table th {
+  padding: 12px 18px;
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-align: left;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+.vl-table th:hover { color: var(--text); }
+
+.sort-icon {
+  display: inline-block;
+  margin-left: 4px;
+  color: var(--accent-roblox);
+  font-size: 0.75rem;
+}
+
+.vl-row {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+.vl-row:last-child { border-bottom: none; }
+.vl-row:hover { background: var(--bg-2); }
+
+.vl-table td {
+  padding: 11px 18px;
+  vertical-align: middle;
+}
+
+/* RANK */
+.col-rank { width: 52px; }
+.rank-num {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  font-weight: 600;
+}
+
+/* ITEM NAME */
+.item-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.item-tier-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.tier-legendary { background: #ffb400; box-shadow: 0 0 6px rgba(255,180,0,0.6); }
+.tier-epic      { background: #a050ff; box-shadow: 0 0 6px rgba(160,80,255,0.5); }
+.tier-rare      { background: #3c78ff; box-shadow: 0 0 6px rgba(60,120,255,0.4); }
+.tier-uncommon  { background: #00c864; box-shadow: 0 0 6px rgba(0,200,100,0.4); }
+.tier-common    { background: var(--text-dim); }
+
+/* SOURCE */
+.col-source { width: 200px; }
+.source-tag {
+  display: inline-block;
+  font-size: 0.72rem;
+  padding: 3px 10px;
+  border-radius: 50px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* VALUE */
+.col-value { width: 120px; text-align: right; }
+.value-cell {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--accent-roblox);
+  white-space: nowrap;
+}
+
+.vl-empty {
+  text-align: center;
+  padding: 48px;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}
+
+/* TIER LEGEND */
+.vl-legend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  align-items: center;
+}
+.vl-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .vl-wrapper { padding-left: 20px; padding-right: 20px; }
+  .col-source { display: none; }
+  .vl-stats { flex-direction: column; gap: 0; }
+}

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Roblox — WHUB</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="auth.css" />
+  <link rel="stylesheet" href="roblox.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="logo">W<span>HUB</span></a>
+    <div class="nav-right">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <span class="sun">☀</span>
+        <span class="moon">◑</span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <!-- PAGE HERO -->
+    <div class="page-hero">
+      <div class="page-hero-bg roblox-glow"></div>
+      <div class="page-hero-content">
+        <div class="breadcrumb">
+          <a href="index.html">Home</a>
+          <span>›</span>
+          <span>Roblox</span>
+        </div>
+        <h1 class="page-title">Roblox <span class="accent" style="color:var(--accent-roblox)">Games</span></h1>
+        <p class="page-subtitle">Select a game to access guides, value lists, trade calculators and more.</p>
+      </div>
+    </div>
+
+    <!-- GAMES GRID -->
+    <section class="games-section">
+      <div class="section-label">// GAMES</div>
+      <div class="games-grid">
+
+        <!-- AOT:R -->
+        <a href="aotr.html" class="game-card">
+          <div class="game-card-accent"></div>
+          <div class="game-card-inner">
+            <div class="game-thumb">
+              <div class="game-thumb-placeholder">AOT:R</div>
+            </div>
+            <div class="game-info">
+              <h2 class="game-title">Attack on Titan: Revolution</h2>
+              <p class="game-meta">Guides · Value List · Trade Calculator</p>
+            </div>
+            <div class="game-arrow">→</div>
+          </div>
+        </a>
+
+        <!-- More coming soon -->
+        <div class="game-card game-card--soon">
+          <div class="game-card-inner">
+            <div class="game-thumb game-thumb--empty">
+              <span>?</span>
+            </div>
+            <div class="game-info">
+              <h2 class="game-title">More Games</h2>
+              <p class="game-meta">Coming soon...</p>
+            </div>
+            <div class="game-lock">🔒</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+
+  <footer class="footer">
+    <div class="footer-logo">W<span>HUB</span></div>
+    <p class="footer-text">Built for the community, by the community.</p>
+  </footer>
+  <script src="app.js"></script>
+  <script type="module" src="nav-auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AOT:R Value List — WHUB</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="auth.css" />
+  <link rel="stylesheet" href="roblox.css" />
+  <link rel="stylesheet" href="aotr-values.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="logo">W<span>HUB</span></a>
+    <div class="nav-right">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <span class="sun">☀</span>
+        <span class="moon">◑</span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+    <div class="page-hero">
+      <div class="page-hero-bg aotr-glow"></div>
+      <div class="page-hero-content">
+        <div class="breadcrumb">
+          <a href="index.html">Home</a> <span>›</span>
+          <a href="roblox.html">Roblox</a> <span>›</span>
+          <a href="aotr.html">AOT:R</a> <span>›</span>
+          <span>Value List</span>
+        </div>
+        <h1 class="page-title">AOT:R <span class="aotr-accent">Value List</span></h1>
+        <p class="page-subtitle">Current trade values for all items. Sorted by value by default.</p>
+      </div>
+    </div>
+
+    <div class="vl-wrapper">
+
+      <!-- CONTROLS -->
+      <div class="vl-controls">
+        <input type="text" class="vl-search" id="vlSearch" placeholder="🔍  Search items..." oninput="renderTable()" />
+        <div class="vl-filters" id="vlFilters">
+          <button class="vl-filter-btn active" data-source="all" onclick="setFilter(this, 'all')">All</button>
+          <!-- source filters injected by JS -->
+        </div>
+      </div>
+
+      <!-- STATS BAR -->
+      <div class="vl-stats">
+        <div class="vl-stat">
+          <span class="vl-stat-num" id="statTotal">—</span>
+          <span class="vl-stat-label">Total Items</span>
+        </div>
+        <div class="vl-stat">
+          <span class="vl-stat-num" id="statShowing">—</span>
+          <span class="vl-stat-label">Showing</span>
+        </div>
+        <div class="vl-stat">
+          <span class="vl-stat-num" id="statMax">—</span>
+          <span class="vl-stat-label">Highest Value</span>
+        </div>
+      </div>
+
+      <!-- TABLE -->
+      <div class="vl-table-wrap">
+        <table class="vl-table">
+          <thead>
+            <tr>
+              <th class="col-rank">#</th>
+              <th class="col-name" onclick="sortBy('name')">Item <span class="sort-icon" id="sort-name"></span></th>
+              <th class="col-source" onclick="sortBy('source')">Source <span class="sort-icon" id="sort-source"></span></th>
+              <th class="col-value" onclick="sortBy('value')">Value 🔑 <span class="sort-icon" id="sort-value">↓</span></th>
+            </tr>
+          </thead>
+          <tbody id="vlTableBody"></tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-logo">W<span>HUB</span></div>
+    <p class="footer-text">Built for the community, by the community.</p>
+  </footer>
+
+  <script src="app.js"></script>
+  <script type="module" src="nav-auth.js"></script>
+  <script src="aotr-calc.js"></script>
+  <script src="aotr-values.js"></script>
+</body>
+</html>

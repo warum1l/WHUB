@@ -1,0 +1,177 @@
+/* =============================================
+   WHUB — Community Page Styles
+   ============================================= */
+
+.comm-accent { color: #7289da; }
+
+.comm-hero-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 65% 80% at 75% 15%, rgba(114,137,218,0.14), transparent 60%);
+  pointer-events: none;
+}
+
+/* SECTION */
+.comm-section {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 8px 48px 100px;
+}
+
+/* =============================================
+   COMMUNITY CARD (base)
+   ============================================= */
+.comm-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px 32px;
+  overflow: hidden;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  margin-bottom: 16px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.comm-card-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  opacity: 0;
+  transition: opacity 0.4s;
+  pointer-events: none;
+}
+.comm-card:hover .comm-card-glow { opacity: 1; }
+.comm-card:hover { transform: translateY(-3px); }
+
+/* DISCORD */
+.comm-card--discord {
+  border-color: var(--border);
+}
+.comm-card--discord .comm-card-glow {
+  background: radial-gradient(ellipse 50% 80% at 0% 50%, rgba(114,137,218,0.1), transparent 60%);
+}
+.comm-card--discord:hover {
+  border-color: rgba(114,137,218,0.45);
+  box-shadow: 0 12px 48px rgba(114,137,218,0.1);
+}
+.comm-card--discord .comm-card-icon { color: #7289da; }
+
+/* YOUTUBE */
+.comm-card--yt .comm-card-glow {
+  background: radial-gradient(ellipse 50% 80% at 0% 50%, rgba(255,0,0,0.08), transparent 60%);
+}
+.comm-card--yt:hover {
+  border-color: rgba(255,0,0,0.3);
+  box-shadow: 0 12px 48px rgba(255,0,0,0.06);
+}
+.comm-card--yt .comm-card-icon { color: #ff0000; }
+
+/* ICON */
+.comm-card-icon {
+  width: 56px; height: 56px;
+  flex-shrink: 0;
+}
+.comm-card-icon svg { width: 100%; height: 100%; }
+.comm-card-icon--yt { width: 52px; height: 52px; }
+
+/* BODY */
+.comm-card-body { flex: 1; }
+
+.comm-tag {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+
+.comm-title {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.01em;
+  margin-bottom: 6px;
+}
+
+.comm-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 12px;
+  max-width: 480px;
+}
+
+.comm-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.comm-meta-item {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  padding: 3px 10px;
+}
+
+/* CTA */
+.comm-card-cta {
+  flex-shrink: 0;
+}
+.comm-cta-btn {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.82rem;
+  padding: 10px 20px;
+  border-radius: 10px;
+  white-space: nowrap;
+  transition: filter 0.2s, transform 0.2s;
+}
+.comm-card:hover .comm-cta-btn {
+  filter: brightness(1.1);
+  transform: translateX(2px);
+}
+
+.discord-btn {
+  background: #7289da;
+  color: #fff;
+}
+.yt-btn {
+  background: #ff0000;
+  color: #fff;
+}
+
+/* YT GRID */
+.comm-yt-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.comm-yt-grid .comm-card {
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 0;
+}
+.comm-yt-grid .comm-card-cta {
+  margin-top: 4px;
+  align-self: flex-start;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .comm-section { padding-left: 20px; padding-right: 20px; }
+  .comm-yt-grid { grid-template-columns: 1fr; }
+  .comm-card { flex-direction: column; align-items: flex-start; }
+  .comm-card-cta { align-self: flex-start; }
+}

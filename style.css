@@ -1,0 +1,506 @@
+/* =============================================
+   NEXUSHUB — Main Stylesheet
+   ============================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+
+/* === TOKENS === */
+:root {
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --radius: 16px;
+  --radius-sm: 8px;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* DARK THEME (default) */
+  --bg: #0a0b0f;
+  --bg-2: #111318;
+  --bg-card: #13151c;
+  --border: rgba(255,255,255,0.07);
+  --border-hover: rgba(255,255,255,0.15);
+  --text: #f0f0f5;
+  --text-muted: #7a7d8e;
+  --text-dim: #4a4d5e;
+
+  /* ACCENT COLORS */
+  --accent-roblox: #e8453c;
+  --accent-genshin: #c8a84b;
+  --accent-windows: #0078d4;
+  --accent-soon: #555;
+
+  /* GRID */
+  --grid-color: rgba(255,255,255,0.03);
+}
+
+[data-theme="light"] {
+  --bg: #f4f5f9;
+  --bg-2: #eceef4;
+  --bg-card: #ffffff;
+  --border: rgba(0,0,0,0.08);
+  --border-hover: rgba(0,0,0,0.18);
+  --text: #0d0e14;
+  --text-muted: #5a5e72;
+  --text-dim: #a0a4b8;
+  --grid-color: rgba(0,0,0,0.04);
+}
+
+/* === RESET === */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  transition: background var(--transition), color var(--transition);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+a { text-decoration: none; color: inherit; }
+
+/* === NAVBAR === */
+.navbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 48px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: rgba(10,11,15,0.6);
+  border-bottom: 1px solid var(--border);
+  transition: background var(--transition);
+}
+[data-theme="light"] .navbar {
+  background: rgba(244,245,249,0.7);
+}
+.logo {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.3rem;
+  letter-spacing: 0.05em;
+  color: var(--text);
+}
+.logo span { color: var(--accent-roblox); }
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+}
+.nav-links a {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  transition: color var(--transition);
+}
+.nav-links a:hover { color: var(--text); }
+
+/* THEME TOGGLE */
+.theme-toggle {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  width: 60px; height: 30px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  transition: background var(--transition), border var(--transition);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+.theme-toggle:hover { border-color: var(--border-hover); }
+[data-theme="light"] .moon { opacity: 0.3; }
+[data-theme="dark"] .sun { opacity: 0.3; }
+
+/* === HERO === */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 120px 48px 80px;
+}
+
+.hero-bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  text-align: center;
+  max-width: 760px;
+  z-index: 1;
+}
+
+.hero-badge {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  padding: 6px 16px;
+  border-radius: 50px;
+  margin-bottom: 28px;
+  background: var(--bg-card);
+  animation: fadeUp 0.6s ease both;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 8vw, 6.5rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  animation: fadeUp 0.6s 0.1s ease both;
+}
+.hero-title em {
+  font-style: normal;
+  background: linear-gradient(135deg, var(--accent-roblox), var(--accent-genshin));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  margin-top: 24px;
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.7;
+  animation: fadeUp 0.6s 0.2s ease both;
+}
+
+.hero-arrow {
+  margin-top: 48px;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  animation: fadeUp 0.6s 0.35s ease both, bounce 2s 1.5s ease-in-out infinite;
+}
+
+/* === CATEGORIES === */
+.categories {
+  padding: 32px 48px 120px;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+.section-label {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 36px;
+}
+
+/* === CARDS GRID === */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  min-height: 240px;
+  overflow: hidden;
+  transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+  cursor: pointer;
+}
+.card:hover {
+  transform: translateY(-5px);
+  border-color: var(--border-hover);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+}
+
+/* Card glow */
+.card-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+  opacity: 0;
+  transition: opacity 0.4s;
+  pointer-events: none;
+}
+.card:hover .card-glow { opacity: 1; }
+
+.card--roblox { --c: var(--accent-roblox); }
+.card--genshin { --c: var(--accent-genshin); }
+.card--windows { --c: var(--accent-windows); }
+
+.card--roblox .card-glow { background: radial-gradient(circle at 20% 20%, rgba(232,69,60,0.12), transparent 60%); }
+.card--genshin .card-glow { background: radial-gradient(circle at 20% 20%, rgba(200,168,75,0.12), transparent 60%); }
+.card--windows .card-glow { background: radial-gradient(circle at 20% 20%, rgba(0,120,212,0.12), transparent 60%); }
+
+.card--roblox:hover { border-color: rgba(232,69,60,0.4); }
+.card--genshin:hover { border-color: rgba(200,168,75,0.4); }
+.card--windows:hover { border-color: rgba(0,120,212,0.4); }
+.card--soon { cursor: default; opacity: 0.5; }
+.card--soon:hover { transform: none; }
+
+/* Card icon */
+.card-icon {
+  width: 44px; height: 44px;
+  color: var(--c, var(--text-muted));
+  margin-bottom: 20px;
+}
+.card-icon svg { width: 100%; height: 100%; }
+
+/* Card body */
+.card-tag {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--c, var(--text-dim));
+  margin-bottom: 10px;
+  opacity: 0.8;
+}
+.card-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+.card-desc {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+
+/* Card arrow */
+.card-arrow {
+  position: absolute;
+  bottom: 28px; right: 28px;
+  font-size: 1.2rem;
+  color: var(--c, var(--text-dim));
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: opacity var(--transition), transform var(--transition);
+}
+.card:hover .card-arrow { opacity: 1; transform: translateX(0); }
+
+.card-lock {
+  position: absolute;
+  bottom: 28px; right: 28px;
+  font-size: 1.2rem;
+  opacity: 0.5;
+}
+
+/* === INNER PAGE LAYOUT === */
+.page-wrapper {
+  padding-top: 80px;
+  min-height: 100vh;
+}
+
+.page-hero {
+  position: relative;
+  padding: 80px 48px 60px;
+  overflow: hidden;
+}
+
+.page-hero-bg {
+  position: absolute;
+  inset: 0;
+  opacity: 0.06;
+  pointer-events: none;
+}
+
+.page-hero-content { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; }
+
+.breadcrumb {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  margin-bottom: 20px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.breadcrumb a { color: var(--text-muted); transition: color var(--transition); }
+.breadcrumb a:hover { color: var(--text); }
+
+.page-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--text);
+}
+.page-title .accent { color: var(--page-accent, var(--accent-roblox)); }
+
+.page-subtitle {
+  margin-top: 16px;
+  color: var(--text-muted);
+  font-size: 1rem;
+  max-width: 520px;
+  line-height: 1.7;
+}
+
+/* === TOOLS SECTION === */
+.tools-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 48px 120px;
+}
+
+.tools-section-title {
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.tool-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 24px;
+  transition: border-color var(--transition), transform var(--transition);
+}
+.tool-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+}
+
+.tool-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.tool-icon {
+  width: 36px; height: 36px;
+  background: var(--bg-2);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.tool-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.tool-desc {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.tool-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  padding: 4px 10px;
+  border-radius: 50px;
+  text-transform: uppercase;
+}
+.tool-badge--soon {
+  background: rgba(255,255,255,0.05);
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+}
+[data-theme="light"] .tool-badge--soon {
+  background: rgba(0,0,0,0.04);
+}
+.tool-badge--new {
+  background: rgba(0,200,80,0.1);
+  color: #00c850;
+  border: 1px solid rgba(0,200,80,0.2);
+}
+
+/* === FOOTER === */
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 40px 48px;
+  text-align: center;
+}
+.footer-logo {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: 0.05em;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.footer-logo span { color: var(--accent-roblox); }
+.footer-text {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+/* === ANIMATIONS === */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .navbar { padding: 16px 20px; }
+  .hero, .categories, .page-hero, .tools-section { padding-left: 20px; padding-right: 20px; }
+  .hero-title { font-size: 3rem; }
+  .page-title { font-size: 2.5rem; }
+  .cards-grid { grid-template-columns: 1fr; }
+  .tools-grid { grid-template-columns: 1fr; }
+}
+
+/* === COMMUNITY CARD === */
+.card--community { --c: #7289da; }
+.card--community .card-glow { background: radial-gradient(circle at 20% 20%, rgba(114,137,218,0.14), transparent 60%); }
+.card--community:hover { border-color: rgba(114,137,218,0.45); }

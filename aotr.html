@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AOT:R — WHUB</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="auth.css" />
+  <link rel="stylesheet" href="roblox.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="logo">W<span>HUB</span></a>
+    <div class="nav-right">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <span class="sun">☀</span>
+        <span class="moon">◑</span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <!-- PAGE HERO -->
+    <div class="page-hero aotr-hero">
+      <div class="page-hero-bg aotr-glow"></div>
+      <div class="page-hero-content">
+        <div class="breadcrumb">
+          <a href="index.html">Home</a>
+          <span>›</span>
+          <a href="roblox.html">Roblox</a>
+          <span>›</span>
+          <span>AOT:R</span>
+        </div>
+        <div class="aotr-badge">Attack on Titan: Revolution</div>
+        <h1 class="page-title">AOT<span class="accent aotr-accent">:R</span></h1>
+        <p class="page-subtitle">Your go-to hub for AOT:R guides, item values, and trade tools.</p>
+      </div>
+    </div>
+
+    <!-- CATEGORY CARDS -->
+    <section class="games-section">
+      <div class="section-label">// CATEGORIES</div>
+      <div class="aotr-categories">
+
+        <!-- Guides -->
+        <a href="aotr-guides.html" class="aotr-cat-card aotr-cat--guides">
+          <div class="aotr-cat-icon">📖</div>
+          <div class="aotr-cat-body">
+            <h2 class="aotr-cat-title">Guides</h2>
+            <p class="aotr-cat-desc">Beginner tips, advanced strategies, character builds, and game mechanics explained.</p>
+          </div>
+          <div class="aotr-cat-arrow">→</div>
+        </a>
+
+        <!-- Trade Value List -->
+        <a href="aotr-values.html" class="aotr-cat-card aotr-cat--values">
+          <div class="aotr-cat-icon">📊</div>
+          <div class="aotr-cat-body">
+            <h2 class="aotr-cat-title">Trade Value List</h2>
+            <p class="aotr-cat-desc">Up-to-date values for every tradeable item in AOT:R. Know what your items are worth.</p>
+          </div>
+          <div class="aotr-cat-arrow">→</div>
+        </a>
+
+        <!-- Trade Calculator -->
+        <a href="aotr-calc.html" class="aotr-cat-card aotr-cat--calc">
+          <div class="aotr-cat-icon">⚖️</div>
+          <div class="aotr-cat-body">
+            <h2 class="aotr-cat-title">Trade Calculator</h2>
+            <p class="aotr-cat-desc">Add items to both sides and instantly see if a trade is in your favor or not.</p>
+          </div>
+          <div class="aotr-cat-arrow">→</div>
+        </a>
+
+      </div>
+    </section>
+
+  </div>
+
+  <footer class="footer">
+    <div class="footer-logo">W<span>HUB</span></div>
+    <p class="footer-text">Built for the community, by the community.</p>
+  </footer>
+  <script src="app.js"></script>
+  <script type="module" src="nav-auth.js"></script>
+</body>
+</html>
