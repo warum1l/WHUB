@@ -97,6 +97,13 @@ a { text-decoration: none; color: inherit; }
 }
 .nav-links a:hover { color: var(--text); }
 
+/* NAV RIGHT */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 /* THEME TOGGLE */
 .theme-toggle {
   background: var(--bg-card);
