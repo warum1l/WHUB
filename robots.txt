@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://warum1l.github.io/WHUB/sitemap.xml
