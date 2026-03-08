@@ -5,17 +5,15 @@ import { auth, db, getUserDoc, initNavAuth, onAuthStateChanged }
   from './firebase.js';
 import {
   collection, addDoc, onSnapshot, doc, getDoc,
-  updateDoc, deleteDoc, query, orderBy, where,
-  serverTimestamp, addDoc as addMessage
+  updateDoc, query, orderBy, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 initNavAuth();
 
-let currentUser  = null;
-let currentData  = null;
-let activeTrade  = null;       // trade object currently open in detail modal
-let chatUnsub    = null;       // unsubscribe fn for chat listener
-let tradesUnsub  = null;
+let currentUser = null;
+let currentData = null;
+let activeTrade = null;
+let chatUnsub   = null;
 
 // -----------------------------------------------
 // AUTH STATE
@@ -36,19 +34,36 @@ onAuthStateChanged(auth, async (user) => {
 document.addEventListener('DOMContentLoaded', () => {
   const q = query(
     collection(db, 'aotr_trades'),
-    where('status', '==', 'open'),
     orderBy('createdAt', 'desc')
   );
 
-  tradesUnsub = onSnapshot(q, (snap) => {
-    const trades = [];
-    snap.forEach(d => trades.push({ id: d.id, ...d.data() }));
-    renderTrades(trades);
-    document.getElementById('activeCount').textContent = trades.length;
-    document.getElementById('tradesLoading').style.display = 'none';
-  });
+  onSnapshot(q,
+    (snap) => {
+      const trades = [];
+      snap.forEach(d => {
+        const data = d.data();
+        // filter open trades client-side (avoids needing composite index)
+        if (data.status === 'open') {
+          trades.push({ id: d.id, ...data });
+        }
+      });
+      renderTrades(trades);
+      document.getElementById('activeCount').textContent = trades.length;
+      document.getElementById('tradesLoading').style.display = 'none';
+    },
+    (err) => {
+      console.error('Firestore error:', err);
+      document.getElementById('tradesLoading').innerHTML =
+        `<p style="color:var(--accent-roblox);text-align:center;padding:40px">
+          Failed to load trades.<br><small>${err.message}</small>
+        </p>`;
+    }
+  );
 });
 
+// -----------------------------------------------
+// RENDER TRADES
+// -----------------------------------------------
 function renderTrades(trades) {
   const list = document.getElementById('tradesList');
 
@@ -111,12 +126,12 @@ window.closePostModal = function() {
 window.submitTrade = async function() {
   if (!currentUser) return;
 
-  const offer      = document.getElementById('offerText').value.trim();
-  const want       = document.getElementById('wantText').value.trim();
-  const robloxUser = document.getElementById('robloxUser').value.trim();
-  const discordUser= document.getElementById('discordUser').value.trim();
-  const errEl      = document.getElementById('postError');
-  const btn        = document.getElementById('postSubmitBtn');
+  const offer       = document.getElementById('offerText').value.trim();
+  const want        = document.getElementById('wantText').value.trim();
+  const robloxUser  = document.getElementById('robloxUser').value.trim();
+  const discordUser = document.getElementById('discordUser').value.trim();
+  const errEl       = document.getElementById('postError');
+  const btn         = document.getElementById('postSubmitBtn');
 
   if (!offer)      return errEl.textContent = 'Please describe what you are offering.';
   if (!want)       return errEl.textContent = 'Please describe what you want.';
@@ -124,27 +139,28 @@ window.submitTrade = async function() {
 
   btn.disabled = true;
   btn.querySelector('.auth-btn-text').textContent = 'Posting...';
+  errEl.textContent = '';
 
   try {
     await addDoc(collection(db, 'aotr_trades'), {
       offer,
       want,
       robloxUser,
-      discordUser,
-      uid:       currentUser.uid,
-      username:  currentData?.username || 'Unknown',
-      status:    'open',
-      msgCount:  0,
-      createdAt: serverTimestamp(),
+      discordUser: discordUser || '',
+      uid:         currentUser.uid,
+      username:    currentData?.username || 'Unknown',
+      status:      'open',
+      msgCount:    0,
+      createdAt:   serverTimestamp(),
     });
-    // Clear form
+
     ['offerText','wantText','robloxUser','discordUser'].forEach(id => {
       document.getElementById(id).value = '';
     });
     closePostModal();
   } catch(e) {
-    errEl.textContent = 'Failed to post. Try again.';
-    console.error(e);
+    console.error('Post error:', e);
+    errEl.textContent = 'Failed to post: ' + e.message;
   } finally {
     btn.disabled = false;
     btn.querySelector('.auth-btn-text').textContent = 'Post Trade';
@@ -152,52 +168,50 @@ window.submitTrade = async function() {
 };
 
 // -----------------------------------------------
-// DETAIL / CHAT MODAL
+// DETAIL MODAL
 // -----------------------------------------------
 window.openDetail = async function(tradeId) {
-  const snap = await getDoc(doc(db, 'aotr_trades', tradeId));
-  if (!snap.exists()) return;
+  try {
+    const snap = await getDoc(doc(db, 'aotr_trades', tradeId));
+    if (!snap.exists()) return;
 
-  activeTrade = { id: snap.id, ...snap.data() };
+    activeTrade = { id: snap.id, ...snap.data() };
 
-  document.getElementById('detailTitle').textContent =
-    `${escHtml(activeTrade.offer)} ⇄ ${escHtml(activeTrade.want)}`;
-  document.getElementById('detailBy').textContent =
-    `Posted by ${escHtml(activeTrade.username)}`;
-  document.getElementById('detailOffer').textContent = activeTrade.offer;
-  document.getElementById('detailWant').textContent  = activeTrade.want;
+    document.getElementById('detailTitle').textContent =
+      `${escHtml(activeTrade.offer)} ⇄ ${escHtml(activeTrade.want)}`;
+    document.getElementById('detailBy').textContent =
+      `Posted by ${escHtml(activeTrade.username)}`;
+    document.getElementById('detailOffer').textContent = activeTrade.offer;
+    document.getElementById('detailWant').textContent  = activeTrade.want;
 
-  // Contacts
-  let contacts = '';
-  if (activeTrade.robloxUser)
-    contacts += `<span class="contact-chip">🎮 ${escHtml(activeTrade.robloxUser)}</span>`;
-  if (activeTrade.discordUser)
-    contacts += `<span class="contact-chip discord-chip">💬 ${escHtml(activeTrade.discordUser)}</span>`;
-  document.getElementById('detailContacts').innerHTML = contacts;
+    let contacts = '';
+    if (activeTrade.robloxUser)
+      contacts += `<span class="contact-chip">🎮 ${escHtml(activeTrade.robloxUser)}</span>`;
+    if (activeTrade.discordUser)
+      contacts += `<span class="contact-chip discord-chip">💬 ${escHtml(activeTrade.discordUser)}</span>`;
+    document.getElementById('detailContacts').innerHTML = contacts;
 
-  // Show complete btn only to trade owner
-  const completeBtn = document.getElementById('completeTradBtn');
-  completeBtn.style.display =
-    (currentUser && currentUser.uid === activeTrade.uid) ? 'flex' : 'none';
+    const completeBtn = document.getElementById('completeTradBtn');
+    completeBtn.style.display =
+      (currentUser && currentUser.uid === activeTrade.uid) ? 'flex' : 'none';
 
-  // Chat input
-  const chatWrap    = document.getElementById('chatInputWrap');
-  const loginNotice = document.getElementById('chatLoginNotice');
-  if (currentUser) {
-    chatWrap.classList.remove('hidden');
-    loginNotice.classList.add('hidden');
-    document.getElementById('chatInput').value = '';
-  } else {
-    chatWrap.classList.add('hidden');
-    loginNotice.classList.remove('hidden');
+    const chatWrap    = document.getElementById('chatInputWrap');
+    const loginNotice = document.getElementById('chatLoginNotice');
+    if (currentUser) {
+      chatWrap.classList.remove('hidden');
+      loginNotice.classList.add('hidden');
+      document.getElementById('chatInput').value = '';
+    } else {
+      chatWrap.classList.add('hidden');
+      loginNotice.classList.remove('hidden');
+    }
+
+    document.getElementById('detailOverlay').classList.add('open');
+    document.getElementById('detailModal').classList.add('open');
+    subscribeChat(tradeId);
+  } catch(e) {
+    console.error('Open detail error:', e);
   }
-
-  // Open modal
-  document.getElementById('detailOverlay').classList.add('open');
-  document.getElementById('detailModal').classList.add('open');
-
-  // Subscribe to chat
-  subscribeChat(tradeId);
 };
 
 window.closeDetailModal = function() {
@@ -218,11 +232,14 @@ function subscribeChat(tradeId) {
     orderBy('createdAt', 'asc')
   );
 
-  chatUnsub = onSnapshot(q, (snap) => {
-    const msgs = [];
-    snap.forEach(d => msgs.push({ id: d.id, ...d.data() }));
-    renderChat(msgs);
-  });
+  chatUnsub = onSnapshot(q,
+    (snap) => {
+      const msgs = [];
+      snap.forEach(d => msgs.push({ id: d.id, ...d.data() }));
+      renderChat(msgs);
+    },
+    (err) => console.error('Chat error:', err)
+  );
 }
 
 function renderChat(msgs) {
@@ -236,7 +253,8 @@ function renderChat(msgs) {
   box.innerHTML = msgs.map(m => {
     const isMe = currentUser && m.uid === currentUser.uid;
     const time = m.createdAt?.seconds
-      ? new Date(m.createdAt.seconds * 1000).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})
+      ? new Date(m.createdAt.seconds * 1000)
+          .toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       : '';
     return `
       <div class="chat-msg ${isMe ? 'chat-msg--me' : ''}">
@@ -257,7 +275,6 @@ window.sendMessage = async function() {
   const input = document.getElementById('chatInput');
   const text  = input.value.trim();
   if (!text) return;
-
   input.value = '';
 
   try {
@@ -270,13 +287,12 @@ window.sendMessage = async function() {
         createdAt: serverTimestamp(),
       }
     );
-    // bump message count
     await updateDoc(doc(db, 'aotr_trades', activeTrade.id), {
       msgCount: (activeTrade.msgCount || 0) + 1
     });
     activeTrade.msgCount = (activeTrade.msgCount || 0) + 1;
   } catch(e) {
-    console.error('Send failed:', e);
+    console.error('Send error:', e);
   }
 };
 
@@ -287,14 +303,13 @@ window.completeTrade = async function() {
   if (!currentUser || !activeTrade) return;
   if (currentUser.uid !== activeTrade.uid) return;
 
-  const confirmed = confirm('Mark this trade as completed? It will be removed from the list.');
-  if (!confirmed) return;
+  if (!confirm('Mark this trade as completed? It will be removed from the list.')) return;
 
   try {
     await updateDoc(doc(db, 'aotr_trades', activeTrade.id), { status: 'completed' });
     closeDetailModal();
   } catch(e) {
-    console.error('Complete failed:', e);
+    console.error('Complete error:', e);
   }
 };
 
@@ -303,10 +318,10 @@ window.completeTrade = async function() {
 // -----------------------------------------------
 function escHtml(str) {
   return String(str || '')
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;');
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
 
 function timeAgo(ms) {
@@ -316,5 +331,5 @@ function timeAgo(ms) {
   if (mins < 60) return `${mins}m ago`;
   const hrs = Math.floor(mins / 60);
   if (hrs < 24)  return `${hrs}h ago`;
-  return `${Math.floor(hrs/24)}d ago`;
+  return `${Math.floor(hrs / 24)}d ago`;
 }
