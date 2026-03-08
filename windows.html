@@ -33,88 +33,246 @@
           <span>Windows Optimization</span>
         </div>
         <h1 class="page-title">Windows <span class="win-accent">Optimization</span></h1>
-        <p class="page-subtitle">Tools and tweaks to boost your PC performance, reduce latency, and maximize FPS.</p>
+        <p class="page-subtitle">Tools, scripts and programs to boost performance, reduce latency and maximize FPS.</p>
       </div>
     </div>
 
-    <!-- TOOLS SECTION -->
-    <div class="win-section">
-      <div class="section-label">// TOOLS</div>
+    <div class="win-page">
 
-      <!-- WTWEAKER CARD -->
-      <div class="wtweaker-card">
-        <div class="wtweaker-glow"></div>
+      <!-- ==========================================
+           WTWEAKER — HERO SECTION
+           ========================================== -->
+      <section class="win-section">
+        <div class="section-label">// FEATURED</div>
 
-        <div class="wtweaker-left">
-          <div class="wtweaker-icon">
-            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="6" y="6" width="16" height="16" rx="3" fill="currentColor" opacity=".9"/>
-              <rect x="26" y="6" width="16" height="16" rx="3" fill="currentColor" opacity=".5"/>
-              <rect x="6" y="26" width="16" height="16" rx="3" fill="currentColor" opacity=".5"/>
-              <rect x="26" y="26" width="16" height="16" rx="3" fill="currentColor" opacity=".9"/>
-            </svg>
+        <div class="wtweaker-card">
+          <div class="wtweaker-glow"></div>
+          <div class="wtweaker-left">
+            <div class="wtweaker-icon">
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="6" y="6" width="16" height="16" rx="3" fill="currentColor" opacity=".9"/>
+                <rect x="26" y="6" width="16" height="16" rx="3" fill="currentColor" opacity=".5"/>
+                <rect x="6" y="26" width="16" height="16" rx="3" fill="currentColor" opacity=".5"/>
+                <rect x="26" y="26" width="16" height="16" rx="3" fill="currentColor" opacity=".9"/>
+              </svg>
+            </div>
+            <div class="wtweaker-info">
+              <div class="wtweaker-badges">
+                <span class="win-badge win-badge--free">Free</span>
+                <span class="win-badge win-badge--version">v1.0</span>
+                <span class="win-badge win-badge--new">New</span>
+              </div>
+              <h2 class="wtweaker-title">WTweaker</h2>
+              <p class="wtweaker-desc">
+                A lightweight Windows optimization tool built for gamers. Apply system tweaks,
+                disable telemetry, optimize network settings, and boost FPS — all in one place.
+              </p>
+              <div class="wtweaker-features">
+                <span class="win-feature">⚡ FPS Boost</span>
+                <span class="win-feature">🌐 Network Tweaks</span>
+                <span class="win-feature">🧹 Debloat</span>
+                <span class="win-feature">🔒 Privacy</span>
+                <span class="win-feature">🖥️ GPU Optimize</span>
+              </div>
+            </div>
           </div>
-          <div class="wtweaker-info">
-            <div class="wtweaker-badges">
-              <span class="win-badge win-badge--free">Free</span>
-              <span class="win-badge win-badge--version">v1.0</span>
-              <span class="win-badge win-badge--new">New</span>
+
+          <div class="wtweaker-right">
+            <div class="wtweaker-stats">
+              <div class="wstat">
+                <span class="wstat-val">Windows</span>
+                <span class="wstat-label">Platform</span>
+              </div>
+              <div class="wstat">
+                <span class="wstat-val">10 / 11</span>
+                <span class="wstat-label">Supported</span>
+              </div>
+              <div class="wstat">
+                <span class="wstat-val">R1.0</span>
+                <span class="wstat-label">Release</span>
+              </div>
             </div>
-            <h2 class="wtweaker-title">WTweaker</h2>
-            <p class="wtweaker-desc">
-              A lightweight Windows optimization tool built for gamers. Apply system tweaks, 
-              disable telemetry, optimize network settings, and boost FPS — all in one place.
-            </p>
-            <div class="wtweaker-features">
-              <span class="win-feature">⚡ FPS Boost</span>
-              <span class="win-feature">🌐 Network Tweaks</span>
-              <span class="win-feature">🧹 Debloat</span>
-              <span class="win-feature">🔒 Privacy</span>
-              <span class="win-feature">🖥️ GPU Optimize</span>
+            <button class="wtweaker-btn" id="downloadBtn" onclick="startDownload()">
+              <span class="btn-icon">↓</span>
+              <span class="btn-text">Download WTweaker</span>
+            </button>
+            <div class="wtweaker-progress" id="progressWrap">
+              <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+              </div>
+              <span class="progress-label" id="progressLabel">Preparing download...</span>
             </div>
+            <p class="wtweaker-note">WLST.zip · ~5 MB · No installer required</p>
           </div>
         </div>
+      </section>
 
-        <div class="wtweaker-right">
-          <div class="wtweaker-stats">
-            <div class="wstat">
-              <span class="wstat-val">Windows</span>
-              <span class="wstat-label">Platform</span>
+      <!-- ==========================================
+           SCRIPTS & FILES
+           ========================================== -->
+      <section class="win-section">
+        <div class="section-label">// USEFUL SCRIPTS</div>
+        <p class="win-section-desc">Ready-to-run scripts and batch files for quick Windows tweaks. Download and run as Administrator.</p>
+
+        <div class="win-cards-grid">
+
+          <div class="win-tool-card">
+            <div class="win-tool-icon" style="background:rgba(0,120,212,0.1);color:var(--accent-windows)">⚡</div>
+            <div class="win-tool-body">
+              <div class="win-tool-tags">
+                <span class="win-tag win-tag--bat">.bat</span>
+                <span class="win-tag win-tag--free">Free</span>
+              </div>
+              <h3 class="win-tool-title">FPS Unlocker Script</h3>
+              <p class="win-tool-desc">Disables CPU parking, sets high performance power plan, tweaks timer resolution for max FPS.</p>
             </div>
-            <div class="wstat">
-              <span class="wstat-val">10 / 11</span>
-              <span class="wstat-label">Supported</span>
-            </div>
-            <div class="wstat">
-              <span class="wstat-val">R1.0</span>
-              <span class="wstat-label">Release</span>
-            </div>
+            <button class="win-dl-btn win-dl-btn--soon">Coming Soon</button>
           </div>
 
-          <button class="wtweaker-btn" id="downloadBtn" onclick="startDownload()">
-            <span class="btn-icon">↓</span>
-            <span class="btn-text">Download WTweaker</span>
-          </button>
-
-          <div class="wtweaker-progress" id="progressWrap">
-            <div class="progress-bar">
-              <div class="progress-fill" id="progressFill"></div>
+          <div class="win-tool-card">
+            <div class="win-tool-icon" style="background:rgba(0,200,100,0.1);color:#00c864">🌐</div>
+            <div class="win-tool-body">
+              <div class="win-tool-tags">
+                <span class="win-tag win-tag--bat">.bat</span>
+                <span class="win-tag win-tag--free">Free</span>
+              </div>
+              <h3 class="win-tool-title">Network Optimizer</h3>
+              <p class="win-tool-desc">Flushes DNS, resets TCP/IP stack, optimizes network adapter settings to reduce ping and packet loss.</p>
             </div>
-            <span class="progress-label" id="progressLabel">Preparing download...</span>
+            <button class="win-dl-btn win-dl-btn--soon">Coming Soon</button>
           </div>
 
-          <p class="wtweaker-note">WLST.zip · ~5 MB · No installer required</p>
-        </div>
-      </div>
+          <div class="win-tool-card">
+            <div class="win-tool-icon" style="background:rgba(232,69,60,0.1);color:var(--accent-roblox)">🧹</div>
+            <div class="win-tool-body">
+              <div class="win-tool-tags">
+                <span class="win-tag win-tag--ps1">.ps1</span>
+                <span class="win-tag win-tag--free">Free</span>
+              </div>
+              <h3 class="win-tool-title">Debloat Windows</h3>
+              <p class="win-tool-desc">Removes pre-installed bloatware, disables telemetry and background data collection services.</p>
+            </div>
+            <button class="win-dl-btn win-dl-btn--soon">Coming Soon</button>
+          </div>
 
-      <!-- MORE TOOLS PLACEHOLDER -->
-      <div class="win-coming-soon">
-        <span class="win-cs-icon">🔧</span>
-        <div>
-          <p class="win-cs-title">More tools coming soon</p>
-          <p class="win-cs-sub">Additional optimization scripts and guides are being added.</p>
+          <div class="win-tool-card">
+            <div class="win-tool-icon" style="background:rgba(200,168,75,0.1);color:var(--accent-genshin)">🖥️</div>
+            <div class="win-tool-body">
+              <div class="win-tool-tags">
+                <span class="win-tag win-tag--reg">.reg</span>
+                <span class="win-tag win-tag--free">Free</span>
+              </div>
+              <h3 class="win-tool-title">GPU Registry Tweaks</h3>
+              <p class="win-tool-desc">Registry tweaks to optimize GPU scheduling, disable HPET, and improve rendering performance.</p>
+            </div>
+            <button class="win-dl-btn win-dl-btn--soon">Coming Soon</button>
+          </div>
+
         </div>
-      </div>
+      </section>
+
+      <!-- ==========================================
+           USEFUL PROGRAMS
+           ========================================== -->
+      <section class="win-section">
+        <div class="section-label">// USEFUL PROGRAMS</div>
+        <p class="win-section-desc">Recommended programs for monitoring, tuning, and maintaining your system.</p>
+
+        <div class="win-cards-grid win-cards-grid--3">
+
+          <!-- OWN -->
+          <div class="win-tool-card win-tool-card--featured">
+            <div class="win-tool-icon" style="background:rgba(0,120,212,0.12);color:var(--accent-windows)">
+              <svg viewBox="0 0 32 32" fill="none" width="28" height="28">
+                <rect x="4" y="4" width="11" height="11" rx="2" fill="currentColor" opacity=".9"/>
+                <rect x="17" y="4" width="11" height="11" rx="2" fill="currentColor" opacity=".5"/>
+                <rect x="4" y="17" width="11" height="11" rx="2" fill="currentColor" opacity=".5"/>
+                <rect x="17" y="17" width="11" height="11" rx="2" fill="currentColor" opacity=".9"/>
+              </svg>
+            </div>
+            <div class="win-tool-body">
+              <div class="win-tool-tags">
+                <span class="win-tag win-tag--own">Our Tool</span>
+                <span class="win-tag win-tag--free">Free</span>
+              </div>
+              <h3 class="win-tool-title">WTweaker</h3>
+              <p class="win-tool-desc">All-in-one Windows optimizer built for gamers. FPS boost, network tweaks, debloat and more.</p>
+            </div>
+            <button class="win-dl-btn" onclick="startDownload()">↓ Download</button>
+          </div>
+
+          <!-- MSI Afterburner -->
+          <div class="win-tool-card">
+            <div class="win-tool-icon" style="background:rgba(232,69,60,0.1);color:var(--accent-roblox)">🔥</div>
+            <div class="win-tool-body">
+              <div class="win-tool-tags">
+                <span class="win-tag win-tag--free">Free</span>
+                <span class="win-tag win-tag--ext">3rd Party</span>
+              </div>
+              <h3 class="win-tool-title">MSI Afterburner</h3>
+              <p class="win-tool-desc">GPU overclocking, fan control and real-time hardware monitoring overlay. Industry standard.</p>
+            </div>
+            <a class="win-dl-btn win-dl-btn--ext" href="https://www.msi.com/Landing/afterburner/graphics-cards" target="_blank">↗ Official Site</a>
+          </div>
+
+          <!-- HWiNFO -->
+          <div class="win-tool-card">
+            <div class="win-tool-icon" style="background:rgba(0,200,100,0.1);color:#00c864">📊</div>
+            <div class="win-tool-body">
+              <div class="win-tool-tags">
+                <span class="win-tag win-tag--free">Free</span>
+                <span class="win-tag win-tag--ext">3rd Party</span>
+              </div>
+              <h3 class="win-tool-title">HWiNFO64</h3>
+              <p class="win-tool-desc">Deep system diagnostics and hardware monitoring. Shows temps, clocks, voltages in real time.</p>
+            </div>
+            <a class="win-dl-btn win-dl-btn--ext" href="https://www.hwinfo.com/download/" target="_blank">↗ Official Site</a>
+          </div>
+
+          <!-- Process Lasso -->
+          <div class="win-tool-card">
+            <div class="win-tool-icon" style="background:rgba(0,120,212,0.1);color:var(--accent-windows)">⚙️</div>
+            <div class="win-tool-body">
+              <div class="win-tool-tags">
+                <span class="win-tag win-tag--free">Free / Pro</span>
+                <span class="win-tag win-tag--ext">3rd Party</span>
+              </div>
+              <h3 class="win-tool-title">Process Lasso</h3>
+              <p class="win-tool-desc">Automated CPU priority optimization. Keeps your PC responsive under heavy load, great for gaming.</p>
+            </div>
+            <a class="win-dl-btn win-dl-btn--ext" href="https://bitsum.com/" target="_blank">↗ Official Site</a>
+          </div>
+
+          <!-- CrystalDiskMark -->
+          <div class="win-tool-card">
+            <div class="win-tool-icon" style="background:rgba(200,168,75,0.1);color:var(--accent-genshin)">💾</div>
+            <div class="win-tool-body">
+              <div class="win-tool-tags">
+                <span class="win-tag win-tag--free">Free</span>
+                <span class="win-tag win-tag--ext">3rd Party</span>
+              </div>
+              <h3 class="win-tool-title">CrystalDiskMark</h3>
+              <p class="win-tool-desc">Benchmark your SSD/HDD read and write speeds. Helps identify storage bottlenecks.</p>
+            </div>
+            <a class="win-dl-btn win-dl-btn--ext" href="https://crystalmark.info/en/software/crystaldiskmark/" target="_blank">↗ Official Site</a>
+          </div>
+
+          <!-- Autoruns -->
+          <div class="win-tool-card">
+            <div class="win-tool-icon" style="background:rgba(114,137,218,0.1);color:#7289da">🔍</div>
+            <div class="win-tool-body">
+              <div class="win-tool-tags">
+                <span class="win-tag win-tag--free">Free</span>
+                <span class="win-tag win-tag--ext">3rd Party</span>
+              </div>
+              <h3 class="win-tool-title">Autoruns</h3>
+              <p class="win-tool-desc">Microsoft Sysinternals tool. Shows every program that runs at startup — clean up what you don't need.</p>
+            </div>
+            <a class="win-dl-btn win-dl-btn--ext" href="https://learn.microsoft.com/en-us/sysinternals/downloads/autoruns" target="_blank">↗ Official Site</a>
+          </div>
+
+        </div>
+      </section>
 
     </div>
   </div>
