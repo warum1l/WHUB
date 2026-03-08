@@ -1,0 +1,320 @@
+// =============================================
+// WHUB — AOT:R Online Trading
+// =============================================
+import { auth, db, getUserDoc, initNavAuth, onAuthStateChanged }
+  from './firebase.js';
+import {
+  collection, addDoc, onSnapshot, doc, getDoc,
+  updateDoc, deleteDoc, query, orderBy, where,
+  serverTimestamp, addDoc as addMessage
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+initNavAuth();
+
+let currentUser  = null;
+let currentData  = null;
+let activeTrade  = null;       // trade object currently open in detail modal
+let chatUnsub    = null;       // unsubscribe fn for chat listener
+let tradesUnsub  = null;
+
+// -----------------------------------------------
+// AUTH STATE
+// -----------------------------------------------
+onAuthStateChanged(auth, async (user) => {
+  currentUser = user;
+  if (user) {
+    currentData = await getUserDoc(user.uid);
+    document.getElementById('postTradeBtn').style.display = 'flex';
+  } else {
+    document.getElementById('postTradeBtn').style.display = 'none';
+  }
+});
+
+// -----------------------------------------------
+// LOAD TRADES (realtime)
+// -----------------------------------------------
+document.addEventListener('DOMContentLoaded', () => {
+  const q = query(
+    collection(db, 'aotr_trades'),
+    where('status', '==', 'open'),
+    orderBy('createdAt', 'desc')
+  );
+
+  tradesUnsub = onSnapshot(q, (snap) => {
+    const trades = [];
+    snap.forEach(d => trades.push({ id: d.id, ...d.data() }));
+    renderTrades(trades);
+    document.getElementById('activeCount').textContent = trades.length;
+    document.getElementById('tradesLoading').style.display = 'none';
+  });
+});
+
+function renderTrades(trades) {
+  const list = document.getElementById('tradesList');
+
+  if (trades.length === 0) {
+    list.innerHTML = `
+      <div class="trades-empty">
+        <span>🤝</span>
+        <p>No active trades yet. Be the first to post one!</p>
+      </div>`;
+    return;
+  }
+
+  list.innerHTML = trades.map(t => {
+    const time = t.createdAt?.seconds
+      ? timeAgo(t.createdAt.seconds * 1000) : 'just now';
+    return `
+      <div class="trade-card" onclick="openDetail('${t.id}')">
+        <div class="trade-card-inner">
+          <div class="trade-card-sides">
+            <div class="trade-offer-col">
+              <span class="trade-col-label">Offering</span>
+              <span class="trade-col-text">${escHtml(t.offer)}</span>
+            </div>
+            <div class="trade-arrow-center">⇄</div>
+            <div class="trade-want-col">
+              <span class="trade-col-label">Wants</span>
+              <span class="trade-col-text">${escHtml(t.want)}</span>
+            </div>
+          </div>
+          <div class="trade-card-footer">
+            <div class="trade-card-meta">
+              <span class="trade-author">👤 ${escHtml(t.username)}</span>
+              ${t.robloxUser ? `<span class="trade-roblox">🎮 ${escHtml(t.robloxUser)}</span>` : ''}
+            </div>
+            <div class="trade-card-right">
+              <span class="trade-time">${time}</span>
+              <span class="trade-chat-count">💬 ${t.msgCount || 0}</span>
+            </div>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// -----------------------------------------------
+// POST TRADE MODAL
+// -----------------------------------------------
+window.openPostModal = function() {
+  if (!currentUser) { window.location.href = 'login.html'; return; }
+  document.getElementById('postOverlay').classList.add('open');
+  document.getElementById('postModal').classList.add('open');
+  document.getElementById('postError').textContent = '';
+};
+
+window.closePostModal = function() {
+  document.getElementById('postOverlay').classList.remove('open');
+  document.getElementById('postModal').classList.remove('open');
+};
+
+window.submitTrade = async function() {
+  if (!currentUser) return;
+
+  const offer      = document.getElementById('offerText').value.trim();
+  const want       = document.getElementById('wantText').value.trim();
+  const robloxUser = document.getElementById('robloxUser').value.trim();
+  const discordUser= document.getElementById('discordUser').value.trim();
+  const errEl      = document.getElementById('postError');
+  const btn        = document.getElementById('postSubmitBtn');
+
+  if (!offer)      return errEl.textContent = 'Please describe what you are offering.';
+  if (!want)       return errEl.textContent = 'Please describe what you want.';
+  if (!robloxUser) return errEl.textContent = 'Please enter your Roblox username.';
+
+  btn.disabled = true;
+  btn.querySelector('.auth-btn-text').textContent = 'Posting...';
+
+  try {
+    await addDoc(collection(db, 'aotr_trades'), {
+      offer,
+      want,
+      robloxUser,
+      discordUser,
+      uid:       currentUser.uid,
+      username:  currentData?.username || 'Unknown',
+      status:    'open',
+      msgCount:  0,
+      createdAt: serverTimestamp(),
+    });
+    // Clear form
+    ['offerText','wantText','robloxUser','discordUser'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    closePostModal();
+  } catch(e) {
+    errEl.textContent = 'Failed to post. Try again.';
+    console.error(e);
+  } finally {
+    btn.disabled = false;
+    btn.querySelector('.auth-btn-text').textContent = 'Post Trade';
+  }
+};
+
+// -----------------------------------------------
+// DETAIL / CHAT MODAL
+// -----------------------------------------------
+window.openDetail = async function(tradeId) {
+  const snap = await getDoc(doc(db, 'aotr_trades', tradeId));
+  if (!snap.exists()) return;
+
+  activeTrade = { id: snap.id, ...snap.data() };
+
+  document.getElementById('detailTitle').textContent =
+    `${escHtml(activeTrade.offer)} ⇄ ${escHtml(activeTrade.want)}`;
+  document.getElementById('detailBy').textContent =
+    `Posted by ${escHtml(activeTrade.username)}`;
+  document.getElementById('detailOffer').textContent = activeTrade.offer;
+  document.getElementById('detailWant').textContent  = activeTrade.want;
+
+  // Contacts
+  let contacts = '';
+  if (activeTrade.robloxUser)
+    contacts += `<span class="contact-chip">🎮 ${escHtml(activeTrade.robloxUser)}</span>`;
+  if (activeTrade.discordUser)
+    contacts += `<span class="contact-chip discord-chip">💬 ${escHtml(activeTrade.discordUser)}</span>`;
+  document.getElementById('detailContacts').innerHTML = contacts;
+
+  // Show complete btn only to trade owner
+  const completeBtn = document.getElementById('completeTradBtn');
+  completeBtn.style.display =
+    (currentUser && currentUser.uid === activeTrade.uid) ? 'flex' : 'none';
+
+  // Chat input
+  const chatWrap    = document.getElementById('chatInputWrap');
+  const loginNotice = document.getElementById('chatLoginNotice');
+  if (currentUser) {
+    chatWrap.classList.remove('hidden');
+    loginNotice.classList.add('hidden');
+    document.getElementById('chatInput').value = '';
+  } else {
+    chatWrap.classList.add('hidden');
+    loginNotice.classList.remove('hidden');
+  }
+
+  // Open modal
+  document.getElementById('detailOverlay').classList.add('open');
+  document.getElementById('detailModal').classList.add('open');
+
+  // Subscribe to chat
+  subscribeChat(tradeId);
+};
+
+window.closeDetailModal = function() {
+  document.getElementById('detailOverlay').classList.remove('open');
+  document.getElementById('detailModal').classList.remove('open');
+  if (chatUnsub) { chatUnsub(); chatUnsub = null; }
+  activeTrade = null;
+};
+
+// -----------------------------------------------
+// CHAT
+// -----------------------------------------------
+function subscribeChat(tradeId) {
+  if (chatUnsub) chatUnsub();
+
+  const q = query(
+    collection(db, 'aotr_trades', tradeId, 'messages'),
+    orderBy('createdAt', 'asc')
+  );
+
+  chatUnsub = onSnapshot(q, (snap) => {
+    const msgs = [];
+    snap.forEach(d => msgs.push({ id: d.id, ...d.data() }));
+    renderChat(msgs);
+  });
+}
+
+function renderChat(msgs) {
+  const box = document.getElementById('chatMessages');
+
+  if (msgs.length === 0) {
+    box.innerHTML = `<div class="chat-empty">No messages yet. Say hi! 👋</div>`;
+    return;
+  }
+
+  box.innerHTML = msgs.map(m => {
+    const isMe = currentUser && m.uid === currentUser.uid;
+    const time = m.createdAt?.seconds
+      ? new Date(m.createdAt.seconds * 1000).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})
+      : '';
+    return `
+      <div class="chat-msg ${isMe ? 'chat-msg--me' : ''}">
+        <div class="chat-msg-header">
+          <span class="chat-msg-author">${escHtml(m.username)}</span>
+          <span class="chat-msg-time">${time}</span>
+        </div>
+        <div class="chat-msg-text">${escHtml(m.text)}</div>
+      </div>`;
+  }).join('');
+
+  box.scrollTop = box.scrollHeight;
+}
+
+window.sendMessage = async function() {
+  if (!currentUser || !activeTrade) return;
+
+  const input = document.getElementById('chatInput');
+  const text  = input.value.trim();
+  if (!text) return;
+
+  input.value = '';
+
+  try {
+    await addDoc(
+      collection(db, 'aotr_trades', activeTrade.id, 'messages'),
+      {
+        text,
+        uid:       currentUser.uid,
+        username:  currentData?.username || 'Unknown',
+        createdAt: serverTimestamp(),
+      }
+    );
+    // bump message count
+    await updateDoc(doc(db, 'aotr_trades', activeTrade.id), {
+      msgCount: (activeTrade.msgCount || 0) + 1
+    });
+    activeTrade.msgCount = (activeTrade.msgCount || 0) + 1;
+  } catch(e) {
+    console.error('Send failed:', e);
+  }
+};
+
+// -----------------------------------------------
+// COMPLETE TRADE
+// -----------------------------------------------
+window.completeTrade = async function() {
+  if (!currentUser || !activeTrade) return;
+  if (currentUser.uid !== activeTrade.uid) return;
+
+  const confirmed = confirm('Mark this trade as completed? It will be removed from the list.');
+  if (!confirmed) return;
+
+  try {
+    await updateDoc(doc(db, 'aotr_trades', activeTrade.id), { status: 'completed' });
+    closeDetailModal();
+  } catch(e) {
+    console.error('Complete failed:', e);
+  }
+};
+
+// -----------------------------------------------
+// UTILS
+// -----------------------------------------------
+function escHtml(str) {
+  return String(str || '')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+
+function timeAgo(ms) {
+  const diff = Date.now() - ms;
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1)  return 'just now';
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24)  return `${hrs}h ago`;
+  return `${Math.floor(hrs/24)}d ago`;
+}
