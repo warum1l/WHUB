@@ -40,6 +40,17 @@ async function getUserDoc(uid) {
   return snap.exists() ? snap.data() : null;
 }
 
+// --- GET USER BY USERNAME ---
+async function getUserByUsername(username) {
+  // We fetch by querying — but since no query export here, use getDocs inline
+  const { collection, query, where, getDocs } =
+    await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+  const q    = query(collection(db, 'users'), where('username', '==', username));
+  const snap = await getDocs(q);
+  if (snap.empty) return null;
+  return { id: snap.docs[0].id, ...snap.docs[0].data() };
+}
+
 // --- UPDATE USER DOC ---
 async function updateUserDoc(uid, data) {
   await updateDoc(doc(db, 'users', uid), data);
@@ -56,6 +67,16 @@ function initNavAuth() {
       const userData = await getUserDoc(user.uid);
       const username = userData?.username || user.email.split('@')[0];
       const initial  = username.charAt(0).toUpperCase();
+      const isAdmin  = userData?.role === 'admin';
+
+      // Admin badge
+      if (isAdmin) {
+        const adminBtn = document.createElement('a');
+        adminBtn.href = 'admin.html';
+        adminBtn.className = 'nav-auth nav-admin-btn';
+        adminBtn.textContent = '⚙ Admin';
+        navRight.insertBefore(adminBtn, navRight.firstChild);
+      }
 
       const avatarBtn = document.createElement('a');
       avatarBtn.href = 'profile.html';
@@ -77,7 +98,7 @@ function initNavAuth() {
 
 export {
   auth, db,
-  createUserDoc, getUserDoc, updateUserDoc, initNavAuth,
+  createUserDoc, getUserDoc, getUserByUsername, updateUserDoc, initNavAuth,
   createUserWithEmailAndPassword, signInWithEmailAndPassword,
   signOut, onAuthStateChanged, updateProfile,
   doc, getDoc, updateDoc, serverTimestamp
