@@ -371,3 +371,29 @@
   .profile-edit-panel, .profile-section { padding-left: 20px; padding-right: 20px; }
   .profile-edit-grid { grid-template-columns: 1fr; }
 }
+
+/* ADMIN NAV BTN */
+.nav-admin-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  background: rgba(232,69,60,0.1);
+  border: 1px solid rgba(232,69,60,0.3);
+  border-radius: 8px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: var(--accent-roblox);
+  margin-right: 6px;
+  transition: background 0.2s;
+}
+.nav-admin-btn:hover { background: rgba(232,69,60,0.18); }
+
+/* PUBLIC PROFILE LINK */
+.profile-public-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.78rem; color: var(--text-dim);
+  margin-top: 4px;
+  transition: color 0.2s;
+}
+.profile-public-link:hover { color: var(--accent-roblox); }
