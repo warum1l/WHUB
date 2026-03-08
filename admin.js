@@ -133,26 +133,13 @@ window.openRoleModal = function(uid, username) {
   roleTarget = { uid, username };
   document.getElementById('roleModalUser').textContent = `@${username}`;
   document.getElementById('roleError').textContent = '';
-  const overlay = document.getElementById('roleOverlay');
-  const modal   = document.getElementById('roleModal');
-  overlay.style.display = 'block';
-  modal.style.display   = 'flex';
-  // trigger animation
-  requestAnimationFrame(() => {
-    overlay.classList.add('open');
-    modal.classList.add('open');
-  });
+  document.getElementById('roleOverlay').classList.add('open');
+  document.getElementById('roleModal').classList.add('open');
 };
 
 window.closeRoleModal = function() {
-  const overlay = document.getElementById('roleOverlay');
-  const modal   = document.getElementById('roleModal');
-  overlay.classList.remove('open');
-  modal.classList.remove('open');
-  setTimeout(() => {
-    overlay.style.display = 'none';
-    modal.style.display   = 'none';
-  }, 260);
+  document.getElementById('roleOverlay').classList.remove('open');
+  document.getElementById('roleModal').classList.remove('open');
   roleTarget = null;
 };
 
