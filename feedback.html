@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Feedback — WHUB</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="auth.css" />
+  <link rel="stylesheet" href="feedback.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="logo">W<span>HUB</span></a>
+    <div class="nav-right">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <span class="sun">☀</span>
+        <span class="moon">◑</span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <!-- HERO -->
+    <div class="page-hero">
+      <div class="fb-hero-bg"></div>
+      <div class="page-hero-content">
+        <div class="breadcrumb">
+          <a href="index.html">Home</a>
+          <span>›</span>
+          <span>Feedback</span>
+        </div>
+        <h1 class="page-title">Feed<span class="fb-accent">back</span></h1>
+        <p class="page-subtitle">Questions, suggestions, bug reports — we read everything and act on it.</p>
+      </div>
+    </div>
+
+    <div class="fb-wrapper">
+
+      <!-- POST FORM -->
+      <div class="fb-form-card" id="fbFormCard">
+        <div class="fb-form-top">
+          <h2 class="fb-form-title">Submit a post</h2>
+          <div class="fb-type-tabs" id="fbTypeTabs">
+            <button class="fb-type-btn active" data-type="suggestion" onclick="setType(this,'suggestion')">💡 Suggestion</button>
+            <button class="fb-type-btn" data-type="question"   onclick="setType(this,'question')">❓ Question</button>
+            <button class="fb-type-btn" data-type="bug"        onclick="setType(this,'bug')">🐛 Bug Report</button>
+            <button class="fb-type-btn" data-type="other"      onclick="setType(this,'other')">💬 Other</button>
+          </div>
+        </div>
+
+        <div id="fbLoginNotice" class="fb-login-notice hidden">
+          <a href="login.html">Sign in</a> to post feedback.
+        </div>
+
+        <div id="fbInputArea">
+          <input type="text" class="fb-title-input" id="fbTitle"
+            placeholder="Short title..." maxlength="80" />
+          <textarea class="fb-body-input" id="fbBody"
+            placeholder="Describe your suggestion, question or issue in detail..." maxlength="600"></textarea>
+          <div class="fb-form-footer">
+            <span class="fb-char-count"><span id="fbBodyCount">0</span>/600</span>
+            <div class="auth-error" id="fbError"></div>
+            <button class="fb-submit-btn" id="fbSubmitBtn" onclick="submitFeedback()">
+              <span class="fb-submit-text">Post</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- FILTERS -->
+      <div class="fb-filters">
+        <div class="fb-filter-group">
+          <button class="fb-filter-btn active" data-filter="all"        onclick="setFilter(this,'all')">All</button>
+          <button class="fb-filter-btn" data-filter="suggestion" onclick="setFilter(this,'suggestion')">💡 Suggestions</button>
+          <button class="fb-filter-btn" data-filter="question"  onclick="setFilter(this,'question')">❓ Questions</button>
+          <button class="fb-filter-btn" data-filter="bug"       onclick="setFilter(this,'bug')">🐛 Bugs</button>
+          <button class="fb-filter-btn" data-filter="other"     onclick="setFilter(this,'other')">💬 Other</button>
+        </div>
+        <span class="fb-count-label"><span id="fbCount">0</span> posts</span>
+      </div>
+
+      <!-- POSTS -->
+      <div class="fb-posts" id="fbPosts">
+        <div class="fb-loading">
+          <div class="auth-loading-spinner"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- REPLY MODAL -->
+  <div class="modal-overlay" id="replyOverlay" onclick="closeReply()"></div>
+  <div class="fb-reply-modal" id="replyModal">
+    <div class="modal-header">
+      <div>
+        <div class="fb-modal-type" id="replyType"></div>
+        <h2 class="modal-title" id="replyTitle"></h2>
+        <span class="detail-by" id="replyBy"></span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <button class="fb-delete-btn" id="replyDeleteBtn" onclick="deletePost()" style="display:none">🗑 Delete</button>
+        <button class="modal-close" onclick="closeReply()">✕</button>
+      </div>
+    </div>
+
+    <div class="fb-reply-body">
+      <div class="fb-post-full-text" id="replyBody"></div>
+
+      <div class="fb-replies-label">// REPLIES</div>
+      <div class="fb-replies" id="replyList">
+        <div class="chat-loading">Loading...</div>
+      </div>
+
+      <div class="fb-reply-input-wrap" id="replyInputWrap">
+        <div class="fb-reply-avatar" id="replyAvatar"></div>
+        <input type="text" class="chat-input" id="replyInput"
+          placeholder="Write a reply..." maxlength="400"
+          onkeydown="if(event.key==='Enter') sendReply()" />
+        <button class="chat-send-btn" onclick="sendReply()">Reply</button>
+      </div>
+      <div class="chat-login-notice hidden" id="replyLoginNotice">
+        <a href="login.html">Sign in</a> to reply
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-logo">W<span>HUB</span></div>
+    <p class="footer-text">Built for the community, by the community.</p>
+  </footer>
+
+  <script src="app.js"></script>
+  <script type="module" src="feedback.js"></script>
+</body>
+</html>
