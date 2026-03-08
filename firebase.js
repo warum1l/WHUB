@@ -22,7 +22,7 @@ const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db   = getFirestore(app);
 
-// --- CREATE USER DOC IN FIRESTORE ---
+// --- CREATE USER DOC ---
 async function createUserDoc(user, username) {
   await setDoc(doc(db, 'users', user.uid), {
     uid:       user.uid,
@@ -45,13 +45,11 @@ async function updateUserDoc(uid, data) {
   await updateDoc(doc(db, 'users', uid), data);
 }
 
-// --- UPDATE NAVBAR based on auth state ---
+// --- NAVBAR AUTH ---
 function initNavAuth() {
   onAuthStateChanged(auth, async (user) => {
     const navRight = document.querySelector('.nav-right');
     if (!navRight) return;
-
-    // Remove old auth elements
     navRight.querySelectorAll('.nav-auth').forEach(el => el.remove());
 
     if (user) {
@@ -77,6 +75,10 @@ function initNavAuth() {
   });
 }
 
-export { auth, db, createUserDoc, getUserDoc, updateUserDoc, initNavAuth,
-         createUserWithEmailAndPassword, signInWithEmailAndPassword,
-         signOut, onAuthStateChanged, updateProfile };
+export {
+  auth, db,
+  createUserDoc, getUserDoc, updateUserDoc, initNavAuth,
+  createUserWithEmailAndPassword, signInWithEmailAndPassword,
+  signOut, onAuthStateChanged, updateProfile,
+  doc, getDoc, updateDoc, serverTimestamp
+};
