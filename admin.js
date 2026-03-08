@@ -4,7 +4,7 @@
 import { auth, db, getUserDoc, initNavAuth, onAuthStateChanged, updateDoc, doc }
   from './firebase.js';
 import {
-  collection, getDocs, deleteDoc, query, orderBy, onSnapshot
+  collection, getDocs, deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 initNavAuth();
@@ -55,11 +55,22 @@ window.switchTab = function(btn, tab) {
 // USERS
 // -----------------------------------------------
 async function loadUsers() {
-  const snap = await getDocs(query(collection(db, 'users'), orderBy('createdAt', 'desc')));
-  allUsers = [];
-  snap.forEach(d => allUsers.push({ id: d.id, ...d.data() }));
-  renderUsers(allUsers);
-  updateStats();
+  try {
+    // No orderBy to avoid needing a Firestore index
+    const snap = await getDocs(collection(db, 'users'));
+    allUsers = [];
+    snap.forEach(d => allUsers.push({ id: d.id, ...d.data() }));
+    // Sort client-side by createdAt desc
+    allUsers.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+    renderUsers(allUsers);
+    updateStats();
+  } catch(e) {
+    console.error('loadUsers error:', e);
+    document.getElementById('usersBody').innerHTML =
+      `<tr><td colspan="5" class="admin-empty-cell" style="color:var(--accent-roblox)">
+        Failed to load users: ${e.message}
+      </td></tr>`;
+  }
 }
 
 function renderUsers(users) {
@@ -122,13 +133,26 @@ window.openRoleModal = function(uid, username) {
   roleTarget = { uid, username };
   document.getElementById('roleModalUser').textContent = `@${username}`;
   document.getElementById('roleError').textContent = '';
-  document.getElementById('roleOverlay').classList.add('open');
-  document.getElementById('roleModal').classList.add('open');
+  const overlay = document.getElementById('roleOverlay');
+  const modal   = document.getElementById('roleModal');
+  overlay.style.display = 'block';
+  modal.style.display   = 'flex';
+  // trigger animation
+  requestAnimationFrame(() => {
+    overlay.classList.add('open');
+    modal.classList.add('open');
+  });
 };
 
 window.closeRoleModal = function() {
-  document.getElementById('roleOverlay').classList.remove('open');
-  document.getElementById('roleModal').classList.remove('open');
+  const overlay = document.getElementById('roleOverlay');
+  const modal   = document.getElementById('roleModal');
+  overlay.classList.remove('open');
+  modal.classList.remove('open');
+  setTimeout(() => {
+    overlay.style.display = 'none';
+    modal.style.display   = 'none';
+  }, 260);
   roleTarget = null;
 };
 
@@ -159,34 +183,40 @@ window.deleteUser = async function(uid, username) {
 // TRADES
 // -----------------------------------------------
 async function loadTrades() {
-  const snap = await getDocs(query(collection(db, 'aotr_trades'), orderBy('createdAt', 'desc')));
-  const trades = [];
-  snap.forEach(d => trades.push({ id: d.id, ...d.data() }));
+  try {
+    const snap = await getDocs(collection(db, 'aotr_trades'));
+    const trades = [];
+    snap.forEach(d => trades.push({ id: d.id, ...d.data() }));
+    trades.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
 
-  const tbody = document.getElementById('tradesBody');
-  if (trades.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" class="admin-empty-cell">No trades.</td></tr>`;
-    return;
+    const tbody = document.getElementById('tradesBody');
+    if (trades.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" class="admin-empty-cell">No trades.</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = trades.map(t => {
+      const posted = t.createdAt?.seconds
+        ? new Date(t.createdAt.seconds * 1000).toLocaleDateString('en-US', { day:'numeric', month:'short' })
+        : '—';
+      const statusClass = t.status === 'open' ? 'status--open' : 'status--done';
+      return `
+        <tr>
+          <td class="admin-username">${escHtml(t.username)}</td>
+          <td class="admin-truncate">${escHtml(t.offer)}</td>
+          <td class="admin-truncate">${escHtml(t.want)}</td>
+          <td><span class="admin-status ${statusClass}">${t.status}</span></td>
+          <td class="admin-date">${posted}</td>
+          <td>
+            <button class="admin-act-btn admin-act--del"
+              onclick="deleteTrade('${t.id}')">Delete</button>
+          </td>
+        </tr>`;
+    }).join('');
+  } catch(e) {
+    console.error('loadTrades error:', e);
+    document.getElementById('tradesBody').innerHTML =
+      `<tr><td colspan="6" class="admin-empty-cell" style="color:var(--accent-roblox)">Failed: ${e.message}</td></tr>`;
   }
-
-  tbody.innerHTML = trades.map(t => {
-    const posted = t.createdAt?.seconds
-      ? new Date(t.createdAt.seconds * 1000).toLocaleDateString('en-US', { day:'numeric', month:'short' })
-      : '—';
-    const statusClass = t.status === 'open' ? 'status--open' : 'status--done';
-    return `
-      <tr>
-        <td class="admin-username">${escHtml(t.username)}</td>
-        <td class="admin-truncate">${escHtml(t.offer)}</td>
-        <td class="admin-truncate">${escHtml(t.want)}</td>
-        <td><span class="admin-status ${statusClass}">${t.status}</span></td>
-        <td class="admin-date">${posted}</td>
-        <td>
-          <button class="admin-act-btn admin-act--del"
-            onclick="deleteTrade('${t.id}')">Delete</button>
-        </td>
-      </tr>`;
-  }).join('');
 }
 
 window.deleteTrade = async function(id) {
@@ -201,9 +231,11 @@ window.deleteTrade = async function(id) {
 // FEEDBACK
 // -----------------------------------------------
 async function loadFeedback() {
-  const snap = await getDocs(query(collection(db, 'feedback'), orderBy('createdAt', 'desc')));
-  const posts = [];
-  snap.forEach(d => posts.push({ id: d.id, ...d.data() }));
+  try {
+    const snap = await getDocs(collection(db, 'feedback'));
+    const posts = [];
+    snap.forEach(d => posts.push({ id: d.id, ...d.data() }));
+    posts.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
 
   const tbody = document.getElementById('feedbackBody');
   if (posts.length === 0) {
@@ -229,6 +261,11 @@ async function loadFeedback() {
         </td>
       </tr>`;
   }).join('');
+  } catch(e) {
+    console.error('loadFeedback error:', e);
+    document.getElementById('feedbackBody').innerHTML =
+      `<tr><td colspan="6" class="admin-empty-cell" style="color:var(--accent-roblox)">Failed: ${e.message}</td></tr>`;
+  }
 }
 
 window.deleteFeedback = async function(id) {
