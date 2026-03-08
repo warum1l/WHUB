@@ -38,6 +38,10 @@ function renderProfile(data, user) {
   document.getElementById('profileBio').textContent      = data.bio || '';
   document.getElementById('profileRole').textContent     = capitalize(data.role || 'member');
 
+  // Public profile link
+  const pubLink = document.getElementById('profilePublicLink');
+  if (pubLink) pubLink.href = `user.html?u=${encodeURIComponent(data.username)}`;
+
   if (data.createdAt?.seconds) {
     const date = new Date(data.createdAt.seconds * 1000);
     document.getElementById('profileJoined').textContent =

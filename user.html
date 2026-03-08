@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile — WHUB</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="auth.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="logo">W<span>HUB</span></a>
+    <div class="nav-right">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <span class="sun">☀</span>
+        <span class="moon">◑</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- LOADING -->
+  <div class="auth-loading" id="pageLoading">
+    <div class="auth-loading-spinner"></div>
+  </div>
+
+  <!-- NOT FOUND -->
+  <div class="page-wrapper" id="notFound" style="display:none">
+    <div style="text-align:center;padding:160px 20px 80px">
+      <div style="font-size:3rem;margin-bottom:16px">👤</div>
+      <h2 style="font-family:var(--font-display);font-size:1.8rem;margin-bottom:10px">User not found</h2>
+      <p style="color:var(--text-muted);margin-bottom:24px">This profile doesn't exist.</p>
+      <a href="index.html" style="color:var(--accent-roblox)">← Back to Home</a>
+    </div>
+  </div>
+
+  <!-- PROFILE -->
+  <div class="page-wrapper" id="profilePage" style="display:none">
+    <div class="profile-hero">
+      <div class="profile-hero-bg"></div>
+      <div class="profile-hero-inner">
+        <div class="profile-avatar-wrap">
+          <div class="profile-avatar" id="pubAvatar">W</div>
+          <div class="profile-avatar-ring"></div>
+        </div>
+        <div class="profile-info">
+          <div class="profile-role-badge" id="pubRole">Member</div>
+          <h1 class="profile-username" id="pubUsername">—</h1>
+          <p class="profile-email" id="pubJoined"></p>
+          <p class="profile-bio" id="pubBio"></p>
+        </div>
+        <!-- "This is you" link -->
+        <div class="profile-actions" id="pubActions"></div>
+      </div>
+    </div>
+
+    <div class="profile-section">
+      <div class="profile-section-label">// ACTIVITY</div>
+      <div class="profile-empty-activity">
+        <span>📊</span>
+        <p>Activity tracking coming soon.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-logo">W<span>HUB</span></div>
+    <p class="footer-text">Built for the community, by the community.</p>
+  </footer>
+
+  <script src="app.js"></script>
+  <script type="module" src="user.js"></script>
+</body>
+</html>

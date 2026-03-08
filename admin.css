@@ -1,0 +1,225 @@
+/* =============================================
+   WHUB — Admin Panel Styles
+   ============================================= */
+
+/* ACCESS DENIED */
+.admin-denied {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+}
+.admin-denied-inner {
+  text-align: center;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 14px;
+}
+.admin-denied-inner span { font-size: 3rem; }
+.admin-denied-inner h2 {
+  font-family: var(--font-display);
+  font-size: 1.8rem; color: var(--text);
+}
+.admin-denied-inner p { color: var(--text-muted); font-size: 0.9rem; }
+.admin-denied-inner a { color: var(--accent-roblox); font-size: 0.85rem; }
+
+/* HEADER */
+.admin-header {
+  max-width: 1100px; margin: 0 auto;
+  padding: 100px 48px 24px;
+  display: flex; align-items: flex-start;
+  justify-content: space-between; flex-wrap: wrap; gap: 20px;
+}
+.admin-title {
+  font-family: var(--font-display);
+  font-size: 2.2rem; font-weight: 800;
+  color: var(--text);
+}
+
+/* STATS */
+.admin-stats { display: flex; gap: 16px; flex-wrap: wrap; }
+.admin-stat {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-size: 0.78rem; color: var(--text-muted);
+  text-align: center;
+}
+.admin-stat span {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.4rem; font-weight: 800;
+  color: var(--text); margin-bottom: 2px;
+}
+
+/* TABS */
+.admin-tabs {
+  max-width: 1100px; margin: 0 auto;
+  padding: 0 48px 20px;
+  display: flex; gap: 6px;
+}
+.admin-tab {
+  padding: 9px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  font-family: var(--font-display);
+  font-weight: 700; font-size: 0.82rem;
+  color: var(--text-muted); cursor: pointer;
+  transition: all 0.2s;
+}
+.admin-tab:hover { border-color: var(--border-hover); color: var(--text); }
+.admin-tab.active {
+  background: rgba(232,69,60,0.1);
+  border-color: rgba(232,69,60,0.35);
+  color: var(--accent-roblox);
+}
+
+/* TAB CONTENT */
+.admin-tab-content {
+  max-width: 1100px; margin: 0 auto;
+  padding: 0 48px 100px;
+}
+.hidden { display: none !important; }
+
+/* SEARCH */
+.admin-search-bar { margin-bottom: 16px; }
+.admin-search { max-width: 360px; }
+
+/* TABLE */
+.admin-table-wrap {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  overflow-x: auto;
+}
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.admin-table thead tr {
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-2);
+}
+.admin-table th {
+  padding: 12px 18px;
+  text-align: left;
+  font-family: var(--font-display);
+  font-size: 0.68rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+.admin-table td {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-muted);
+  vertical-align: middle;
+}
+.admin-table tbody tr:last-child td { border-bottom: none; }
+.admin-table tbody tr:hover td { background: var(--bg-2); }
+
+.admin-loading-cell, .admin-empty-cell {
+  text-align: center;
+  padding: 48px !important;
+  color: var(--text-dim);
+}
+.admin-loading-cell .auth-loading-spinner { margin: 0 auto; }
+
+/* USER CELL */
+.admin-user-cell { display: flex; align-items: center; gap: 12px; }
+.admin-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: linear-gradient(135deg, #1a1a2e, #0f3460);
+  border: 1px solid rgba(232,69,60,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 800; font-size: 0.75rem;
+  color: var(--accent-roblox);
+  flex-shrink: 0;
+}
+.admin-username { font-weight: 600; color: var(--text); }
+.admin-username a { color: var(--text); }
+.admin-username a:hover { color: var(--accent-roblox); }
+.admin-email { font-size: 0.8rem; }
+.admin-date  { font-size: 0.78rem; white-space: nowrap; }
+.admin-truncate {
+  max-width: 200px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* STATUS BADGES */
+.admin-status {
+  display: inline-block;
+  padding: 3px 10px; border-radius: 50px;
+  font-size: 0.68rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
+.status--open { background: rgba(0,200,100,0.1); color: #00c864; border: 1px solid rgba(0,200,100,0.25); }
+.status--done { background: rgba(255,255,255,0.05); color: var(--text-dim); border: 1px solid var(--border); }
+
+/* ACTION BUTTONS */
+.admin-actions { display: flex; gap: 8px; }
+.admin-act-btn {
+  padding: 6px 12px;
+  border-radius: 7px;
+  font-family: var(--font-display);
+  font-weight: 700; font-size: 0.72rem;
+  cursor: pointer; border: 1px solid;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+.admin-act--role {
+  background: rgba(114,137,218,0.08);
+  border-color: rgba(114,137,218,0.3);
+  color: #7289da;
+}
+.admin-act--role:hover { background: rgba(114,137,218,0.18); }
+.admin-act--del {
+  background: rgba(232,69,60,0.08);
+  border-color: rgba(232,69,60,0.25);
+  color: var(--accent-roblox);
+}
+.admin-act--del:hover { background: rgba(232,69,60,0.18); }
+
+/* ROLE MODAL */
+.admin-role-user {
+  font-family: var(--font-display);
+  font-weight: 700; font-size: 1.1rem;
+  color: var(--text); margin-bottom: 20px;
+}
+.admin-role-options {
+  display: flex; flex-direction: column; gap: 10px;
+  margin-bottom: 12px;
+}
+.admin-role-opt {
+  width: 100%; padding: 14px 18px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-family: var(--font-display);
+  font-weight: 700; font-size: 0.9rem;
+  color: var(--text); cursor: pointer;
+  text-align: left;
+  transition: border-color 0.2s, background 0.2s;
+}
+.admin-role-opt:hover { border-color: var(--border-hover); background: var(--bg-card); }
+.admin-role-opt[data-role="admin"]:hover {
+  border-color: rgba(232,69,60,0.4);
+  background: rgba(232,69,60,0.06);
+}
+.admin-role-opt[data-role="mod"]:hover {
+  border-color: rgba(0,200,100,0.35);
+  background: rgba(0,200,100,0.05);
+}
+
+/* feedback badge reuse */
+.fb-post-type-badge { font-size: 0.68rem; }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .admin-header, .admin-tabs, .admin-tab-content { padding-left: 20px; padding-right: 20px; }
+  .admin-header { padding-top: 90px; }
+  .admin-tabs { flex-wrap: wrap; }
+  .admin-truncate { max-width: 120px; }
+}

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel — WHUB</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="auth.css" />
+  <link rel="stylesheet" href="admin.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="logo">W<span>HUB</span></a>
+    <div class="nav-right">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <span class="sun">☀</span>
+        <span class="moon">◑</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- LOADING / ACCESS DENIED -->
+  <div class="auth-loading" id="pageLoading">
+    <div class="auth-loading-spinner"></div>
+  </div>
+  <div class="admin-denied" id="accessDenied" style="display:none">
+    <div class="admin-denied-inner">
+      <span>🔒</span>
+      <h2>Access Denied</h2>
+      <p>You don't have permission to view this page.</p>
+      <a href="index.html">← Back to Home</a>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div class="page-wrapper" id="adminPage" style="display:none">
+
+    <div class="admin-header">
+      <div>
+        <div class="profile-section-label">// ADMIN PANEL</div>
+        <h1 class="admin-title">Dashboard</h1>
+      </div>
+      <div class="admin-stats" id="adminStats"></div>
+    </div>
+
+    <!-- TABS -->
+    <div class="admin-tabs">
+      <button class="admin-tab active" onclick="switchTab(this,'users')">👥 Users</button>
+      <button class="admin-tab" onclick="switchTab(this,'trades')">🤝 Trades</button>
+      <button class="admin-tab" onclick="switchTab(this,'feedback')">💬 Feedback</button>
+    </div>
+
+    <!-- USERS TAB -->
+    <div class="admin-tab-content" id="tab-users">
+      <div class="admin-search-bar">
+        <input type="text" class="auth-input admin-search" id="userSearch"
+          placeholder="Search by username or email..."
+          oninput="filterUsers()" />
+      </div>
+      <div class="admin-table-wrap">
+        <table class="admin-table" id="usersTable">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Joined</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="usersBody">
+            <tr><td colspan="5" class="admin-loading-cell"><div class="auth-loading-spinner"></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TRADES TAB -->
+    <div class="admin-tab-content hidden" id="tab-trades">
+      <div class="admin-table-wrap">
+        <table class="admin-table" id="tradesTable">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Offering</th>
+              <th>Wants</th>
+              <th>Status</th>
+              <th>Posted</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="tradesBody">
+            <tr><td colspan="6" class="admin-loading-cell"><div class="auth-loading-spinner"></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- FEEDBACK TAB -->
+    <div class="admin-tab-content hidden" id="tab-feedback">
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Title</th>
+              <th>User</th>
+              <th>▲</th>
+              <th>Posted</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="feedbackBody">
+            <tr><td colspan="6" class="admin-loading-cell"><div class="auth-loading-spinner"></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ROLE MODAL -->
+  <div class="modal-overlay" id="roleOverlay" onclick="closeRoleModal()"></div>
+  <div class="modal" id="roleModal">
+    <div class="modal-header">
+      <h2 class="modal-title">Change Role</h2>
+      <button class="modal-close" onclick="closeRoleModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="admin-role-user" id="roleModalUser"></p>
+      <div class="admin-role-options">
+        <button class="admin-role-opt" data-role="member"    onclick="applyRole('member')">👤 Member</button>
+        <button class="admin-role-opt" data-role="mod"       onclick="applyRole('mod')">🛡 Moderator</button>
+        <button class="admin-role-opt" data-role="admin"     onclick="applyRole('admin')">⚙ Admin</button>
+      </div>
+      <div class="auth-error" id="roleError"></div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-logo">W<span>HUB</span></div>
+    <p class="footer-text">Built for the community, by the community.</p>
+  </footer>
+
+  <script src="app.js"></script>
+  <script type="module" src="admin.js"></script>
+</body>
+</html>
