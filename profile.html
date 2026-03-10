@@ -2,6 +2,8 @@
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="apple-touch-icon" href="favicon.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Profile — WHUB</title>
   <link rel="stylesheet" href="style.css" />
@@ -27,28 +29,49 @@
       <div class="profile-hero-bg"></div>
       <div class="profile-hero-inner">
 
-        <!-- Avatar -->
         <div class="profile-avatar-wrap">
           <div class="profile-avatar" id="profileAvatar">W</div>
           <div class="profile-avatar-ring"></div>
         </div>
 
-        <!-- Info -->
         <div class="profile-info">
           <div class="profile-role-badge" id="profileRole">Member</div>
           <h1 class="profile-username" id="profileUsername">—</h1>
           <p class="profile-email" id="profileEmail">—</p>
           <p class="profile-bio" id="profileBio"></p>
+
+          <!-- Social links display -->
+          <div class="profile-socials" id="profileSocials"></div>
+
           <p class="profile-joined" id="profileJoined"></p>
           <a class="profile-public-link" id="profilePublicLink" href="#" target="_blank">🔗 Public profile</a>
         </div>
 
-        <!-- Actions -->
         <div class="profile-actions">
           <button class="profile-edit-btn" onclick="openEdit()">✏ Edit Profile</button>
           <button class="profile-signout-btn" onclick="handleSignOut()">Sign Out</button>
         </div>
 
+      </div>
+    </div>
+
+    <!-- STATS ROW -->
+    <div class="profile-stats-row" id="profileStatsRow">
+      <div class="profile-stat-card">
+        <span class="pstat-val" id="statTrades">—</span>
+        <span class="pstat-label">Trades Posted</span>
+      </div>
+      <div class="profile-stat-card">
+        <span class="pstat-val" id="statFeedback">—</span>
+        <span class="pstat-label">Feedback Posts</span>
+      </div>
+      <div class="profile-stat-card">
+        <span class="pstat-val" id="statJoinedShort">—</span>
+        <span class="pstat-label">Member Since</span>
+      </div>
+      <div class="profile-stat-card">
+        <span class="pstat-val pstat-val--role" id="statRole">—</span>
+        <span class="pstat-label">Role</span>
       </div>
     </div>
 
@@ -67,6 +90,16 @@
           <input type="text" class="auth-input" id="editBio" placeholder="Something about yourself..." maxlength="120" />
         </div>
 
+        <div class="auth-field">
+          <label class="auth-label">Roblox Username</label>
+          <input type="text" class="auth-input" id="editRoblox" placeholder="Your Roblox username" maxlength="20" />
+        </div>
+
+        <div class="auth-field">
+          <label class="auth-label">Discord Tag</label>
+          <input type="text" class="auth-input" id="editDiscord" placeholder="username or user#0000" maxlength="40" />
+        </div>
+
       </div>
       <div class="profile-edit-footer">
         <div class="auth-error" id="editError"></div>
@@ -79,18 +112,28 @@
       </div>
     </div>
 
-    <!-- STATS / ACTIVITY placeholder -->
+    <!-- MY TRADES -->
     <div class="profile-section">
-      <div class="profile-section-label">// ACTIVITY</div>
-      <div class="profile-empty-activity">
-        <span>📊</span>
-        <p>Activity tracking coming soon.</p>
+      <div class="profile-section-label">// MY TRADES</div>
+      <div id="myTradesList" class="profile-activity-list">
+        <div class="profile-activity-loading">
+          <div class="auth-loading-spinner"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MY FEEDBACK -->
+    <div class="profile-section">
+      <div class="profile-section-label">// MY FEEDBACK POSTS</div>
+      <div id="myFeedbackList" class="profile-activity-list">
+        <div class="profile-activity-loading">
+          <div class="auth-loading-spinner"></div>
+        </div>
       </div>
     </div>
 
   </div>
 
-  <!-- Loading state -->
   <div class="auth-loading" id="authLoading">
     <div class="auth-loading-spinner"></div>
   </div>
