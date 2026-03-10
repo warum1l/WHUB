@@ -855,3 +855,5 @@
 @media (max-width: 480px) {
   .settings-panel { width: 100%; }
 }
+
+.settings-row--support .settings-row-label { color: #ff6b35; }
