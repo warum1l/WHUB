@@ -647,7 +647,7 @@ a { text-decoration: none; color: inherit; }
    ============================================= */
 .lb-widget-section {
   padding: 0 48px 80px;
-  max-width: 1300px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 .lb-widget-inner {
@@ -749,7 +749,7 @@ a { text-decoration: none; color: inherit; }
    ============================================= */
 .about-widget-section {
   padding: 0 48px 80px;
-  max-width: 1300px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 .about-widget-inner {
