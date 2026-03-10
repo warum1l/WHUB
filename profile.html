@@ -132,6 +132,26 @@
       </div>
     </div>
 
+    <!-- SEARCH USERS -->
+    <div class="profile-section">
+      <div class="profile-section-label">// FIND USERS</div>
+      <div class="user-search-wrap">
+        <div class="user-search-input-wrap">
+          <span class="user-search-icon">🔍</span>
+          <input
+            type="text"
+            class="user-search-input"
+            id="userSearchInput"
+            placeholder="Search by username..."
+            maxlength="24"
+            autocomplete="off"
+          />
+          <button class="user-search-btn" id="userSearchBtn" onclick="searchUser()">Search</button>
+        </div>
+        <div id="userSearchResult"></div>
+      </div>
+    </div>
+
   </div>
 
   <div class="auth-loading" id="authLoading">
