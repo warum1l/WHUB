@@ -606,52 +606,9 @@ a { text-decoration: none; color: inherit; }
   .feedback-section-right { width: 100%; }
 }
 
-/* =============================================
-   MOBILE NAV & BURGER
-   ============================================= */
 
-/* Burger button — hidden on desktop */
-.burger-btn {
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  gap: 5px;
-  width: 36px; height: 36px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  cursor: pointer;
-  padding: 8px 7px;
-  flex-shrink: 0;
-  transition: border-color 0.2s;
-}
-.burger-btn:hover { border-color: var(--border-hover); }
-.burger-btn span {
-  display: block;
-  width: 100%; height: 2px;
-  background: var(--text-muted);
-  border-radius: 2px;
-  transition: transform 0.25s ease, opacity 0.2s ease, background 0.2s;
-  transform-origin: center;
-}
-/* Open state — X icon */
-.burger-btn.burger-open span:nth-child(1) { transform: translateY(7px) rotate(45deg); background: var(--text); }
-.burger-btn.burger-open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
-.burger-btn.burger-open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); background: var(--text); }
-
-/* Mobile overlay dim */
-body.nav-overlay-open::before {
-  content: '';
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.5);
-  z-index: 98;
-  backdrop-filter: blur(2px);
-}
 
 @media (max-width: 768px) {
-  /* Burger not implemented — hide it */
-  .burger-btn { display: none; }
-
   /* Nav right — always visible, just smaller */
   .nav-right { gap: 8px; flex-wrap: wrap; }
 
@@ -690,10 +647,11 @@ body.nav-overlay-open::before {
    ============================================= */
 .lb-widget-section {
   padding: 0 48px 80px;
+  max-width: 1300px;
+  margin: 0 auto;
 }
 .lb-widget-inner {
-  max-width: 860px;
-  margin: 0 auto;
+  max-width: 100%;
 }
 .lb-widget-header {
   display: flex;
@@ -791,9 +749,11 @@ body.nav-overlay-open::before {
    ============================================= */
 .about-widget-section {
   padding: 0 48px 80px;
+  max-width: 1300px;
+  margin: 0 auto;
 }
 .about-widget-inner {
-  max-width: 860px;
+  max-width: 100%;
   margin: 0 auto;
   background: var(--bg-card);
   border: 1px solid var(--border);
