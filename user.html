@@ -2,6 +2,8 @@
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="apple-touch-icon" href="favicon.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Profile — WHUB</title>
   <link rel="stylesheet" href="style.css" />
@@ -16,6 +18,9 @@
       <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
         <span class="sun">☀</span>
         <span class="moon">◑</span>
+      </button>
+      <button class="burger-btn" id="burgerBtn" aria-label="Menu">
+        <span></span><span></span><span></span>
       </button>
     </div>
   </nav>
@@ -49,6 +54,7 @@
           <h1 class="profile-username" id="pubUsername">—</h1>
           <p class="profile-email" id="pubJoined"></p>
           <p class="profile-bio" id="pubBio"></p>
+          <div class="profile-socials" id="pubSocials"></div>
         </div>
         <!-- "This is you" link -->
         <div class="profile-actions" id="pubActions"></div>
