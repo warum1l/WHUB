@@ -82,6 +82,12 @@ function initSettingsPanel() {
           <span id="settingsThemeLabel">Dark</span>
         </button>
       </div>
+      <div class="settings-divider"></div>
+      <div class="settings-section-label">GENERAL</div>
+      <a href="support.html" class="settings-row settings-row--link settings-row--support">
+        <span class="settings-row-label">❤ Support WHUB</span>
+        <span class="settings-row-arrow">→</span>
+      </a>
     </div>
   `;
 
