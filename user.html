@@ -19,9 +19,6 @@
         <span class="sun">☀</span>
         <span class="moon">◑</span>
       </button>
-      <button class="burger-btn" id="burgerBtn" aria-label="Menu">
-        <span></span><span></span><span></span>
-      </button>
     </div>
   </nav>
 
@@ -42,6 +39,8 @@
 
   <!-- PROFILE -->
   <div class="page-wrapper" id="profilePage" style="display:none">
+
+    <!-- HERO -->
     <div class="profile-hero">
       <div class="profile-hero-bg"></div>
       <div class="profile-hero-inner">
@@ -52,22 +51,50 @@
         <div class="profile-info">
           <div class="profile-role-badge" id="pubRole">Member</div>
           <h1 class="profile-username" id="pubUsername">—</h1>
-          <p class="profile-email" id="pubJoined"></p>
           <p class="profile-bio" id="pubBio"></p>
           <div class="profile-socials" id="pubSocials"></div>
+          <p class="profile-joined" id="pubJoined"></p>
         </div>
-        <!-- "This is you" link -->
         <div class="profile-actions" id="pubActions"></div>
       </div>
     </div>
 
-    <div class="profile-section">
-      <div class="profile-section-label">// ACTIVITY</div>
-      <div class="profile-empty-activity">
-        <span>📊</span>
-        <p>Activity tracking coming soon.</p>
+    <!-- STATS -->
+    <div class="profile-stats-row">
+      <div class="profile-stat-card">
+        <span class="pstat-val" id="statTrades">—</span>
+        <span class="pstat-label">Trades Posted</span>
+      </div>
+      <div class="profile-stat-card">
+        <span class="pstat-val" id="statFeedback">—</span>
+        <span class="pstat-label">Feedback Posts</span>
+      </div>
+      <div class="profile-stat-card">
+        <span class="pstat-val" id="statJoinedShort">—</span>
+        <span class="pstat-label">Member Since</span>
+      </div>
+      <div class="profile-stat-card">
+        <span class="pstat-val pstat-val--role" id="statRole">—</span>
+        <span class="pstat-label">Role</span>
       </div>
     </div>
+
+    <!-- TRADES -->
+    <div class="profile-section">
+      <div class="profile-section-label">// TRADES</div>
+      <div id="pubTradesList" class="profile-activity-list">
+        <div class="profile-activity-loading"><div class="auth-loading-spinner"></div></div>
+      </div>
+    </div>
+
+    <!-- FEEDBACK -->
+    <div class="profile-section">
+      <div class="profile-section-label">// FEEDBACK POSTS</div>
+      <div id="pubFeedbackList" class="profile-activity-list">
+        <div class="profile-activity-loading"><div class="auth-loading-spinner"></div></div>
+      </div>
+    </div>
+
   </div>
 
   <footer class="footer">
