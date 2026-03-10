@@ -56,42 +56,169 @@ async function updateUserDoc(uid, data) {
   await updateDoc(doc(db, 'users', uid), data);
 }
 
+// --- SETTINGS PANEL ---
+function initSettingsPanel() {
+  // Inject panel HTML once
+  if (document.getElementById('settings-panel')) return;
+
+  const overlay = document.createElement('div');
+  overlay.id = 'settings-overlay';
+  overlay.className = 'settings-overlay';
+
+  const panel = document.createElement('div');
+  panel.id = 'settings-panel';
+  panel.className = 'settings-panel';
+  panel.innerHTML = `
+    <div class="settings-header">
+      <span class="settings-title">Settings</span>
+      <button class="settings-close" id="settingsClose">✕</button>
+    </div>
+    <div class="settings-body" id="settingsBody">
+      <div class="settings-section-label">APPEARANCE</div>
+      <div class="settings-row">
+        <span class="settings-row-label">Theme</span>
+        <button class="settings-theme-toggle" id="settingsThemeBtn">
+          <span class="sth-icon">◑</span>
+          <span id="settingsThemeLabel">Dark</span>
+        </button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+  document.body.appendChild(panel);
+
+  // Theme toggle inside panel
+  const html = document.documentElement;
+  const saved = localStorage.getItem('nexushub-theme') || 'dark';
+  html.setAttribute('data-theme', saved);
+
+  const themeBtn   = document.getElementById('settingsThemeBtn');
+  const themeLabel = document.getElementById('settingsThemeLabel');
+
+  function updateThemeLabel() {
+    const t = html.getAttribute('data-theme');
+    themeLabel.textContent = t === 'dark' ? 'Dark' : 'Light';
+    themeBtn.querySelector('.sth-icon').textContent = t === 'dark' ? '◑' : '☀';
+  }
+  updateThemeLabel();
+
+  themeBtn.addEventListener('click', () => {
+    const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('nexushub-theme', next);
+    updateThemeLabel();
+  });
+
+  // Open / close
+  function openPanel()  { panel.classList.add('open'); overlay.classList.add('open'); }
+  function closePanel() { panel.classList.remove('open'); overlay.classList.remove('open'); }
+
+  document.getElementById('settingsClose').addEventListener('click', closePanel);
+  overlay.addEventListener('click', closePanel);
+
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('#settingsBtn')) openPanel();
+  });
+}
+
 // --- NAVBAR AUTH ---
 function initNavAuth() {
+  // Init theme immediately (before auth resolves)
+  const html  = document.documentElement;
+  const saved = localStorage.getItem('nexushub-theme') || 'dark';
+  html.setAttribute('data-theme', saved);
+
+  initSettingsPanel();
+
   onAuthStateChanged(auth, async (user) => {
     const navRight = document.querySelector('.nav-right');
     if (!navRight) return;
     navRight.querySelectorAll('.nav-auth').forEach(el => el.remove());
 
+    // Settings gear button (always present)
+    const settingsBtn = document.createElement('button');
+    settingsBtn.id        = 'settingsBtn';
+    settingsBtn.className = 'nav-auth nav-settings-btn';
+    settingsBtn.innerHTML = `<svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 0 1-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 0 1 .947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 0 1 2.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 0 1 2.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 0 1 .947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 0 1-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 0 1-2.287-.947ZM10 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clip-rule="evenodd"/></svg>`;
+    navRight.appendChild(settingsBtn);
+
+    // Inject auth-specific rows into panel body
+    const body = document.getElementById('settingsBody');
+    body.querySelectorAll('.settings-auth-row').forEach(el => el.remove());
+
     if (user) {
       const userData = await getUserDoc(user.uid);
-      const username = userData?.username || user.email.split('@')[0];
-      const initial  = username.charAt(0).toUpperCase();
-      const isAdmin  = userData?.role === 'admin';
+      const username  = userData?.username || user.email.split('@')[0];
+      const initial   = username.charAt(0).toUpperCase();
+      const isAdmin   = userData?.role === 'admin';
 
-      // Admin badge
+      // Avatar + username in navbar
+      const avatarBtn = document.createElement('a');
+      avatarBtn.href      = 'profile.html';
+      avatarBtn.className = 'nav-auth nav-avatar-btn';
+      avatarBtn.innerHTML = `<div class="nav-avatar">${initial}</div><span class="nav-username">${username}</span>`;
+      navRight.insertBefore(avatarBtn, settingsBtn);
+
+      // Divider
+      const div1 = document.createElement('div');
+      div1.className = 'settings-auth-row settings-divider';
+      body.appendChild(div1);
+
+      // Section label
+      const label = document.createElement('div');
+      label.className = 'settings-auth-row settings-section-label';
+      label.textContent = 'ACCOUNT';
+      body.appendChild(label);
+
+      // Profile link
+      const profileRow = document.createElement('a');
+      profileRow.href       = 'profile.html';
+      profileRow.className  = 'settings-auth-row settings-row settings-row--link';
+      profileRow.innerHTML  = `<span class="settings-row-label">Profile</span><span class="settings-row-arrow">→</span>`;
+      body.appendChild(profileRow);
+
+      // Admin link
       if (isAdmin) {
-        const adminBtn = document.createElement('a');
-        adminBtn.href = 'admin.html';
-        adminBtn.className = 'nav-auth nav-admin-btn';
-        adminBtn.textContent = '⚙ Admin';
-        navRight.insertBefore(adminBtn, navRight.firstChild);
+        const adminRow = document.createElement('a');
+        adminRow.href      = 'admin.html';
+        adminRow.className = 'settings-auth-row settings-row settings-row--link settings-row--admin';
+        adminRow.innerHTML = `<span class="settings-row-label">Admin Panel</span><span class="settings-row-arrow">→</span>`;
+        body.appendChild(adminRow);
       }
 
-      const avatarBtn = document.createElement('a');
-      avatarBtn.href = 'profile.html';
-      avatarBtn.className = 'nav-auth nav-avatar-btn';
-      avatarBtn.innerHTML = `
-        <div class="nav-avatar">${initial}</div>
-        <span class="nav-username">${username}</span>
-      `;
-      navRight.insertBefore(avatarBtn, navRight.firstChild);
+      // Sign out
+      const signOutRow = document.createElement('button');
+      signOutRow.className = 'settings-auth-row settings-row settings-row--signout';
+      signOutRow.innerHTML = `<span class="settings-row-label">Sign Out</span>`;
+      signOutRow.addEventListener('click', async () => {
+        await signOut(auth);
+        window.location.href = 'index.html';
+      });
+      body.appendChild(signOutRow);
+
     } else {
+      // Sign in link
       const loginBtn = document.createElement('a');
-      loginBtn.href = 'login.html';
-      loginBtn.className = 'nav-auth nav-login-btn';
+      loginBtn.href       = 'login.html';
+      loginBtn.className  = 'nav-auth nav-login-btn';
       loginBtn.textContent = 'Sign In';
-      navRight.insertBefore(loginBtn, navRight.firstChild);
+      navRight.insertBefore(loginBtn, settingsBtn);
+
+      const div1 = document.createElement('div');
+      div1.className = 'settings-auth-row settings-divider';
+      body.appendChild(div1);
+
+      const label = document.createElement('div');
+      label.className = 'settings-auth-row settings-section-label';
+      label.textContent = 'ACCOUNT';
+      body.appendChild(label);
+
+      const signInRow = document.createElement('a');
+      signInRow.href      = 'login.html';
+      signInRow.className = 'settings-auth-row settings-row settings-row--link';
+      signInRow.innerHTML = `<span class="settings-row-label">Sign In</span><span class="settings-row-arrow">→</span>`;
+      body.appendChild(signInRow);
     }
   });
 }
