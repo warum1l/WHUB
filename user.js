@@ -53,6 +53,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         'Joined ' + date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
     }
 
+    // Social chips
+    const socialsEl = document.getElementById('pubSocials');
+    if (socialsEl) {
+      let html = '';
+      if (data.robloxUser)  html += `<span class="profile-social-chip profile-social-chip--roblox">🎮 ${escHtml(data.robloxUser)}</span>`;
+      if (data.discordUser) html += `<span class="profile-social-chip profile-social-chip--discord">💬 ${escHtml(data.discordUser)}</span>`;
+      socialsEl.innerHTML = html;
+    }
+
     // If viewing own profile — show "Edit Profile" link
     document.title = `@${data.username} — WHUB`;
     onAuthStateChanged(auth, (user) => {
@@ -71,3 +80,4 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
+function escHtml(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
