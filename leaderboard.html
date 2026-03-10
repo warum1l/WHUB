@@ -26,8 +26,6 @@
   </nav>
 
   <div class="page-wrapper">
-
-    <!-- HERO -->
     <div class="page-hero">
       <div class="lb-hero-bg"></div>
       <div class="page-hero-content">
@@ -50,18 +48,13 @@
         <button class="lb-tab" data-tab="oldest" onclick="switchTab('oldest')">📅 OG Members</button>
       </div>
 
-      <!-- PODIUM (top 3) -->
-      <div class="lb-podium" id="lbPodium">
-        <div class="lb-loading"><div class="auth-loading-spinner"></div></div>
-      </div>
-
-      <!-- FULL LIST -->
-      <div class="lb-list-wrap">
-        <div class="lb-list-header">
-          <span class="lb-list-col lb-list-col--rank">#</span>
-          <span class="lb-list-col lb-list-col--user">User</span>
-          <span class="lb-list-col lb-list-col--stat" id="listStatLabel">Trades</span>
-          <span class="lb-list-col lb-list-col--joined">Joined</span>
+      <!-- TABLE -->
+      <div class="lb-table-wrap">
+        <div class="lb-table-header">
+          <span class="lb-col lb-col--rank">#</span>
+          <span class="lb-col lb-col--user">User</span>
+          <span class="lb-col lb-col--stat" id="listStatLabel">Trades</span>
+          <span class="lb-col lb-col--joined">Joined</span>
         </div>
         <div id="lbList">
           <div class="lb-loading"><div class="auth-loading-spinner"></div></div>
