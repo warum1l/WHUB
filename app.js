@@ -1,21 +1,6 @@
-// NexusHub — Theme Toggle & misc interactions
+// WHUB — misc interactions
 
 (function () {
-  const html = document.documentElement;
-  const btn = document.getElementById('themeToggle');
-
-  // Load saved theme
-  const saved = localStorage.getItem('nexushub-theme') || 'dark';
-  html.setAttribute('data-theme', saved);
-
-  if (btn) {
-    btn.addEventListener('click', () => {
-      const current = html.getAttribute('data-theme');
-      const next = current === 'dark' ? 'light' : 'dark';
-      html.setAttribute('data-theme', next);
-      localStorage.setItem('nexushub-theme', next);
-    });
-  }
 
   // Animate cards on scroll
   const observer = new IntersectionObserver((entries) => {
