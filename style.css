@@ -649,56 +649,20 @@ body.nav-overlay-open::before {
 }
 
 @media (max-width: 768px) {
-  /* Show burger */
-  .burger-btn { display: flex; }
+  /* Burger not implemented — hide it */
+  .burger-btn { display: none; }
 
-  /* Nav right — hidden by default, slides down when open */
-  .nav-right {
-    position: fixed;
-    top: 61px; left: 0; right: 0;
-    background: var(--bg-card);
-    border-bottom: 1px solid var(--border);
-    padding: 16px 20px 20px;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-    z-index: 99;
-    transform: translateY(-110%);
-    opacity: 0;
-    transition: transform 0.3s ease, opacity 0.25s ease;
-    pointer-events: none;
-  }
-  .nav-right.nav-open {
-    transform: translateY(0);
-    opacity: 1;
-    pointer-events: all;
-  }
+  /* Nav right — always visible, just smaller */
+  .nav-right { gap: 8px; flex-wrap: wrap; }
 
-  /* Auth buttons full width on mobile */
-  .nav-login-btn,
-  .nav-avatar-btn,
-  .nav-admin-btn {
-    width: 100%;
-    justify-content: center;
-    margin-right: 0;
-    border-radius: 10px;
-  }
-  .nav-avatar-btn { padding: 10px 16px; }
+  /* Hide username text, keep avatar */
+  .nav-username { display: none; }
 
-  /* Theme toggle full width */
-  .theme-toggle {
-    width: 100%;
-    justify-content: center;
-    padding: 10px 16px;
-    border-radius: 10px;
-    height: auto;
-  }
-
-  /* Hero font sizes for small screens */
+  /* Hero font sizes */
   .hero-title { font-size: 2.4rem; }
   .page-title { font-size: 2rem; }
 
-  /* Feedback section stack on mobile */
+  /* Feedback section stack */
   .feedback-section { padding: 32px 20px; }
   .feedback-section-inner {
     flex-direction: column;
