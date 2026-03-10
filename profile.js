@@ -228,7 +228,61 @@ window.handleSave = async function() {
   }
 };
 
-// ─── UTILS ────────────────────────────────────
+// ─── SEARCH USERS ─────────────────────────────
+window.searchUser = async function() {
+  const input  = document.getElementById('userSearchInput');
+  const result = document.getElementById('userSearchResult');
+  const btn    = document.getElementById('userSearchBtn');
+  const username = input.value.trim();
+
+  if (!username) return;
+
+  btn.disabled = true;
+  btn.textContent = '...';
+  result.innerHTML = '';
+
+  try {
+    const { getUserByUsername } = await import('./firebase.js');
+    const data = await getUserByUsername(username);
+
+    if (!data) {
+      result.innerHTML = `<div class="user-search-empty">No user found with username <strong>${escHtml(username)}</strong></div>`;
+    } else {
+      const initial = data.username.charAt(0).toUpperCase();
+      const roleClass = 'role--' + (data.role || 'member');
+      const roleText  = capitalize(data.role || 'member');
+      let socials = '';
+      if (data.robloxUser)  socials += `<span class="profile-social-chip profile-social-chip--roblox">🎮 ${escHtml(data.robloxUser)}</span>`;
+      if (data.discordUser) socials += `<span class="profile-social-chip profile-social-chip--discord">💬 ${escHtml(data.discordUser)}</span>`;
+
+      result.innerHTML = `
+        <a class="user-search-card" href="user.html?u=${encodeURIComponent(data.username)}">
+          <div class="user-search-avatar">${initial}</div>
+          <div class="user-search-info">
+            <div class="user-search-name">
+              <span>${escHtml(data.username)}</span>
+              <span class="profile-role-badge ${roleClass}" style="font-size:0.6rem;padding:2px 8px">${roleText}</span>
+            </div>
+            ${data.bio ? `<p class="user-search-bio">${escHtml(data.bio)}</p>` : ''}
+            ${socials ? `<div class="profile-socials" style="margin-top:6px">${socials}</div>` : ''}
+          </div>
+          <span class="user-search-arrow">→</span>
+        </a>`;
+    }
+  } catch(e) {
+    result.innerHTML = `<div class="user-search-empty">Error searching. Try again.</div>`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Search';
+  }
+};
+
+// Allow Enter key to search
+document.addEventListener('DOMContentLoaded', () => {
+  const input = document.getElementById('userSearchInput');
+  if (input) input.addEventListener('keydown', e => { if (e.key === 'Enter') window.searchUser(); });
+});
+
 function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
