@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="apple-touch-icon" href="favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="WHUB community leaderboard — top members by trades and activity." />
+  <meta name="robots" content="index, follow" />
+  <title>Leaderboard — WHUB</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="auth.css" />
+  <link rel="stylesheet" href="leaderboard.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="logo">W<span>HUB</span></a>
+    <div class="nav-right">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <span class="sun">☀</span>
+        <span class="moon">◑</span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <!-- HERO -->
+    <div class="page-hero">
+      <div class="lb-hero-bg"></div>
+      <div class="page-hero-content">
+        <div class="breadcrumb">
+          <a href="index.html">Home</a>
+          <span>›</span>
+          <span>Leaderboard</span>
+        </div>
+        <h1 class="page-title">Community <span class="lb-accent">Leaderboard</span></h1>
+        <p class="page-subtitle">Top members ranked by trades posted and community activity.</p>
+      </div>
+    </div>
+
+    <div class="lb-page">
+
+      <!-- TABS -->
+      <div class="lb-tabs">
+        <button class="lb-tab active" data-tab="trades" onclick="switchTab('trades')">🔄 Most Trades</button>
+        <button class="lb-tab" data-tab="feedback" onclick="switchTab('feedback')">💬 Most Posts</button>
+        <button class="lb-tab" data-tab="oldest" onclick="switchTab('oldest')">📅 OG Members</button>
+      </div>
+
+      <!-- PODIUM (top 3) -->
+      <div class="lb-podium" id="lbPodium">
+        <div class="lb-loading"><div class="auth-loading-spinner"></div></div>
+      </div>
+
+      <!-- FULL LIST -->
+      <div class="lb-list-wrap">
+        <div class="lb-list-header">
+          <span class="lb-list-col lb-list-col--rank">#</span>
+          <span class="lb-list-col lb-list-col--user">User</span>
+          <span class="lb-list-col lb-list-col--stat" id="listStatLabel">Trades</span>
+          <span class="lb-list-col lb-list-col--joined">Joined</span>
+        </div>
+        <div id="lbList">
+          <div class="lb-loading"><div class="auth-loading-spinner"></div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-logo">W<span>HUB</span></div>
+    <p class="footer-text">Built for the community, by the community.</p>
+  </footer>
+
+  <script src="app.js"></script>
+  <script type="module" src="nav-auth.js"></script>
+  <script type="module" src="leaderboard.js"></script>
+</body>
+</html>
