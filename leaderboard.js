@@ -55,7 +55,7 @@ function renderTab(tab) {
     return;
   }
 
-  const medals = ['🥇', '🥈', '🥉'];
+  const medals = ['<span class="lb-medal lb-medal--1">1</span>', '<span class="lb-medal lb-medal--2">2</span>', '<span class="lb-medal lb-medal--3">3</span>'];
   const rowClass = ['lb-row--gold', 'lb-row--silver', 'lb-row--bronze'];
 
   listEl.innerHTML = sorted.map((u, i) => {

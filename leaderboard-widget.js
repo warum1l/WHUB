@@ -31,7 +31,7 @@ async function initWidget() {
       return;
     }
 
-    const medals = ['🥇', '🥈', '🥉'];
+    const medals = ['<span class="lb-medal lb-medal--1">1</span>', '<span class="lb-medal lb-medal--2">2</span>', '<span class="lb-medal lb-medal--3">3</span>'];
     el.innerHTML = users.map((u, i) => {
       const trades  = tradeCount[u.uid] || 0;
       const initial = u.username.charAt(0).toUpperCase();

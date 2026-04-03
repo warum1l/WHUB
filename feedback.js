@@ -19,10 +19,10 @@ let currentType   = 'suggestion';
 let currentFilter = 'all';
 
 const TYPE_ICONS = {
-  suggestion: '💡',
-  question:   '❓',
-  bug:        '🐛',
-  other:      '💬',
+  suggestion: '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>',
+  question:   '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>',
+  bug:        '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 2 1.88 1.88"/><path d="M14.12 3.88 16 2"/><path d="M9 7.13v-1a3.003 3.003 0 1 1 6 0v1"/><path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6z"/><path d="M12 20v-9"/><path d="M6.53 9C4.6 8.8 3 7.1 3 5"/><path d="M6 13H2"/><path d="M3 21c0-2.1 1.7-3.9 3.8-4"/><path d="M20.97 5c0 2.1-1.6 3.8-3.5 4"/><path d="M22 13h-4"/><path d="M17.2 17c2.1.1 3.8 1.9 3.8 4"/></svg>',
+  other:      '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>',
 };
 
 // -----------------------------------------------
@@ -83,14 +83,14 @@ function renderPosts() {
   if (filtered.length === 0) {
     container.innerHTML = `
       <div class="fb-empty">
-        <span>📭</span>
+        <span style="color:var(--text-dim)"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
         <p>No posts yet${currentFilter !== 'all' ? ' in this category' : ''}. Be the first!</p>
       </div>`;
     return;
   }
 
   container.innerHTML = filtered.map(p => {
-    const icon = TYPE_ICONS[p.type] || '💬';
+    const icon = TYPE_ICONS[p.type] || '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>';
     const time = p.createdAt?.seconds ? timeAgo(p.createdAt.seconds * 1000) : 'just now';
     return `
       <div class="fb-post-card" onclick="openPost('${p.id}')">
@@ -107,9 +107,9 @@ function renderPosts() {
           </div>
           <p class="fb-post-preview">${escHtml(p.body)}</p>
           <div class="fb-post-meta">
-            <span>👤 ${escHtml(p.username)}</span>
+            <span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> ${escHtml(p.username)}</span>
             <span>${time}</span>
-            <span>💬 ${p.replyCount || 0} replies</span>
+            <span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg> ${p.replyCount || 0} replies</span>
           </div>
         </div>
       </div>`;
@@ -194,7 +194,7 @@ window.openPost = async function(postId) {
   if (!snap.exists()) return;
 
   activePost = { id: snap.id, ...snap.data() };
-  const icon = TYPE_ICONS[activePost.type] || '💬';
+  const icon = TYPE_ICONS[activePost.type] || '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>';
 
   document.getElementById('replyType').innerHTML =
     `<span class="fb-post-type-badge fb-type--${activePost.type}">${icon} ${capitalize(activePost.type)}</span>`;

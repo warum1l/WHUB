@@ -345,7 +345,7 @@ function filterItems() {
           <span class="picker-item-source">${item.source}</span>
           ${qtyBadge}
         </div>
-        <span class="picker-item-value">🔑 ${item.value.toLocaleString()}</span>
+        <span class="picker-item-value"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg> ${item.value.toLocaleString()}</span>
       </div>
     `;
   }).join('');
@@ -401,7 +401,7 @@ function updateResult() {
     verdictDiff.textContent = `+${Math.abs(diff).toLocaleString()} in your favor`;
     result.classList.add('result--win');
   } else {
-    verdictText.textContent = '✗ Bad for you';
+    verdictText.textContent = '× Bad for you';
     verdictDiff.textContent = `−${Math.abs(diff).toLocaleString()} against you`;
     result.classList.add('result--lose');
   }

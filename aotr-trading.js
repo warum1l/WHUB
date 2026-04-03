@@ -70,7 +70,7 @@ function renderTrades(trades) {
   if (trades.length === 0) {
     list.innerHTML = `
       <div class="trades-empty">
-        <span>🤝</span>
+        <span style="color:var(--text-dim)"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2 9 3-3 3 3"/><path d="M13 18H7a2 2 0 0 1-2-2V6"/><path d="m22 15-3 3-3-3"/><path d="M11 6h6a2 2 0 0 1 2 2v10"/></svg></span>
         <p>No active trades yet. Be the first to post one!</p>
       </div>`;
     return;
@@ -95,12 +95,12 @@ function renderTrades(trades) {
           </div>
           <div class="trade-card-footer">
             <div class="trade-card-meta">
-              <span class="trade-author">👤 ${escHtml(t.username)}</span>
-              ${t.robloxUser ? `<span class="trade-roblox">🎮 ${escHtml(t.robloxUser)}</span>` : ''}
+              <span class="trade-author"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> ${escHtml(t.username)}</span>
+              ${t.robloxUser ? `<span class="trade-roblox"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" x2="10" y1="11" y2="11"/><line x1="8" x2="8" y1="9" y2="13"/><line x1="15" x2="15.01" y1="12" y2="12"/><line x1="18" x2="18.01" y1="10" y2="10"/><path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z"/></svg> ${escHtml(t.robloxUser)}</span>` : ''}
             </div>
             <div class="trade-card-right">
               <span class="trade-time">${time}</span>
-              <span class="trade-chat-count">💬 ${t.msgCount || 0}</span>
+              <span class="trade-chat-count"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg> ${t.msgCount || 0}</span>
             </div>
           </div>
         </div>
@@ -186,9 +186,9 @@ window.openDetail = async function(tradeId) {
 
     let contacts = '';
     if (activeTrade.robloxUser)
-      contacts += `<span class="contact-chip">🎮 ${escHtml(activeTrade.robloxUser)}</span>`;
+      contacts += `<span class="contact-chip"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" x2="10" y1="11" y2="11"/><line x1="8" x2="8" y1="9" y2="13"/><line x1="15" x2="15.01" y1="12" y2="12"/><line x1="18" x2="18.01" y1="10" y2="10"/><path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z"/></svg> ${escHtml(activeTrade.robloxUser)}</span>`;
     if (activeTrade.discordUser)
-      contacts += `<span class="contact-chip discord-chip">💬 ${escHtml(activeTrade.discordUser)}</span>`;
+      contacts += `<span class="contact-chip discord-chip"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg> ${escHtml(activeTrade.discordUser)}</span>`;
     document.getElementById('detailContacts').innerHTML = contacts;
 
     const completeBtn = document.getElementById('completeTradBtn');
@@ -246,7 +246,7 @@ function renderChat(msgs) {
   const box = document.getElementById('chatMessages');
 
   if (msgs.length === 0) {
-    box.innerHTML = `<div class="chat-empty">No messages yet. Say hi! 👋</div>`;
+    box.innerHTML = `<div class="chat-empty">No messages yet. Say hi!</div>`;
     return;
   }
 

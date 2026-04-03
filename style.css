@@ -830,3 +830,38 @@ a { text-decoration: none; color: inherit; }
   .about-widget-section { padding: 0 16px 60px; }
   .about-widget-inner { grid-template-columns: 1fr; gap: 24px; }
 }
+
+/* =============================================
+   LUCIDE ICONS — global alignment
+   ============================================= */
+svg[viewBox="0 0 24 24"] {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+/* KEY ICON in value cells */
+.value-cell svg, .picker-item-value svg, .slot-item-value svg {
+  vertical-align: middle;
+  margin-right: 2px;
+}
+
+/* LEADERBOARD MEDALS */
+.lb-medal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.72rem;
+}
+.lb-medal--1 { background: rgba(255,200,0,0.15); color: #f5c400; border: 1px solid rgba(255,200,0,0.3); }
+.lb-medal--2 { background: rgba(180,180,180,0.1); color: #adb5bd; border: 1px solid rgba(180,180,180,0.25); }
+.lb-medal--3 { background: rgba(180,120,60,0.1);  color: #cd7f32; border: 1px solid rgba(180,120,60,0.25); }
+
+/* ABOUT FEATURE ICON */
+.about-feature-icon { display: flex; align-items: center; }
+.aotr-cat-icon { display: flex; align-items: center; flex-shrink: 0; margin-top: 2px; }
+.empty-icon { display: flex; align-items: center; justify-content: center; }
