@@ -48,12 +48,12 @@
     <div class="win-page">
 
       <!-- ==========================================
-           WTWEAKER — HERO SECTION
+           WTWEAKER v2 — FEATURED HERO
            ========================================== -->
       <section class="win-section">
         <div class="section-label">// FEATURED</div>
 
-        <div class="wtweaker-card">
+        <div class="wtweaker-card" style="border-color:rgba(0,120,212,0.25)">
           <div class="wtweaker-glow"></div>
           <div class="wtweaker-left">
             <div class="wtweaker-icon">
@@ -67,22 +67,18 @@
             <div class="wtweaker-info">
               <div class="wtweaker-badges">
                 <span class="win-badge win-badge--free">Free</span>
-                <span class="win-badge win-badge--version">v1.0</span>
-                <span class="win-badge win-badge--old">Outdated</span>
+                <span class="win-badge win-badge--version">v2.0</span>
+                <span class="win-badge win-badge--new">New</span>
               </div>
-              <div class="win-outdated-notice">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
-                A newer version is available. <a href="wtweaker.html">Check out WTweaker v2 →</a>
-              </div>
-              <h2 class="wtweaker-title">WTweaker</h2>
+              <h2 class="wtweaker-title">WTweaker v2</h2>
               <p class="wtweaker-desc">
-                A lightweight Windows optimization tool built for gamers. Apply system tweaks,
-                disable telemetry, optimize network settings, and boost FPS — all in one place.
+                WTweaker rebuilt from scratch. Cleaner design, faster performance, more tweaks —
+                everything the original had, done right. Built for Windows 10 and 11 gamers.
               </p>
               <div class="wtweaker-features">
                 <span class="win-feature"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg> FPS Boost</span>
                 <span class="win-feature"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg> Network Tweaks</span>
-                <span class="win-feature"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg> Debloat</span>
+                <span class="win-feature"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg> Debloat</span>
                 <span class="win-feature"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Privacy</span>
                 <span class="win-feature"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg> GPU Optimize</span>
               </div>
@@ -100,26 +96,74 @@
                 <span class="wstat-label">Supported</span>
               </div>
               <div class="wstat">
-                <span class="wstat-val">R1.0</span>
+                <span class="wstat-val">v2.0</span>
                 <span class="wstat-label">Release</span>
               </div>
             </div>
-            <button class="wtweaker-btn" id="downloadBtn" onclick="startDownload()">
-              <span class="btn-icon">↓</span>
-              <span class="btn-text">Download WTweaker</span>
-            </button>
-            <div class="wtweaker-progress" id="progressWrap">
-              <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
-              </div>
-              <span class="progress-label" id="progressLabel">Preparing download...</span>
-            </div>
-            <p class="wtweaker-note">WLST.zip · ~5 MB · No installer required</p>
+            <a class="wtweaker-btn" href="wtweaker.html" style="text-decoration:none;justify-content:center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              <span class="btn-text">View WTweaker v2</span>
+            </a>
+            <p class="wtweaker-note">Free · No installer required · Win 10/11</p>
           </div>
         </div>
       </section>
 
       <!-- ==========================================
+           OUR TOOLS — WTweaker v1 + WRCS
+           ========================================== -->
+      <section class="win-section">
+        <div class="section-label">// OUR TOOLS</div>
+        <p class="win-section-desc">Tools built by us for the community.</p>
+
+        <div class="win-cards-grid">
+
+          <!-- WTweaker v1 — outdated -->
+          <div class="win-tool-card" style="opacity:0.75">
+            <div class="win-tool-icon" style="background:rgba(0,120,212,0.1);color:var(--accent-windows)">
+              <svg viewBox="0 0 32 32" fill="none" width="24" height="24">
+                <rect x="4" y="4" width="11" height="11" rx="2" fill="currentColor" opacity=".9"/>
+                <rect x="17" y="4" width="11" height="11" rx="2" fill="currentColor" opacity=".5"/>
+                <rect x="4" y="17" width="11" height="11" rx="2" fill="currentColor" opacity=".5"/>
+                <rect x="17" y="17" width="11" height="11" rx="2" fill="currentColor" opacity=".9"/>
+              </svg>
+            </div>
+            <div class="win-tool-body">
+              <div class="win-tool-tags">
+                <span class="win-tag win-tag--own">Our Tool</span>
+                <span class="win-tag win-tag--free">Free</span>
+                <span class="win-badge win-badge--old" style="font-size:0.6rem;padding:2px 7px;border-radius:50px">Outdated</span>
+              </div>
+              <h3 class="win-tool-title">WTweaker v1</h3>
+              <p class="win-tool-desc">The original version. Still works, but no longer updated — use v2 instead.</p>
+            </div>
+            <button class="win-dl-btn" id="downloadBtn" onclick="startDownload()">↓ Download v1</button>
+          </div>
+
+          <!-- WRCS -->
+          <div class="win-tool-card win-tool-card--featured" style="border-color:rgba(114,137,218,0.25);background:linear-gradient(135deg,var(--bg-card),rgba(114,137,218,0.04))">
+            <div class="win-tool-icon" style="background:rgba(114,137,218,0.12);color:#7289da">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="4" y1="21" y2="14"/><line x1="4" x2="4" y1="10" y2="3"/><line x1="12" x2="12" y1="21" y2="12"/><line x1="12" x2="12" y1="8" y2="3"/><line x1="20" x2="20" y1="21" y2="16"/><line x1="20" x2="20" y1="12" y2="3"/><line x1="2" x2="6" y1="14" y2="14"/><line x1="10" x2="14" y1="8" y2="8"/><line x1="18" x2="22" y1="16" y2="16"/></svg>
+            </div>
+            <div class="win-tool-body">
+              <div class="win-tool-tags">
+                <span class="win-tag win-tag--own" style="color:#7289da;border-color:rgba(114,137,218,0.3);background:rgba(114,137,218,0.1)">Our Tool</span>
+                <span class="win-tag win-tag--free">Free</span>
+                <span class="win-tag win-tag--new">New</span>
+              </div>
+              <h3 class="win-tool-title">WRCS</h3>
+              <p class="win-tool-desc">W Roblox Custom Settings — customize Roblox fast flags and client settings. Similar to Bloxstrap.</p>
+            </div>
+            <a class="win-dl-btn" href="wrcs.html" style="background:#7289da;border:none"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg> Learn More</a>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SCRIPTS & FILES
+           ==========================================
+<!-- ==========================================
            SCRIPTS & FILES
            ========================================== -->
       <section class="win-section">
@@ -191,45 +235,6 @@
         <p class="win-section-desc">Recommended programs for monitoring, tuning, and maintaining your system.</p>
 
         <div class="win-cards-grid win-cards-grid--3">
-
-          <!-- WTweaker v2 — OUR TOOL -->
-          <div class="win-tool-card win-tool-card--featured">
-            <div class="win-tool-icon" style="background:rgba(0,120,212,0.12);color:var(--accent-windows)">
-              <svg viewBox="0 0 32 32" fill="none" width="28" height="28">
-                <rect x="4" y="4" width="11" height="11" rx="2" fill="currentColor" opacity=".9"/>
-                <rect x="17" y="4" width="11" height="11" rx="2" fill="currentColor" opacity=".5"/>
-                <rect x="4" y="17" width="11" height="11" rx="2" fill="currentColor" opacity=".5"/>
-                <rect x="17" y="17" width="11" height="11" rx="2" fill="currentColor" opacity=".9"/>
-              </svg>
-            </div>
-            <div class="win-tool-body">
-              <div class="win-tool-tags">
-                <span class="win-tag win-tag--own">Our Tool</span>
-                <span class="win-tag win-tag--free">Free</span>
-                <span class="win-tag win-tag--new">v2</span>
-              </div>
-              <h3 class="win-tool-title">WTweaker v2</h3>
-              <p class="win-tool-desc">All-in-one Windows optimizer for gamers. Redesigned from scratch — faster, cleaner, more tweaks.</p>
-            </div>
-            <a class="win-dl-btn" href="wtweaker.html"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg> Learn More</a>
-          </div>
-
-          <!-- WRCS — OUR TOOL -->
-          <div class="win-tool-card win-tool-card--featured" style="border-color:rgba(114,137,218,0.25);background:linear-gradient(135deg,var(--bg-card),rgba(114,137,218,0.04))">
-            <div class="win-tool-icon" style="background:rgba(114,137,218,0.12);color:#7289da">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="4" y1="21" y2="14"/><line x1="4" x2="4" y1="10" y2="3"/><line x1="12" x2="12" y1="21" y2="12"/><line x1="12" x2="12" y1="8" y2="3"/><line x1="20" x2="20" y1="21" y2="16"/><line x1="20" x2="20" y1="12" y2="3"/><line x1="2" x2="6" y1="14" y2="14"/><line x1="10" x2="14" y1="8" y2="8"/><line x1="18" x2="22" y1="16" y2="16"/></svg>
-            </div>
-            <div class="win-tool-body">
-              <div class="win-tool-tags">
-                <span class="win-tag win-tag--own" style="color:#7289da;border-color:rgba(114,137,218,0.3);background:rgba(114,137,218,0.1)">Our Tool</span>
-                <span class="win-tag win-tag--free">Free</span>
-                <span class="win-tag win-tag--new">New</span>
-              </div>
-              <h3 class="win-tool-title">WRCS</h3>
-              <p class="win-tool-desc">W Roblox Custom Settings — customize Roblox client flags and settings, similar to Bloxstrap.</p>
-            </div>
-            <a class="win-dl-btn" href="wrcs.html" style="background:#7289da;border:none"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg> Learn More</a>
-          </div>
 
           <!-- MSI Afterburner -->
           <div class="win-tool-card">
