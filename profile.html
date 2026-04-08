@@ -14,145 +14,165 @@
 <body>
   <nav class="navbar">
     <a href="index.html" class="logo">W<span>HUB</span></a>
-    <div class="nav-right">
-      
-    </div>
+    <div class="nav-right"></div>
   </nav>
-
-  <div class="page-wrapper" id="profilePage" style="display:none">
-
-    <!-- PROFILE HERO -->
-    <div class="profile-hero">
-      <div class="profile-hero-bg"></div>
-      <div class="profile-hero-inner">
-
-        <div class="profile-avatar-wrap">
-          <div class="profile-avatar" id="profileAvatar">W</div>
-          <div class="profile-avatar-ring"></div>
-        </div>
-
-        <div class="profile-info">
-          <div class="profile-role-badge" id="profileRole">Member</div>
-          <h1 class="profile-username" id="profileUsername">—</h1>
-          <p class="profile-email" id="profileEmail">—</p>
-          <p class="profile-bio" id="profileBio"></p>
-
-          <!-- Social links display -->
-          <div class="profile-socials" id="profileSocials"></div>
-
-          <p class="profile-joined" id="profileJoined"></p>
-          <a class="profile-public-link" id="profilePublicLink" href="#" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Public profile</a>
-        </div>
-
-        <div class="profile-actions">
-          <button class="profile-edit-btn" onclick="openEdit()"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg> Edit Profile</button>
-          <button class="profile-signout-btn" onclick="handleSignOut()">Sign Out</button>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- STATS ROW -->
-    <div class="profile-stats-row" id="profileStatsRow">
-      <div class="profile-stat-card">
-        <span class="pstat-val" id="statTrades">—</span>
-        <span class="pstat-label">Trades Posted</span>
-      </div>
-      <div class="profile-stat-card">
-        <span class="pstat-val" id="statFeedback">—</span>
-        <span class="pstat-label">Feedback Posts</span>
-      </div>
-      <div class="profile-stat-card">
-        <span class="pstat-val" id="statJoinedShort">—</span>
-        <span class="pstat-label">Member Since</span>
-      </div>
-      <div class="profile-stat-card">
-        <span class="pstat-val pstat-val--role" id="statRole">—</span>
-        <span class="pstat-label">Role</span>
-      </div>
-    </div>
-
-    <!-- EDIT PANEL -->
-    <div class="profile-edit-panel" id="editPanel">
-      <div class="profile-section-label">// EDIT PROFILE</div>
-      <div class="profile-edit-grid">
-
-        <div class="auth-field">
-          <label class="auth-label">Username</label>
-          <input type="text" class="auth-input" id="editUsername" maxlength="24" />
-        </div>
-
-        <div class="auth-field">
-          <label class="auth-label">Bio</label>
-          <input type="text" class="auth-input" id="editBio" placeholder="Something about yourself..." maxlength="120" />
-        </div>
-
-        <div class="auth-field">
-          <label class="auth-label">Roblox Username</label>
-          <input type="text" class="auth-input" id="editRoblox" placeholder="Your Roblox username" maxlength="20" />
-        </div>
-
-        <div class="auth-field">
-          <label class="auth-label">Discord Tag</label>
-          <input type="text" class="auth-input" id="editDiscord" placeholder="username or user#0000" maxlength="40" />
-        </div>
-
-      </div>
-      <div class="profile-edit-footer">
-        <div class="auth-error" id="editError"></div>
-        <div class="profile-edit-btns">
-          <button class="profile-cancel-btn" onclick="closeEdit()">Cancel</button>
-          <button class="auth-btn profile-save-btn" id="saveBtn" onclick="handleSave()">
-            <span class="auth-btn-text">Save Changes</span>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- MY TRADES -->
-    <div class="profile-section">
-      <div class="profile-section-label">// MY TRADES</div>
-      <div id="myTradesList" class="profile-activity-list">
-        <div class="profile-activity-loading">
-          <div class="auth-loading-spinner"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- MY FEEDBACK -->
-    <div class="profile-section">
-      <div class="profile-section-label">// MY FEEDBACK POSTS</div>
-      <div id="myFeedbackList" class="profile-activity-list">
-        <div class="profile-activity-loading">
-          <div class="auth-loading-spinner"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- SEARCH USERS -->
-    <div class="profile-section">
-      <div class="profile-section-label">// FIND USERS</div>
-      <div class="user-search-wrap">
-        <div class="user-search-input-wrap">
-          <span class="user-search-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></span>
-          <input
-            type="text"
-            class="user-search-input"
-            id="userSearchInput"
-            placeholder="Search by username..."
-            maxlength="24"
-            autocomplete="off"
-          />
-          <button class="user-search-btn" id="userSearchBtn" onclick="searchUser()">Search</button>
-        </div>
-        <div id="userSearchResult"></div>
-      </div>
-    </div>
-
-  </div>
 
   <div class="auth-loading" id="authLoading">
     <div class="auth-loading-spinner"></div>
+  </div>
+
+  <div id="profilePage" style="display:none">
+
+    <!-- COVER + AVATAR -->
+    <div class="pf-cover-wrap">
+      <div class="pf-cover" id="pfCover"></div>
+      <div class="pf-cover-bottom">
+        <div class="pf-avatar-outer">
+          <div class="pf-avatar" id="profileAvatar">W</div>
+        </div>
+        <div class="pf-cover-actions">
+          <button class="pf-btn pf-btn--ghost" onclick="openEdit()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+            Edit Profile
+          </button>
+          <button class="pf-btn pf-btn--danger" onclick="handleSignOut()">Sign Out</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE BODY -->
+    <div class="pf-body">
+
+      <!-- LEFT SIDEBAR -->
+      <aside class="pf-sidebar">
+
+        <div class="pf-card pf-identity">
+          <div class="pf-username-row">
+            <h1 class="pf-username" id="profileUsername">—</h1>
+            <span class="profile-role-badge" id="profileRole">Member</span>
+          </div>
+          <p class="pf-email" id="profileEmail"></p>
+          <p class="pf-bio" id="profileBio"></p>
+
+          <div class="pf-meta-list">
+            <div class="pf-meta-item" id="pfJoinedWrap" style="display:none">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
+              <span id="profileJoined">—</span>
+            </div>
+            <div class="pf-meta-item" id="pfRobloxWrap" style="display:none">
+              <svg viewBox="0 0 20 20" fill="none" width="13" height="13"><rect x="3" y="3" width="6" height="6" rx="1" fill="currentColor"/><rect x="11" y="3" width="6" height="6" rx="1" fill="currentColor" opacity=".5"/><rect x="3" y="11" width="6" height="6" rx="1" fill="currentColor" opacity=".5"/><rect x="11" y="11" width="6" height="6" rx="1" fill="currentColor"/></svg>
+              <span id="pfRobloxVal" class="pf-social--roblox">—</span>
+            </div>
+            <div class="pf-meta-item" id="pfDiscordWrap" style="display:none">
+              <svg viewBox="0 0 20 20" fill="currentColor" width="13" height="13"><path d="M16.9 4.2A16.1 16.1 0 0 0 13 3a.1.1 0 0 0-.1.1 11 11 0 0 0-.5 1 14.9 14.9 0 0 0-4.8 0 10.5 10.5 0 0 0-.5-1 .1.1 0 0 0-.1-.1A16.1 16.1 0 0 0 3.1 4.2a.1.1 0 0 0-.1.1C1.6 8.3 1.2 12.3 1.5 16.3a.1.1 0 0 0 .1.1 16.2 16.2 0 0 0 4.9 2.5.1.1 0 0 0 .1-.1 11.6 11.6 0 0 0 1-1.6.1.1 0 0 0-.1-.2 10.7 10.7 0 0 1-1.5-.7.1.1 0 0 1 0-.2l.3-.2a.1.1 0 0 1 .1 0c3.2 1.5 6.7 1.5 9.9 0a.1.1 0 0 1 .1 0l.3.2a.1.1 0 0 1 0 .2 10 10 0 0 1-1.5.7.1.1 0 0 0-.1.2 13 13 0 0 0 1 1.6.1.1 0 0 0 .1.1 16.2 16.2 0 0 0 4.9-2.5.1.1 0 0 0 .1-.1c.4-4.5-.6-8.5-2.5-12a.1.1 0 0 0-.1-.1Z"/></svg>
+              <span id="pfDiscordVal" class="pf-social--discord">—</span>
+            </div>
+          </div>
+
+          <a class="pf-public-link" id="profilePublicLink" href="#">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            View public profile
+          </a>
+        </div>
+
+        <div class="pf-card pf-stats-card">
+          <div class="pf-stats-label">Stats</div>
+          <div class="pf-stats-grid">
+            <div class="pf-stat">
+              <span class="pf-stat-val" id="statTrades">—</span>
+              <span class="pf-stat-lbl">Trades</span>
+            </div>
+            <div class="pf-stat">
+              <span class="pf-stat-val" id="statFeedback">—</span>
+              <span class="pf-stat-lbl">Posts</span>
+            </div>
+            <div class="pf-stat">
+              <span class="pf-stat-val" id="statJoinedShort">—</span>
+              <span class="pf-stat-lbl">Since</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="pf-card">
+          <div class="pf-stats-label">Find Users</div>
+          <div class="pf-search-wrap">
+            <div class="pf-search-inner">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <input type="text" class="pf-search-input" id="userSearchInput" placeholder="Username..." maxlength="24" autocomplete="off" />
+            </div>
+            <button class="pf-search-btn" id="userSearchBtn" onclick="searchUser()">Search</button>
+          </div>
+          <div id="userSearchResult"></div>
+        </div>
+
+      </aside>
+
+      <!-- MAIN -->
+      <main class="pf-main">
+
+        <!-- EDIT PANEL -->
+        <div class="pf-card pf-edit-panel" id="editPanel" style="display:none">
+          <div class="pf-edit-header">
+            <span class="pf-stats-label" style="margin-bottom:0">Edit Profile</span>
+            <button class="pf-edit-close" onclick="closeEdit()">✕</button>
+          </div>
+          <div class="pf-edit-grid">
+            <div class="auth-field">
+              <label class="auth-label">Username</label>
+              <input type="text" class="auth-input" id="editUsername" maxlength="24" />
+            </div>
+            <div class="auth-field">
+              <label class="auth-label">Roblox Username</label>
+              <input type="text" class="auth-input" id="editRoblox" placeholder="Your Roblox name" maxlength="20" />
+            </div>
+            <div class="auth-field pf-edit-full">
+              <label class="auth-label">Bio</label>
+              <input type="text" class="auth-input" id="editBio" placeholder="Something about yourself..." maxlength="120" />
+            </div>
+            <div class="auth-field">
+              <label class="auth-label">Discord</label>
+              <input type="text" class="auth-input" id="editDiscord" placeholder="user#0000 or @user" maxlength="40" />
+            </div>
+          </div>
+          <div class="pf-edit-footer">
+            <div class="auth-error" id="editError"></div>
+            <div class="pf-edit-btns">
+              <button class="pf-btn pf-btn--ghost" onclick="closeEdit()">Cancel</button>
+              <button class="auth-btn pf-save-btn" id="saveBtn" onclick="handleSave()">
+                <span class="auth-btn-text">Save Changes</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TABS -->
+        <div class="pf-tabs">
+          <button class="pf-tab active" onclick="switchTab('Trades', this)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2 9 3-3 3 3"/><path d="M13 18H7a2 2 0 0 1-2-2V6"/><path d="m22 15-3 3-3-3"/><path d="M11 6h6a2 2 0 0 1 2 2v10"/></svg>
+            Trades
+            <span class="pf-tab-count" id="tabCountTrades">—</span>
+          </button>
+          <button class="pf-tab" onclick="switchTab('Feedback', this)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Feedback
+            <span class="pf-tab-count" id="tabCountFeedback">—</span>
+          </button>
+        </div>
+
+        <div id="tabTrades" class="pf-tab-content">
+          <div id="myTradesList" class="profile-activity-list">
+            <div class="profile-activity-loading"><div class="auth-loading-spinner"></div></div>
+          </div>
+        </div>
+
+        <div id="tabFeedback" class="pf-tab-content" style="display:none">
+          <div id="myFeedbackList" class="profile-activity-list">
+            <div class="profile-activity-loading"><div class="auth-loading-spinner"></div></div>
+          </div>
+        </div>
+
+      </main>
+    </div>
   </div>
 
   <footer class="footer">
@@ -161,6 +181,14 @@
   </footer>
 
   <script src="app.js"></script>
+  <script>
+    function switchTab(name, btn) {
+      document.querySelectorAll('.pf-tab').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.pf-tab-content').forEach(c => c.style.display = 'none');
+      btn.classList.add('active');
+      document.getElementById('tab' + name).style.display = 'block';
+    }
+  </script>
   <script type="module" src="profile.js"></script>
 </body>
 </html>

@@ -857,3 +857,392 @@
 }
 
 .settings-row--support .settings-row-label { color: #ff6b35; }
+
+/* =============================================
+   PROFILE REDESIGN — Social Network Style
+   ============================================= */
+
+/* ── COVER ───────────────────────────────────── */
+.pf-cover-wrap {
+  position: relative;
+  padding-top: 72px; /* navbar offset */
+}
+.pf-cover {
+  height: 200px;
+  background: linear-gradient(135deg, rgba(60,100,232,0.15) 0%, rgba(60,100,232,0.03) 60%, transparent);
+  position: relative;
+  overflow: hidden;
+}
+.pf-cover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(ellipse 100% 100% at 50% 0%, black 40%, transparent 100%);
+}
+.pf-cover-bottom {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  position: relative;
+}
+
+/* ── AVATAR ──────────────────────────────────── */
+.pf-avatar-outer {
+  margin-top: -48px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+}
+.pf-avatar {
+  width: 96px; height: 96px;
+  border-radius: 24px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 800; font-size: 2.2rem;
+  color: #fff;
+  border: 3px solid var(--bg);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+  transition: transform 0.2s;
+}
+.pf-avatar:hover { transform: scale(1.03); }
+.pf-avatar--member { background: linear-gradient(135deg, #2a2d3a, #3a4060); color: #8899cc; }
+.pf-avatar--admin  { background: linear-gradient(135deg, #e8453c, #c73a32); color: #fff; }
+.pf-avatar--mod    { background: linear-gradient(135deg, #00a854, #007a3e); color: #fff; }
+
+.pf-cover-actions {
+  padding-bottom: 16px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* ── BUTTONS ─────────────────────────────────── */
+.pf-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 18px;
+  border-radius: 9px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.18s;
+  white-space: nowrap;
+  border: 1px solid;
+}
+.pf-btn--ghost {
+  background: var(--bg-card);
+  border-color: var(--border);
+  color: var(--text);
+}
+.pf-btn--ghost:hover { border-color: var(--border-hover); background: var(--bg-2); }
+.pf-btn--danger {
+  background: transparent;
+  border-color: rgba(232,69,60,0.35);
+  color: var(--accent-roblox);
+}
+.pf-btn--danger:hover { background: rgba(232,69,60,0.08); border-color: rgba(232,69,60,0.6); }
+
+/* ── LAYOUT ──────────────────────────────────── */
+.pf-body {
+  max-width: 1000px;
+  margin: 24px auto 80px;
+  padding: 0 40px;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+/* ── CARD BASE ───────────────────────────────── */
+.pf-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 14px;
+}
+.pf-card:last-child { margin-bottom: 0; }
+
+/* ── IDENTITY CARD ───────────────────────────── */
+.pf-sidebar { position: sticky; top: 88px; }
+
+.pf-username-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+.pf-username {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+.pf-email {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  margin-bottom: 10px;
+}
+.pf-bio {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+
+.pf-meta-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.pf-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+.pf-meta-item svg { color: var(--text-dim); flex-shrink: 0; }
+.pf-social--roblox { color: var(--accent-roblox); }
+.pf-social--discord { color: #7289da; }
+
+.pf-public-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color 0.18s;
+}
+.pf-public-link:hover { color: var(--accent-roblox); }
+
+/* ── STATS CARD ──────────────────────────────── */
+.pf-stats-label {
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 14px;
+}
+.pf-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.pf-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 6px;
+}
+.pf-stat-val {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--text);
+}
+.pf-stat-lbl {
+  font-size: 0.62rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* ── SEARCH ──────────────────────────────────── */
+.pf-search-wrap { display: flex; flex-direction: column; gap: 10px; }
+.pf-search-inner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 8px 12px;
+  transition: border-color 0.2s;
+}
+.pf-search-inner:focus-within { border-color: var(--border-hover); }
+.pf-search-input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--text);
+}
+.pf-search-input::placeholder { color: var(--text-dim); }
+.pf-search-btn {
+  width: 100%;
+  padding: 9px;
+  background: var(--accent-roblox);
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.18s;
+}
+.pf-search-btn:hover { background: #c93b33; }
+.pf-search-empty {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  padding: 10px 0;
+}
+.pf-search-result {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--text);
+  margin-top: 10px;
+  transition: border-color 0.2s;
+}
+.pf-search-result:hover { border-color: var(--border-hover); }
+.pf-search-result-avatar {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 800; font-size: 0.9rem;
+  color: #fff; flex-shrink: 0;
+}
+.pf-search-result-info { flex: 1; min-width: 0; }
+.pf-search-result-name {
+  display: flex; align-items: center; gap: 6px;
+  font-family: var(--font-display);
+  font-weight: 700; font-size: 0.88rem;
+}
+.pf-search-result-bio {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  margin-top: 2px;
+}
+
+/* ── MAIN COLUMN ─────────────────────────────── */
+.pf-main { min-width: 0; }
+
+/* ── EDIT PANEL ──────────────────────────────── */
+.pf-edit-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.pf-edit-close {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  width: 26px; height: 26px;
+  font-size: 0.75rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.2s;
+}
+.pf-edit-close:hover { border-color: var(--border-hover); color: var(--text); }
+.pf-edit-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 0;
+}
+.pf-edit-full { grid-column: 1 / -1; }
+.pf-edit-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+.pf-edit-btns { display: flex; gap: 10px; }
+.pf-save-btn { width: auto; margin-top: 0; padding: 10px 24px; }
+
+/* ── TABS ────────────────────────────────────── */
+.pf-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 5px;
+  margin-bottom: 14px;
+}
+.pf-tab {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex: 1;
+  padding: 9px 16px;
+  background: none;
+  border: none;
+  border-radius: 10px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+  justify-content: center;
+}
+.pf-tab:hover { color: var(--text); background: var(--bg-2); }
+.pf-tab.active {
+  background: var(--bg-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.pf-tab-count {
+  font-size: 0.68rem;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  padding: 1px 7px;
+  color: var(--text-dim);
+  min-width: 22px;
+  text-align: center;
+}
+.pf-tab.active .pf-tab-count {
+  background: var(--bg-card);
+}
+
+/* ── RESPONSIVE ──────────────────────────────── */
+@media (max-width: 760px) {
+  .pf-body {
+    grid-template-columns: 1fr;
+    padding: 0 16px;
+  }
+  .pf-sidebar { position: static; }
+  .pf-cover { height: 140px; }
+  .pf-avatar { width: 80px; height: 80px; font-size: 1.8rem; border-radius: 20px; }
+  .pf-avatar-outer { margin-top: -40px; }
+  .pf-cover-bottom { padding: 0 16px; }
+  .pf-edit-grid { grid-template-columns: 1fr; }
+  .pf-edit-full { grid-column: 1; }
+}
