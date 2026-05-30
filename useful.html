@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Useful tools and utilities for the WHUB community." />
+  <title>Useful — WHUB</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="auth.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="logo">W<span>HUB</span></a>
+    <div class="nav-right"></div>
+  </nav>
+
+  <div class="page-wrapper">
+    <div class="page-hero">
+      <div class="page-hero-bg" style="background:radial-gradient(ellipse 60% 80% at 80% 20%, rgba(168,85,247,0.14), transparent 60%)"></div>
+      <div class="page-hero-content">
+        <div class="breadcrumb">
+          <a href="index.html">Home</a>
+          <span>›</span>
+          <span>Useful</span>
+        </div>
+        <h1 class="page-title"><span style="color:var(--accent-useful)">Useful</span> Tools</h1>
+        <p class="page-subtitle">Community utilities, personal trackers, and more.</p>
+      </div>
+    </div>
+
+    <section class="games-section">
+      <div class="section-label">// CATEGORIES</div>
+      <div class="games-grid">
+
+        <!-- Anime List -->
+        <a href="anime.html" class="game-card" style="--hover-color: rgba(236,72,153,0.4)">
+          <div class="game-card-accent" style="background:linear-gradient(90deg,#ec4899,transparent)"></div>
+          <div class="game-card-inner">
+            <div class="game-thumb" style="border-color:rgba(236,72,153,0.3)">
+              <div class="game-thumb-placeholder" style="color:#ec4899;font-size:0.65rem">ANIME</div>
+            </div>
+            <div class="game-info">
+              <h2 class="game-title">Anime List</h2>
+              <p class="game-meta">Track what you watch · Share your list</p>
+            </div>
+            <div class="game-arrow" style="color:#ec4899">→</div>
+          </div>
+        </a>
+
+        <!-- More coming soon -->
+        <div class="game-card game-card--soon">
+          <div class="game-card-inner">
+            <div class="game-thumb game-thumb--empty"><span>?</span></div>
+            <div class="game-info">
+              <h2 class="game-title">More Tools</h2>
+              <p class="game-meta">Coming soon...</p>
+            </div>
+            <div class="game-lock"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-logo">W<span>HUB</span></div>
+    <p class="footer-text">Built for the community, by the community.</p>
+  </footer>
+  <script src="app.js"></script>
+  <script type="module" src="nav-auth.js"></script>
+</body>
+</html>

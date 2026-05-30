@@ -27,6 +27,8 @@
   --accent-genshin: #c8a84b;
   --accent-windows: #0078d4;
   --accent-soon: #555;
+  --accent-useful: #a855f7;
+  --accent-anime: #ec4899;
 
   /* GRID */
   --grid-color: rgba(255,255,255,0.03);
@@ -509,6 +511,9 @@ a { text-decoration: none; color: inherit; }
 
 /* === COMMUNITY CARD === */
 .card--community { --c: #7289da; }
+.card--useful { --c: #a855f7; }
+.card--useful .card-glow { background: radial-gradient(circle at 20% 20%, rgba(168,85,247,0.12), transparent 60%); }
+.card--useful:hover { border-color: rgba(168,85,247,0.4); }
 .card--community .card-glow { background: radial-gradient(circle at 20% 20%, rgba(114,137,218,0.14), transparent 60%); }
 .card--community:hover { border-color: rgba(114,137,218,0.45); }
 
