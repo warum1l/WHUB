@@ -79,13 +79,12 @@
         <!-- Search (own list only) -->
         <div class="anime-card" id="searchCard" style="display:none">
           <div class="anime-card-label">Add Anime</div>
-          <div class="anime-search-wrap">
+          <div class="anime-search-sidebar-wrap">
             <div class="anime-search-inner">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
               <input type="text" class="anime-search-input" id="animeSearchInput" placeholder="Search anime..." autocomplete="off" />
             </div>
           </div>
-          <div id="searchResults" class="anime-search-results"></div>
         </div>
 
         <!-- Login prompt -->
@@ -99,6 +98,15 @@
 
       <!-- ── MAIN ── -->
       <main class="anime-main">
+
+        <!-- SEARCH RESULTS (full-width, shown when searching) -->
+        <div class="anime-search-panel" id="searchPanel" style="display:none">
+          <div class="anime-search-panel-header">
+            <span class="anime-card-label" style="margin-bottom:0">Search Results</span>
+            <button class="anime-search-panel-close" onclick="closeSearchPanel()">✕</button>
+          </div>
+          <div id="searchResults" class="anime-search-results-grid"></div>
+        </div>
 
         <!-- TABS -->
         <div class="anime-tabs">

@@ -83,7 +83,13 @@ async function initOwnList(user) {
   input.addEventListener('input', () => {
     clearTimeout(searchTimeout);
     const q = input.value.trim();
-    if (q.length < 2) { document.getElementById('searchResults').innerHTML = ''; return; }
+    const panel = document.getElementById('searchPanel');
+    if (q.length < 2) {
+      panel.style.display = 'none';
+      document.getElementById('searchResults').innerHTML = '';
+      return;
+    }
+    panel.style.display = 'block';
     searchTimeout = setTimeout(() => searchAnime(q), 400);
   });
 
@@ -203,6 +209,7 @@ function animeCard(anime, tab) {
 async function searchAnime(q) {
   const el = document.getElementById('searchResults');
   el.innerHTML = `<div class="anime-searching"><div class="auth-loading-spinner" style="width:20px;height:20px;border-width:2px"></div></div>`;
+  document.getElementById('searchPanel').style.display = 'block';
 
   try {
     const res  = await fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(q)}&limit=8&sfw=true`);
@@ -228,21 +235,33 @@ async function searchAnime(q) {
       const score = a.score ? `★ ${a.score}` : '';
       const eps   = a.episodes ? `${a.episodes} ep` : '';
       const already = inList.has(id);
+      const animeData = JSON.stringify({id,title,image:img,score:a.score,episodes:a.episodes});
 
-      return `<div class="anime-result ${already ? 'anime-result--added' : ''}">
-        ${img ? `<img src="${escHtml(img)}" class="anime-result-img" loading="lazy" />` : `<div class="anime-result-img anime-result-img--ph">${title.charAt(0)}</div>`}
-        <div class="anime-result-info">
-          <div class="anime-result-title">${escHtml(title)}</div>
-          <div class="anime-result-meta">${score}${score && eps ? ' · ' : ''}${eps}</div>
+      return `<div class="anime-search-card ${already ? 'anime-search-card--added' : ''}">
+        ${img
+          ? `<img src="${escHtml(img)}" class="anime-search-card-img" loading="lazy" onerror="this.style.display='none'" />`
+          : `<div class="anime-search-card-img anime-search-card-img--ph">${title.charAt(0)}</div>`}
+        <div class="anime-search-card-body">
+          <div class="anime-search-card-title">${escHtml(title)}</div>
+          <div class="anime-search-card-meta">${score}${score && eps ? ' · ' : ''}${eps}</div>
+          ${already
+            ? `<span class="anime-search-card-added">Already in list</span>`
+            : `<div class="anime-search-card-btns">
+                <button class="anime-add-btn anime-add--watch" onclick='addAnime(${animeData}, "watched")'>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                  Watched
+                </button>
+                <button class="anime-add-btn anime-add--plan" onclick='addAnime(${animeData}, "plan")'>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
+                  Plan
+                </button>
+                <button class="anime-add-btn anime-add--fav" onclick='addAnime(${animeData}, "favorites")'>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                  Fav
+                </button>
+              </div>`
+          }
         </div>
-        ${already
-          ? `<span class="anime-result-badge">Added</span>`
-          : `<div class="anime-result-btns">
-              <button class="anime-add-btn anime-add--watch" onclick='addAnime(${JSON.stringify({id,title,image:img,score:a.score,episodes:a.episodes})}, "watched")'>Watched</button>
-              <button class="anime-add-btn anime-add--plan"  onclick='addAnime(${JSON.stringify({id,title,image:img,score:a.score,episodes:a.episodes})}, "plan")'>Plan</button>
-              <button class="anime-add-btn anime-add--fav"   onclick='addAnime(${JSON.stringify({id,title,image:img,score:a.score,episodes:a.episodes})}, "favorites")'>★</button>
-            </div>`
-        }
       </div>`;
     }).join('');
   } catch(e) {
@@ -305,6 +324,12 @@ window.copyShareUrl = function() {
       btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> Copy`;
     }, 2000);
   });
+};
+
+window.closeSearchPanel = function() {
+  document.getElementById('searchPanel').style.display = 'none';
+  document.getElementById('animeSearchInput').value = '';
+  document.getElementById('searchResults').innerHTML = '';
 };
 
 function renderError(msg) {
