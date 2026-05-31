@@ -27,7 +27,6 @@ onAuthStateChanged(auth, async (user) => {
   loading.style.display = 'none';
   page.style.display    = 'block';
 
-  loadMyTrades(user.uid);
   loadMyFeedback(user.uid);
 });
 
@@ -89,56 +88,6 @@ function renderProfile(data, user) {
   }
 }
 
-// ─── MY TRADES ────────────────────────────────
-async function loadMyTrades(uid) {
-  const el = document.getElementById('myTradesList');
-  try {
-    const q    = query(collection(db, 'aotr_trades'), where('uid', '==', uid));
-    const snap = await getDocs(q);
-    const trades = snap.docs
-      .map(d => ({ id: d.id, ...d.data() }))
-      .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-
-    document.getElementById('statTrades').textContent    = trades.length;
-    document.getElementById('tabCountTrades').textContent = trades.length;
-
-    if (trades.length === 0) {
-      el.innerHTML = `<div class="profile-empty">
-        <span style="color:var(--text-dim)"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2 9 3-3 3 3"/><path d="M13 18H7a2 2 0 0 1-2-2V6"/><path d="m22 15-3 3-3-3"/><path d="M11 6h6a2 2 0 0 1 2 2v10"/></svg></span>
-        <p>No trades posted yet. <a href="aotr-trading.html">Post one →</a></p>
-      </div>`;
-      return;
-    }
-
-    el.innerHTML = trades.map(t => {
-      const date = t.createdAt?.seconds
-        ? new Date(t.createdAt.seconds * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-        : '';
-      const statusClass = t.status === 'completed' ? 'pact-status--done' : 'pact-status--open';
-      const statusText  = t.status === 'completed' ? 'Completed' : 'Open';
-      return `
-        <a class="pact-item" href="aotr-trading.html">
-          <div class="pact-main">
-            <div class="pact-trade">
-              <span class="pact-offer">${escHtml(t.offer || '—')}</span>
-              <span class="pact-arrow">⇄</span>
-              <span class="pact-want">${escHtml(t.want || '—')}</span>
-            </div>
-            <div class="pact-meta">
-              ${t.robloxUser ? `<span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" x2="10" y1="11" y2="11"/><line x1="8" x2="8" y1="9" y2="13"/><line x1="15" x2="15.01" y1="12" y2="12"/><line x1="18" x2="18.01" y1="10" y2="10"/><path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z"/></svg> ${escHtml(t.robloxUser)}</span>` : ''}
-              ${t.msgCount   ? `<span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg> ${t.msgCount}</span>` : ''}
-              ${date         ? `<span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg> ${date}</span>` : ''}
-            </div>
-          </div>
-          <span class="pact-status ${statusClass}">${statusText}</span>
-        </a>`;
-    }).join('');
-
-  } catch (e) {
-    el.innerHTML = `<div class="profile-empty"><p>Failed to load trades.</p></div>`;
-  }
-}
-
 // ─── MY FEEDBACK ──────────────────────────────
 async function loadMyFeedback(uid) {
   const el = document.getElementById('myFeedbackList');
@@ -150,6 +99,7 @@ async function loadMyFeedback(uid) {
       .map(d => ({ id: d.id, ...d.data() }))
       .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
 
+    document.getElementById('statPosts').textContent        = posts.length;
     document.getElementById('statFeedback').textContent     = posts.length;
     document.getElementById('tabCountFeedback').textContent = posts.length;
 

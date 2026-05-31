@@ -75,8 +75,8 @@
           <div class="pf-stats-label">Stats</div>
           <div class="pf-stats-grid">
             <div class="pf-stat">
-              <span class="pf-stat-val" id="statTrades">—</span>
-              <span class="pf-stat-lbl">Trades</span>
+              <span class="pf-stat-val" id="statPosts">—</span>
+              <span class="pf-stat-lbl">Posts</span>
             </div>
             <div class="pf-stat">
               <span class="pf-stat-val" id="statFeedback">—</span>
@@ -94,25 +94,14 @@
       <main class="pf-main">
 
         <div class="pf-tabs">
-          <button class="pf-tab active" onclick="switchTab('Trades', this)">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2 9 3-3 3 3"/><path d="M13 18H7a2 2 0 0 1-2-2V6"/><path d="m22 15-3 3-3-3"/><path d="M11 6h6a2 2 0 0 1 2 2v10"/></svg>
-            Trades
-            <span class="pf-tab-count" id="tabCountTrades">—</span>
-          </button>
-          <button class="pf-tab" onclick="switchTab('Feedback', this)">
+          <button class="pf-tab active" onclick="switchTab('Feedback', this)">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
             Feedback
             <span class="pf-tab-count" id="tabCountFeedback">—</span>
           </button>
         </div>
 
-        <div id="tabTrades" class="pf-tab-content">
-          <div id="pubTradesList" class="profile-activity-list">
-            <div class="profile-activity-loading"><div class="auth-loading-spinner"></div></div>
-          </div>
-        </div>
-
-        <div id="tabFeedback" class="pf-tab-content" style="display:none">
+        <div id="tabFeedback" class="pf-tab-content">
           <div id="pubFeedbackList" class="profile-activity-list">
             <div class="profile-activity-loading"><div class="auth-loading-spinner"></div></div>
           </div>

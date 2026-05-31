@@ -6,7 +6,6 @@
   <title>Admin Panel — WHUB</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="auth.css" />
-  <link rel="stylesheet" href="aotr-trading.css" />
   <link rel="stylesheet" href="admin.css" />
   <link rel="stylesheet" href="feedback.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -46,7 +45,6 @@
     <!-- TABS -->
     <div class="admin-tabs">
       <button class="admin-tab active" onclick="switchTab(this,'users')"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 1-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Users</button>
-      <button class="admin-tab" onclick="switchTab(this,'trades')"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2 9 3-3 3 3"/><path d="M13 18H7a2 2 0 0 1-2-2V6"/><path d="m22 15-3 3-3-3"/><path d="M11 6h6a2 2 0 0 1 2 2v10"/></svg> Trades</button>
       <button class="admin-tab" onclick="switchTab(this,'feedback')"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Feedback</button>
     </div>
 
@@ -70,27 +68,6 @@
           </thead>
           <tbody id="usersBody">
             <tr><td colspan="5" class="admin-loading-cell"><div class="auth-loading-spinner"></div></td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- TRADES TAB -->
-    <div class="admin-tab-content hidden" id="tab-trades">
-      <div class="admin-table-wrap">
-        <table class="admin-table" id="tradesTable">
-          <thead>
-            <tr>
-              <th>User</th>
-              <th>Offering</th>
-              <th>Wants</th>
-              <th>Status</th>
-              <th>Posted</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="tradesBody">
-            <tr><td colspan="6" class="admin-loading-cell"><div class="auth-loading-spinner"></div></td></tr>
           </tbody>
         </table>
       </div>

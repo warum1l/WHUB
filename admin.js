@@ -37,7 +37,6 @@ onAuthStateChanged(auth, async (user) => {
   page.style.display    = 'block';
 
   loadUsers();
-  loadTrades();
   loadFeedback();
 });
 
@@ -166,55 +165,6 @@ window.deleteUser = async function(uid, username) {
   } catch(e) { alert('Failed: ' + e.message); }
 };
 
-// -----------------------------------------------
-// TRADES
-// -----------------------------------------------
-async function loadTrades() {
-  try {
-    const snap = await getDocs(collection(db, 'aotr_trades'));
-    const trades = [];
-    snap.forEach(d => trades.push({ id: d.id, ...d.data() }));
-    trades.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-
-    const tbody = document.getElementById('tradesBody');
-    if (trades.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="6" class="admin-empty-cell">No trades.</td></tr>`;
-      return;
-    }
-    tbody.innerHTML = trades.map(t => {
-      const posted = t.createdAt?.seconds
-        ? new Date(t.createdAt.seconds * 1000).toLocaleDateString('en-US', { day:'numeric', month:'short' })
-        : '—';
-      const statusClass = t.status === 'open' ? 'status--open' : 'status--done';
-      return `
-        <tr>
-          <td class="admin-username">${escHtml(t.username)}</td>
-          <td class="admin-truncate">${escHtml(t.offer)}</td>
-          <td class="admin-truncate">${escHtml(t.want)}</td>
-          <td><span class="admin-status ${statusClass}">${t.status}</span></td>
-          <td class="admin-date">${posted}</td>
-          <td>
-            <button class="admin-act-btn admin-act--del"
-              onclick="deleteTrade('${t.id}')">Delete</button>
-          </td>
-        </tr>`;
-    }).join('');
-  } catch(e) {
-    console.error('loadTrades error:', e);
-    document.getElementById('tradesBody').innerHTML =
-      `<tr><td colspan="6" class="admin-empty-cell" style="color:var(--accent-roblox)">Failed: ${e.message}</td></tr>`;
-  }
-}
-
-window.deleteTrade = async function(id) {
-  if (!confirm('Delete this trade?')) return;
-  try {
-    await deleteDoc(doc(db, 'aotr_trades', id));
-    await loadTrades();
-  } catch(e) { alert('Failed: ' + e.message); }
-};
-
-// -----------------------------------------------
 // FEEDBACK
 // -----------------------------------------------
 async function loadFeedback() {

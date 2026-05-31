@@ -229,38 +229,50 @@ async function searchAnime(q) {
     ]);
 
     el.innerHTML = results.map(a => {
-      const id    = a.mal_id;
-      const title = a.title_english || a.title;
-      const img   = a.images?.jpg?.image_url || '';
-      const score = a.score ? `★ ${a.score}` : '';
-      const eps   = a.episodes ? `${a.episodes} ep` : '';
+      const id      = a.mal_id;
+      const title   = a.title_english || a.title;
+      const img     = a.images?.jpg?.image_url || '';
+      const score   = a.score ? `★ ${a.score}` : '';
+      const eps     = a.episodes ? `${a.episodes} ep` : '';
       const already = inList.has(id);
-      const animeData = JSON.stringify({id,title,image:img,score:a.score,episodes:a.episodes});
+      // Use data attributes to avoid quote escaping issues in onclick
+      const safeTitle = escHtml(title);
+      const safeImg   = escHtml(img);
+
+      const addBtns = already
+        ? `<span class="anime-search-card-added">Already in list</span>`
+        : `<div class="anime-search-card-btns">
+            <button class="anime-add-btn anime-add--watch"
+              data-id="${id}" data-title="${safeTitle}" data-img="${safeImg}"
+              data-score="${a.score||''}" data-eps="${a.episodes||''}"
+              data-list="watched" onclick="handleAdd(this)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+              Watched
+            </button>
+            <button class="anime-add-btn anime-add--plan"
+              data-id="${id}" data-title="${safeTitle}" data-img="${safeImg}"
+              data-score="${a.score||''}" data-eps="${a.episodes||''}"
+              data-list="plan" onclick="handleAdd(this)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
+              Plan
+            </button>
+            <button class="anime-add-btn anime-add--fav"
+              data-id="${id}" data-title="${safeTitle}" data-img="${safeImg}"
+              data-score="${a.score||''}" data-eps="${a.episodes||''}"
+              data-list="favorites" onclick="handleAdd(this)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              Fav
+            </button>
+          </div>`;
 
       return `<div class="anime-search-card ${already ? 'anime-search-card--added' : ''}">
         ${img
-          ? `<img src="${escHtml(img)}" class="anime-search-card-img" loading="lazy" onerror="this.style.display='none'" />`
+          ? `<img src="${safeImg}" class="anime-search-card-img" loading="lazy" onerror="this.style.display='none'" />`
           : `<div class="anime-search-card-img anime-search-card-img--ph">${title.charAt(0)}</div>`}
         <div class="anime-search-card-body">
-          <div class="anime-search-card-title">${escHtml(title)}</div>
+          <div class="anime-search-card-title">${safeTitle}</div>
           <div class="anime-search-card-meta">${score}${score && eps ? ' · ' : ''}${eps}</div>
-          ${already
-            ? `<span class="anime-search-card-added">Already in list</span>`
-            : `<div class="anime-search-card-btns">
-                <button class="anime-add-btn anime-add--watch" onclick='addAnime(${animeData}, "watched")'>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
-                  Watched
-                </button>
-                <button class="anime-add-btn anime-add--plan" onclick='addAnime(${animeData}, "plan")'>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
-                  Plan
-                </button>
-                <button class="anime-add-btn anime-add--fav" onclick='addAnime(${animeData}, "favorites")'>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                  Fav
-                </button>
-              </div>`
-          }
+          ${addBtns}
         </div>
       </div>`;
     }).join('');
@@ -337,6 +349,19 @@ function renderError(msg) {
     document.getElementById('tab-' + t).innerHTML = `<div class="anime-empty"><p>${msg}</p></div>`;
   });
 }
+
+
+// ── handleAdd — reads data attributes, calls addAnime ────────
+window.handleAdd = function(btn) {
+  const anime = {
+    id:       parseInt(btn.dataset.id),
+    title:    btn.dataset.title,
+    image:    btn.dataset.img,
+    score:    btn.dataset.score ? parseFloat(btn.dataset.score) : null,
+    episodes: btn.dataset.eps   ? parseInt(btn.dataset.eps)     : null,
+  };
+  addAnime(anime, btn.dataset.list);
+};
 
 function escHtml(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');

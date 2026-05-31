@@ -9,21 +9,14 @@ async function initWidget() {
   if (!el) return;
 
   try {
-    const [usersSnap, tradesSnap] = await Promise.all([
-      getDocs(collection(db, 'users')),
-      getDocs(collection(db, 'aotr_trades'))
+    const [usersSnap] = await Promise.all([
+      getDocs(collection(db, 'users'))
     ]);
-
-    const tradeCount = {};
-    tradesSnap.docs.forEach(d => {
-      const uid = d.data().uid;
-      if (uid) tradeCount[uid] = (tradeCount[uid] || 0) + 1;
-    });
 
     const users = usersSnap.docs
       .map(d => ({ uid: d.id, ...d.data() }))
       .filter(u => u.username)
-      .sort((a, b) => (tradeCount[b.uid] || 0) - (tradeCount[a.uid] || 0))
+      .sort((a, b) => (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0))
       .slice(0, 5);
 
     if (users.length === 0) {
@@ -33,7 +26,6 @@ async function initWidget() {
 
     const medals = ['<span class="lb-medal lb-medal--1">1</span>', '<span class="lb-medal lb-medal--2">2</span>', '<span class="lb-medal lb-medal--3">3</span>'];
     el.innerHTML = users.map((u, i) => {
-      const trades  = tradeCount[u.uid] || 0;
       const initial = u.username.charAt(0).toUpperCase();
       const medal   = medals[i] || `<span style="font-size:0.85rem;color:var(--text-dim)">${i + 1}</span>`;
       return `

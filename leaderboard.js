@@ -5,35 +5,28 @@ import { db } from './firebase.js';
 import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 let allUsers   = [];
-let tradeCount = {};
 let fbCount    = {};
 
 async function init() {
-  const [usersSnap, tradesSnap, fbSnap] = await Promise.all([
+  const [usersSnap, fbSnap] = await Promise.all([
     getDocs(collection(db, 'users')),
-    getDocs(collection(db, 'aotr_trades')),
-    getDocs(collection(db, 'feedback'))
+        getDocs(collection(db, 'feedback'))
   ]);
 
   allUsers = usersSnap.docs
     .map(d => ({ uid: d.id, ...d.data() }))
     .filter(u => u.username);
-
-  tradesSnap.docs.forEach(d => {
-    const uid = d.data().uid;
-    if (uid) tradeCount[uid] = (tradeCount[uid] || 0) + 1;
-  });
   fbSnap.docs.forEach(d => {
     const uid = d.data().uid;
     if (uid) fbCount[uid] = (fbCount[uid] || 0) + 1;
   });
 
-  renderTab('trades');
+  renderTab('feedback');
 }
 
 window.switchTab = function(tab) {
   document.querySelectorAll('.lb-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
-  const labels = { trades: 'Trades', feedback: 'Posts', oldest: 'Joined' };
+  const labels = { feedback: 'Posts', feedback: 'Posts', oldest: 'Joined' };
   document.getElementById('listStatLabel').textContent = labels[tab];
   renderTab(tab);
 };
@@ -42,8 +35,8 @@ function renderTab(tab) {
   const listEl = document.getElementById('lbList');
 
   let sorted;
-  if (tab === 'trades') {
-    sorted = [...allUsers].sort((a, b) => (tradeCount[b.uid] || 0) - (tradeCount[a.uid] || 0));
+  if (tab === 'feedback') {
+    sorted = [...allUsers].sort((a, b) => (fbCount[b.uid] || 0) - (fbCount[a.uid] || 0));
   } else if (tab === 'feedback') {
     sorted = [...allUsers].sort((a, b) => (fbCount[b.uid] || 0) - (fbCount[a.uid] || 0));
   } else {
@@ -66,7 +59,7 @@ function renderTab(tab) {
       : '—';
 
     let stat;
-    if (tab === 'trades')   stat = tradeCount[u.uid] || 0;
+    if (tab === 'feedback')   stat = fbCount[u.uid] || 0;
     else if (tab === 'feedback') stat = fbCount[u.uid] || 0;
     else stat = joined;
 
