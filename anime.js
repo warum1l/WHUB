@@ -21,9 +21,11 @@ let searchTimeout = null;
 
 // ── getUserByUsername — works without auth via REST ──
 async function getUserByUsername(username) {
-  // Use Firestore REST API — no auth required for public reads
+  // Firestore REST API with API key — works without Firebase auth
   const projectId = 'whub-7f24b';
-  const url = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents:runQuery`;
+  const apiKey    = 'AIzaSyC5X9rt_sGUBpEANBw9HIcNkELxRRxmEkQ';
+  const url = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents:runQuery?key=${apiKey}`;
+
   const body = {
     structuredQuery: {
       from: [{ collectionId: 'users' }],
@@ -46,20 +48,25 @@ async function getUserByUsername(username) {
     });
     const data = await res.json();
 
-    if (!data[0]?.document) return null;
+    // data is array; first item may have no document if no results
+    if (!Array.isArray(data) || !data[0]?.document) return null;
 
-    const fields = data[0].document.fields;
-    // Convert Firestore REST format to plain object
+    const fields = data[0].document.fields || {};
+    // Convert Firestore REST field format → plain values
     const obj = {};
     for (const [k, v] of Object.entries(fields)) {
-      obj[k] = v.stringValue ?? v.integerValue ?? v.booleanValue ?? null;
+      if      ('stringValue'    in v) obj[k] = v.stringValue;
+      else if ('integerValue'   in v) obj[k] = parseInt(v.integerValue);
+      else if ('booleanValue'   in v) obj[k] = v.booleanValue;
+      else if ('timestampValue' in v) obj[k] = v.timestampValue;
+      else                            obj[k] = null;
     }
-    // Extract uid from document name
-    const name = data[0].document.name;
-    obj.uid = name.split('/').pop();
+    // uid lives in the document path, not in fields
+    const docName = data[0].document.name;
+    obj.uid = docName.split('/').pop();
     return obj;
   } catch(e) {
-    console.error('getUserByUsername error:', e);
+    console.error('getUserByUsername REST error:', e);
     return null;
   }
 }
