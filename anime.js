@@ -1,10 +1,10 @@
 // =============================================
 // WHUB — Anime List
 // =============================================
-import { auth, db, getUserByUsername, initNavAuth, onAuthStateChanged }
+import { auth, db, initNavAuth, onAuthStateChanged }
   from './firebase.js';
 import {
-  doc, getDoc, setDoc, updateDoc, collection,
+  doc, getDoc, setDoc, collection,
   query, where, getDocs, serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
@@ -12,23 +12,70 @@ initNavAuth();
 
 // ── State ──────────────────────────────────────
 let currentUser   = null;
-let isViewMode    = false;   // viewing someone else's list
+let isViewMode    = false;
 let viewUsername  = null;
 let viewUid       = null;
 let animeList     = { watched: [], plan: [], favorites: [] };
 let activeTab     = 'watched';
 let searchTimeout = null;
 
+// ── getUserByUsername — works without auth via REST ──
+async function getUserByUsername(username) {
+  // Use Firestore REST API — no auth required for public reads
+  const projectId = 'whub-7f24b';
+  const url = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents:runQuery`;
+  const body = {
+    structuredQuery: {
+      from: [{ collectionId: 'users' }],
+      where: {
+        fieldFilter: {
+          field: { fieldPath: 'username' },
+          op: 'EQUAL',
+          value: { stringValue: username }
+        }
+      },
+      limit: 1
+    }
+  };
+
+  try {
+    const res  = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    const data = await res.json();
+
+    if (!data[0]?.document) return null;
+
+    const fields = data[0].document.fields;
+    // Convert Firestore REST format to plain object
+    const obj = {};
+    for (const [k, v] of Object.entries(fields)) {
+      obj[k] = v.stringValue ?? v.integerValue ?? v.booleanValue ?? null;
+    }
+    // Extract uid from document name
+    const name = data[0].document.name;
+    obj.uid = name.split('/').pop();
+    return obj;
+  } catch(e) {
+    console.error('getUserByUsername error:', e);
+    return null;
+  }
+}
+
+async function getUserDoc(uid) {
+  const snap = await getDoc(doc(db, 'users', uid));
+  return snap.exists() ? snap.data() : null;
+}
+
 // ── Init ───────────────────────────────────────
-const params = new URLSearchParams(window.location.search);
+const params  = new URLSearchParams(window.location.search);
 const urlUser = params.get('u');
 
 if (urlUser) {
-  // Public URL — load immediately WITHOUT waiting for auth
-  // Then check auth to see if it's own profile
   initViewModePublic(urlUser);
 } else {
-  // No URL param — need auth to show own list
   onAuthStateChanged(auth, async (user) => {
     currentUser = user;
     if (user) {
@@ -41,7 +88,6 @@ if (urlUser) {
 }
 
 async function initViewModePublic(username) {
-  // 1. Resolve username → uid immediately (no auth needed)
   const data = await getUserByUsername(username);
   if (!data) {
     renderError('User not found.');
@@ -50,7 +96,6 @@ async function initViewModePublic(username) {
   viewUid      = data.uid;
   viewUsername = data.username;
 
-  // 2. Set view mode UI immediately — before loading list
   isViewMode = true;
   document.getElementById('heroUsername').textContent   = data.username + "'s";
   document.getElementById('heroSuffix').textContent     = 'Anime List';
@@ -62,10 +107,9 @@ async function initViewModePublic(username) {
   document.getElementById('viewBannerName').textContent = data.username;
   document.getElementById('statsCard').style.display   = 'block';
 
-  // 3. Load list — works for anyone since anime_lists is public-read in Firestore rules
   await loadList(data.uid);
 
-  // 4. Check auth in background — if own profile, upgrade to edit mode
+  // Check auth in background — if own profile, upgrade to edit mode
   onAuthStateChanged(auth, async (user) => {
     currentUser = user;
     if (user && user.uid === data.uid) {
@@ -75,17 +119,16 @@ async function initViewModePublic(username) {
   });
 }
 
-
 async function initOwnList(user) {
   document.getElementById('searchCard').style.display  = 'block';
   document.getElementById('shareCard').style.display   = 'block';
   document.getElementById('statsCard').style.display   = 'block';
   document.getElementById('loginPrompt').style.display = 'none';
 
-  const shareUrl = `${window.location.origin}${window.location.pathname}?u=${encodeURIComponent((await getUserDoc(user.uid))?.username || '')}`;
+  const userData = await getUserDoc(user.uid);
+  const shareUrl = `${window.location.origin}${window.location.pathname}?u=${encodeURIComponent(userData?.username || '')}`;
   document.getElementById('shareUrl').value = shareUrl;
 
-  // Setup search
   const input = document.getElementById('animeSearchInput');
   input.addEventListener('input', () => {
     clearTimeout(searchTimeout);
@@ -103,11 +146,6 @@ async function initOwnList(user) {
   await loadList(user.uid);
 }
 
-async function getUserDoc(uid) {
-  const snap = await getDoc(doc(db, 'users', uid));
-  return snap.exists() ? snap.data() : null;
-}
-
 // ── Load list from Firestore ───────────────────
 async function loadList(uid) {
   try {
@@ -116,6 +154,7 @@ async function loadList(uid) {
       ? { watched: [], plan: [], favorites: [], ...snap.data() }
       : { watched: [], plan: [], favorites: [] };
   } catch(e) {
+    console.error('loadList error:', e);
     animeList = { watched: [], plan: [], favorites: [] };
   }
   updateCounts();
@@ -161,20 +200,18 @@ function renderEmptyAll() {
 function renderTab(tab) {
   const el   = document.getElementById('tab-' + tab);
   const list = animeList[tab] || [];
-
   if (list.length === 0) {
     el.innerHTML = emptyState(tab);
     return;
   }
-
   el.innerHTML = `<div class="anime-grid">${list.map(a => animeCard(a, tab)).join('')}</div>`;
 }
 
 function emptyState(tab) {
   const msgs = {
-    watched:   ['No anime watched yet.', isViewMode ? '' : 'Search for anime and add them here.'],
-    plan:      ['Nothing planned yet.', isViewMode ? '' : 'Add anime you want to watch.'],
-    favorites: ['No favorites yet.', isViewMode ? '' : 'Star your favorite anime.'],
+    watched:   ['No anime watched yet.',  isViewMode ? '' : 'Search for anime and add them here.'],
+    plan:      ['Nothing planned yet.',   isViewMode ? '' : 'Add anime you want to watch.'],
+    favorites: ['No favorites yet.',      isViewMode ? '' : 'Star your favorite anime.'],
   };
   const [title, sub] = msgs[tab] || ['Empty.', ''];
   return `<div class="anime-empty">
@@ -189,14 +226,14 @@ function animeCard(anime, tab) {
     ? `<img src="${escHtml(anime.image)}" alt="${escHtml(anime.title)}" class="anime-card-img" loading="lazy" onerror="this.style.display='none'" />`
     : `<div class="anime-card-img anime-card-img--placeholder">${escHtml(anime.title.charAt(0))}</div>`;
 
-  const score = anime.score ? `<span class="anime-card-score">★ ${anime.score}</span>` : '';
+  const score = anime.score    ? `<span class="anime-card-score">★ ${anime.score}</span>` : '';
   const eps   = anime.episodes ? `<span class="anime-card-eps">${anime.episodes} ep</span>` : '';
 
   const buttons = isViewMode ? '' : `
     <div class="anime-card-actions">
-      ${tab !== 'watched'   ? `<button class="anime-act-btn anime-act--watch"  onclick="moveAnime(${anime.id},'${tab}','watched')"   title="Move to Watched"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>` : ''}
-      ${tab !== 'plan'      ? `<button class="anime-act-btn anime-act--plan"   onclick="moveAnime(${anime.id},'${tab}','plan')"      title="Plan to Watch"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg></button>` : ''}
-      ${tab !== 'favorites' ? `<button class="anime-act-btn anime-act--fav"    onclick="moveAnime(${anime.id},'${tab}','favorites')" title="Add to Favorites"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></button>` : ''}
+      ${tab !== 'watched'   ? `<button class="anime-act-btn anime-act--watch"  onclick="moveAnime(${anime.id},'${tab}','watched')"   title="Watched"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>` : ''}
+      ${tab !== 'plan'      ? `<button class="anime-act-btn anime-act--plan"   onclick="moveAnime(${anime.id},'${tab}','plan')"      title="Plan"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg></button>` : ''}
+      ${tab !== 'favorites' ? `<button class="anime-act-btn anime-act--fav"    onclick="moveAnime(${anime.id},'${tab}','favorites')" title="Favorite"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></button>` : ''}
       <button class="anime-act-btn anime-act--del" onclick="removeAnime(${anime.id},'${tab}')" title="Remove"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg></button>
     </div>`;
 
@@ -228,7 +265,6 @@ async function searchAnime(q) {
       return;
     }
 
-    // Check which are already in list
     const inList = new Set([
       ...animeList.watched.map(a => a.id),
       ...animeList.plan.map(a => a.id),
@@ -236,13 +272,12 @@ async function searchAnime(q) {
     ]);
 
     el.innerHTML = results.map(a => {
-      const id      = a.mal_id;
-      const title   = a.title_english || a.title;
-      const img     = a.images?.jpg?.image_url || '';
-      const score   = a.score ? `★ ${a.score}` : '';
-      const eps     = a.episodes ? `${a.episodes} ep` : '';
-      const already = inList.has(id);
-      // Use data attributes to avoid quote escaping issues in onclick
+      const id        = a.mal_id;
+      const title     = a.title_english || a.title;
+      const img       = a.images?.jpg?.image_url || '';
+      const score     = a.score    ? `★ ${a.score}` : '';
+      const eps       = a.episodes ? `${a.episodes} ep` : '';
+      const already   = inList.has(id);
       const safeTitle = escHtml(title);
       const safeImg   = escHtml(img);
 
@@ -291,7 +326,6 @@ async function searchAnime(q) {
 // ── Add / Move / Remove ────────────────────────
 window.addAnime = async function(anime, tab) {
   if (!currentUser) return;
-  // Remove from all tabs first (no dupes)
   ['watched','plan','favorites'].forEach(t => {
     animeList[t] = animeList[t].filter(a => a.id !== anime.id);
   });
@@ -299,7 +333,6 @@ window.addAnime = async function(anime, tab) {
   updateCounts();
   renderAll();
   await saveList();
-  // Refresh search to update "Added" state
   const q = document.getElementById('animeSearchInput').value.trim();
   if (q.length >= 2) searchAnime(q);
 };
@@ -307,8 +340,8 @@ window.addAnime = async function(anime, tab) {
 window.moveAnime = async function(id, fromTab, toTab) {
   const anime = animeList[fromTab].find(a => a.id === id);
   if (!anime) return;
-  animeList[fromTab]  = animeList[fromTab].filter(a => a.id !== id);
-  animeList[toTab]    = animeList[toTab].filter(a => a.id !== id); // avoid dup
+  animeList[fromTab] = animeList[fromTab].filter(a => a.id !== id);
+  animeList[toTab]   = animeList[toTab].filter(a => a.id !== id);
   animeList[toTab].unshift(anime);
   updateCounts();
   renderAll();
@@ -324,7 +357,17 @@ window.removeAnime = async function(id, tab) {
   if (q && q.length >= 2) searchAnime(q);
 };
 
-// ── Tab switch ─────────────────────────────────
+window.handleAdd = function(btn) {
+  const anime = {
+    id:       parseInt(btn.dataset.id),
+    title:    btn.dataset.title,
+    image:    btn.dataset.img,
+    score:    btn.dataset.score ? parseFloat(btn.dataset.score) : null,
+    episodes: btn.dataset.eps   ? parseInt(btn.dataset.eps)     : null,
+  };
+  addAnime(anime, btn.dataset.list);
+};
+
 window.switchAnimeTab = function(tab, btn) {
   activeTab = tab;
   document.querySelectorAll('.anime-tab').forEach(b => b.classList.remove('active'));
@@ -333,7 +376,6 @@ window.switchAnimeTab = function(tab, btn) {
   document.getElementById('tab-' + tab).style.display = 'block';
 };
 
-// ── Share URL copy ─────────────────────────────
 window.copyShareUrl = function() {
   const input = document.getElementById('shareUrl');
   navigator.clipboard.writeText(input.value).then(() => {
@@ -356,19 +398,6 @@ function renderError(msg) {
     document.getElementById('tab-' + t).innerHTML = `<div class="anime-empty"><p>${msg}</p></div>`;
   });
 }
-
-
-// ── handleAdd — reads data attributes, calls addAnime ────────
-window.handleAdd = function(btn) {
-  const anime = {
-    id:       parseInt(btn.dataset.id),
-    title:    btn.dataset.title,
-    image:    btn.dataset.img,
-    score:    btn.dataset.score ? parseFloat(btn.dataset.score) : null,
-    episodes: btn.dataset.eps   ? parseInt(btn.dataset.eps)     : null,
-  };
-  addAnime(anime, btn.dataset.list);
-};
 
 function escHtml(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
