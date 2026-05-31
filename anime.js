@@ -41,7 +41,7 @@ if (urlUser) {
 }
 
 async function initViewModePublic(username) {
-  // Load the list right away (no auth needed)
+  // 1. Resolve username → uid immediately (no auth needed)
   const data = await getUserByUsername(username);
   if (!data) {
     renderError('User not found.');
@@ -50,32 +50,29 @@ async function initViewModePublic(username) {
   viewUid      = data.uid;
   viewUsername = data.username;
 
-  // Start loading list immediately
-  const listPromise = loadList(data.uid);
+  // 2. Set view mode UI immediately — before loading list
+  isViewMode = true;
+  document.getElementById('heroUsername').textContent   = data.username + "'s";
+  document.getElementById('heroSuffix').textContent     = 'Anime List';
+  document.getElementById('heroSub').textContent        = `${data.username}'s anime tracker on WHUB.`;
+  document.title = `${data.username}'s Anime List — WHUB`;
 
-  // Check auth in parallel — if own profile, switch to edit mode
+  const banner = document.getElementById('viewBanner');
+  banner.style.display = 'flex';
+  document.getElementById('viewBannerName').textContent = data.username;
+  document.getElementById('statsCard').style.display   = 'block';
+
+  // 3. Load list — works for anyone since anime_lists is public-read in Firestore rules
+  await loadList(data.uid);
+
+  // 4. Check auth in background — if own profile, upgrade to edit mode
   onAuthStateChanged(auth, async (user) => {
     currentUser = user;
     if (user && user.uid === data.uid) {
-      // Own profile — switch to full edit mode
-      await listPromise; // make sure list is loaded
+      isViewMode = false;
       await initOwnList(user);
-      return;
     }
-    // Not own profile — pure view mode
-    isViewMode = true;
-    document.getElementById('heroUsername').textContent = data.username + "'s";
-    document.getElementById('heroSuffix').textContent   = 'Anime List';
-    document.getElementById('heroSub').textContent      = `${data.username}'s anime tracker on WHUB.`;
-    document.title = `${data.username}'s Anime List — WHUB`;
-
-    const banner = document.getElementById('viewBanner');
-    banner.style.display = 'flex';
-    document.getElementById('viewBannerName').textContent = data.username;
-    document.getElementById('statsCard').style.display   = 'block';
   });
-
-  await listPromise;
 }
 
 
