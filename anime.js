@@ -23,51 +23,61 @@ let searchTimeout = null;
 const params = new URLSearchParams(window.location.search);
 const urlUser = params.get('u');
 
-onAuthStateChanged(auth, async (user) => {
-  currentUser = user;
+if (urlUser) {
+  // Public URL — load immediately WITHOUT waiting for auth
+  // Then check auth to see if it's own profile
+  initViewModePublic(urlUser);
+} else {
+  // No URL param — need auth to show own list
+  onAuthStateChanged(auth, async (user) => {
+    currentUser = user;
+    if (user) {
+      await initOwnList(user);
+    } else {
+      document.getElementById('loginPrompt').style.display = 'block';
+      renderEmptyAll();
+    }
+  });
+}
 
-  if (urlUser) {
-    // Viewing someone else (or own via URL)
-    await initViewMode(urlUser, user);
-  } else if (user) {
-    // Own list
-    await initOwnList(user);
-  } else {
-    // Logged out, no URL param
-    document.getElementById('loginPrompt').style.display = 'block';
-    renderEmptyAll();
-  }
-});
-
-async function initViewMode(username, user) {
+async function initViewModePublic(username) {
+  // Load the list right away (no auth needed)
   const data = await getUserByUsername(username);
   if (!data) {
     renderError('User not found.');
     return;
   }
-  viewUid = data.uid;
+  viewUid      = data.uid;
   viewUsername = data.username;
 
-  // Check if viewing own profile
-  if (user && user.uid === data.uid) {
-    await initOwnList(user);
-    return;
-  }
+  // Start loading list immediately
+  const listPromise = loadList(data.uid);
 
-  // Public view
-  isViewMode = true;
-  document.getElementById('heroUsername').textContent = data.username + "'s";
-  document.getElementById('heroSuffix').textContent   = 'Anime List';
-  document.getElementById('heroSub').textContent      = `${data.username}'s anime tracker on WHUB.`;
-  document.title = `${data.username}'s Anime List — WHUB`;
+  // Check auth in parallel — if own profile, switch to edit mode
+  onAuthStateChanged(auth, async (user) => {
+    currentUser = user;
+    if (user && user.uid === data.uid) {
+      // Own profile — switch to full edit mode
+      await listPromise; // make sure list is loaded
+      await initOwnList(user);
+      return;
+    }
+    // Not own profile — pure view mode
+    isViewMode = true;
+    document.getElementById('heroUsername').textContent = data.username + "'s";
+    document.getElementById('heroSuffix').textContent   = 'Anime List';
+    document.getElementById('heroSub').textContent      = `${data.username}'s anime tracker on WHUB.`;
+    document.title = `${data.username}'s Anime List — WHUB`;
 
-  const banner = document.getElementById('viewBanner');
-  banner.style.display = 'flex';
-  document.getElementById('viewBannerName').textContent = data.username;
-  document.getElementById('statsCard').style.display = 'block';
+    const banner = document.getElementById('viewBanner');
+    banner.style.display = 'flex';
+    document.getElementById('viewBannerName').textContent = data.username;
+    document.getElementById('statsCard').style.display   = 'block';
+  });
 
-  await loadList(data.uid);
+  await listPromise;
 }
+
 
 async function initOwnList(user) {
   document.getElementById('searchCard').style.display  = 'block';
