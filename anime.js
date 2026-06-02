@@ -78,9 +78,14 @@ async function getUserDoc(uid) {
 
 // ── Init ───────────────────────────────────────
 const params  = new URLSearchParams(window.location.search);
-const urlUser = params.get('u');
+const urlUser = params.get('u');   // username-based share link
+const urlUid  = params.get('uid'); // uid-based share link (more reliable)
 
-if (urlUser) {
+if (urlUid) {
+  // Direct uid — no username lookup needed, works without auth
+  initViewModeByUid(urlUid);
+} else if (urlUser) {
+  // Username-based — try REST first, fallback handled inside
   initViewModePublic(urlUser);
 } else {
   onAuthStateChanged(auth, async (user) => {
@@ -90,6 +95,40 @@ if (urlUser) {
     } else {
       document.getElementById('loginPrompt').style.display = 'block';
       renderEmptyAll();
+    }
+  });
+}
+
+async function initViewModeByUid(uid) {
+  // Load anime list directly by uid — no user lookup needed
+  viewUid = uid;
+
+  // Try to get display name from users collection (may fail if not auth)
+  // but show list regardless
+  let displayName = 'Someone';
+  try {
+    const snap = await getDoc(doc(db, 'users', uid));
+    if (snap.exists()) displayName = snap.data().username || displayName;
+  } catch(e) { /* rules may block — show list anyway */ }
+
+  isViewMode = true;
+  document.getElementById('heroUsername').textContent   = displayName + "'s";
+  document.getElementById('heroSuffix').textContent     = 'Anime List';
+  document.getElementById('heroSub').textContent        = `${displayName}'s anime tracker on WHUB.`;
+  document.title = `${displayName}'s Anime List — WHUB`;
+
+  const banner = document.getElementById('viewBanner');
+  banner.style.display = 'flex';
+  document.getElementById('viewBannerName').textContent = displayName;
+  document.getElementById('statsCard').style.display   = 'block';
+
+  await loadList(uid);
+
+  onAuthStateChanged(auth, async (user) => {
+    currentUser = user;
+    if (user && user.uid === uid) {
+      isViewMode = false;
+      await initOwnList(user);
     }
   });
 }
@@ -132,8 +171,8 @@ async function initOwnList(user) {
   document.getElementById('statsCard').style.display   = 'block';
   document.getElementById('loginPrompt').style.display = 'none';
 
-  const userData = await getUserDoc(user.uid);
-  const shareUrl = `${window.location.origin}${window.location.pathname}?u=${encodeURIComponent(userData?.username || '')}`;
+  // Use uid-based share URL — works without auth for viewers
+  const shareUrl = `${window.location.origin}${window.location.pathname}?uid=${user.uid}`;
   document.getElementById('shareUrl').value = shareUrl;
 
   const input = document.getElementById('animeSearchInput');
