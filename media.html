@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Track movies, TV shows and dramas. Share your watchlist with anyone." />
+  <title>Media List — WHUB</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="auth.css" />
+  <link rel="stylesheet" href="anime.css" />
+  <link rel="stylesheet" href="media.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="logo">W<span>HUB</span></a>
+    <div class="nav-right"></div>
+  </nav>
+
+  <div class="page-wrapper">
+    <div class="page-hero">
+      <div class="media-hero-bg"></div>
+      <div class="page-hero-content">
+        <div class="breadcrumb">
+          <a href="index.html">Home</a><span>›</span>
+          <a href="useful.html">Useful</a><span>›</span>
+          <span id="heroTitle">Media List</span>
+        </div>
+        <h1 class="page-title"><span class="media-accent" id="heroUsername">Media</span> <span id="heroSuffix">List</span></h1>
+        <p class="page-subtitle" id="heroSub">Track movies, TV shows and dramas. Share your list with anyone.</p>
+      </div>
+    </div>
+
+    <div class="anime-layout">
+
+      <!-- SIDEBAR -->
+      <aside class="anime-sidebar">
+
+        <div class="anime-view-banner" id="viewBanner" style="display:none">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+          <span>Viewing <strong id="viewBannerName"></strong>'s list</span>
+          <a href="media.html" class="anime-view-back">My List →</a>
+        </div>
+
+        <div class="anime-card" id="shareCard" style="display:none">
+          <div class="anime-card-label">Share Your List</div>
+          <p class="anime-share-desc">Anyone can view your list — no account needed.</p>
+          <div class="anime-share-box">
+            <input type="text" class="anime-share-input" id="shareUrl" readonly />
+            <button class="anime-share-copy media-copy-btn" id="shareCopyBtn" onclick="copyShareUrl()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+              Copy
+            </button>
+          </div>
+        </div>
+
+        <div class="anime-card" id="statsCard" style="display:none">
+          <div class="anime-card-label">Stats</div>
+          <div class="anime-stats-grid" style="grid-template-columns:repeat(3,1fr)">
+            <div class="anime-stat media-stat--watched"><span class="anime-stat-val" id="countWatched">0</span><span class="anime-stat-lbl">Watched</span></div>
+            <div class="anime-stat media-stat--plan"><span class="anime-stat-val" id="countPlan">0</span><span class="anime-stat-lbl">Plan</span></div>
+            <div class="anime-stat media-stat--fav"><span class="anime-stat-val" id="countFav">0</span><span class="anime-stat-lbl">Favs</span></div>
+          </div>
+        </div>
+
+        <!-- SEARCH -->
+        <div class="anime-card" id="searchCard" style="display:none">
+          <div class="anime-card-label">Add Media</div>
+
+          <!-- Type filter -->
+          <div class="media-type-tabs">
+            <button class="media-type-tab active" data-type="movie" onclick="setType('movie',this)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" x2="7" y1="2" y2="22"/><line x1="17" x2="17" y1="2" y2="22"/><line x1="2" x2="22" y1="12" y2="12"/><line x1="2" x2="7" y1="7" y2="7"/><line x1="2" x2="7" y1="17" y2="17"/><line x1="17" x2="22" y1="17" y2="17"/><line x1="17" x2="22" y1="7" y2="7"/></svg>
+              Movies
+            </button>
+            <button class="media-type-tab" data-type="tv" onclick="setType('tv',this)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
+              TV Shows
+            </button>
+            <button class="media-type-tab" data-type="drama" onclick="setType('drama',this)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+              Dramas
+            </button>
+          </div>
+
+          <div class="anime-search-sidebar-wrap" style="margin-top:10px">
+            <div class="anime-search-inner">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <input type="text" class="anime-search-input" id="mediaSearchInput" placeholder="Search..." autocomplete="off" />
+            </div>
+          </div>
+        </div>
+
+        <div class="anime-card anime-login-prompt" id="loginPrompt" style="display:none">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent-media)"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" x2="7" y1="2" y2="22"/><line x1="17" x2="17" y1="2" y2="22"/><line x1="2" x2="22" y1="12" y2="12"/></svg>
+          <p>Sign in to create your media list and share it with others.</p>
+          <a href="login.html" class="anime-login-btn" style="background:var(--accent-media)">Sign In</a>
+        </div>
+
+      </aside>
+
+      <!-- MAIN -->
+      <main class="anime-main">
+
+        <!-- SEARCH RESULTS PANEL -->
+        <div class="anime-search-panel" id="searchPanel" style="display:none">
+          <div class="anime-search-panel-header">
+            <span class="anime-card-label" style="margin-bottom:0" id="searchPanelLabel">Search Results</span>
+            <button class="anime-search-panel-close" onclick="closeSearchPanel()">✕</button>
+          </div>
+          <div id="searchResults" class="anime-search-results-grid"></div>
+        </div>
+
+        <!-- TABS -->
+        <div class="anime-tabs">
+          <button class="anime-tab active" onclick="switchMediaTab('watched', this)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+            Watched
+            <span class="anime-tab-count" id="tc-watched">0</span>
+          </button>
+          <button class="anime-tab" onclick="switchMediaTab('plan', this)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
+            Plan to Watch
+            <span class="anime-tab-count" id="tc-plan">0</span>
+          </button>
+          <button class="anime-tab" onclick="switchMediaTab('favorites', this)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            Favorites
+            <span class="anime-tab-count" id="tc-favorites">0</span>
+          </button>
+        </div>
+
+        <div id="tab-watched"   class="anime-tab-content"><div class="anime-list-loading"><div class="auth-loading-spinner"></div></div></div>
+        <div id="tab-plan"      class="anime-tab-content" style="display:none"><div class="anime-list-loading"><div class="auth-loading-spinner"></div></div></div>
+        <div id="tab-favorites" class="anime-tab-content" style="display:none"><div class="anime-list-loading"><div class="auth-loading-spinner"></div></div></div>
+
+      </main>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-logo">W<span>HUB</span></div>
+    <p class="footer-text">Built for the community, by the community.</p>
+  </footer>
+
+  <script src="app.js"></script>
+  <script type="module" src="media.js"></script>
+</body>
+</html>
