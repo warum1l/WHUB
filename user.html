@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-  <link rel="apple-touch-icon" href="favicon.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Profile — WHUB</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="auth.css" />
+  <link rel="stylesheet" href="social.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
 </head>
@@ -17,35 +17,27 @@
     <div class="nav-right"></div>
   </nav>
 
-  <div class="auth-loading" id="pageLoading">
-    <div class="auth-loading-spinner"></div>
-  </div>
+  <div class="auth-loading" id="pageLoading"><div class="auth-loading-spinner"></div></div>
 
-  <!-- NOT FOUND -->
   <div id="notFound" style="display:none;text-align:center;padding:160px 20px 80px">
     <div style="color:var(--text-dim);margin-bottom:16px">
       <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
     </div>
     <h2 style="font-family:var(--font-display);font-size:1.8rem;margin-bottom:10px">User not found</h2>
-    <p style="color:var(--text-muted);margin-bottom:24px">This profile doesn't exist.</p>
     <a href="index.html" style="color:var(--accent-roblox)">← Back to Home</a>
   </div>
 
-  <!-- PROFILE -->
   <div id="profilePage" style="display:none">
 
     <div class="pf-cover-wrap">
       <div class="pf-cover" id="pfCover"></div>
       <div class="pf-cover-bottom">
-        <div class="pf-avatar-outer">
-          <div class="pf-avatar" id="pubAvatar">W</div>
-        </div>
+        <div class="pf-avatar-outer"><div class="pf-avatar" id="pubAvatar">W</div></div>
         <div class="pf-cover-actions" id="pubActions"></div>
       </div>
     </div>
 
     <div class="pf-body">
-
       <aside class="pf-sidebar">
 
         <div class="pf-card pf-identity">
@@ -54,12 +46,7 @@
             <span class="profile-role-badge" id="pubRole">Member</span>
           </div>
           <p class="pf-bio" id="pubBio"></p>
-
           <div class="pf-meta-list">
-            <div class="pf-meta-item" id="pfJoinedWrap" style="display:none">
-              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
-              <span id="pubJoined">—</span>
-            </div>
             <div class="pf-meta-item" id="pfRobloxWrap" style="display:none">
               <svg viewBox="0 0 20 20" fill="none" width="13" height="13"><rect x="3" y="3" width="6" height="6" rx="1" fill="currentColor"/><rect x="11" y="3" width="6" height="6" rx="1" fill="currentColor" opacity=".5"/><rect x="3" y="11" width="6" height="6" rx="1" fill="currentColor" opacity=".5"/><rect x="11" y="11" width="6" height="6" rx="1" fill="currentColor"/></svg>
               <span id="pfRobloxVal" class="pf-social--roblox">—</span>
@@ -74,39 +61,25 @@
         <div class="pf-card pf-stats-card">
           <div class="pf-stats-label">Stats</div>
           <div class="pf-stats-grid">
-            <div class="pf-stat">
-              <span class="pf-stat-val" id="statPosts">—</span>
-              <span class="pf-stat-lbl">Posts</span>
-            </div>
-            <div class="pf-stat">
-              <span class="pf-stat-val" id="statFeedback">—</span>
-              <span class="pf-stat-lbl">Posts</span>
-            </div>
-            <div class="pf-stat">
-              <span class="pf-stat-val" id="statJoinedShort">—</span>
-              <span class="pf-stat-lbl">Since</span>
-            </div>
+            <div class="pf-stat"><span class="pf-stat-val" id="statPosts">—</span><span class="pf-stat-lbl">Posts</span></div>
+            <div class="pf-stat"><span class="pf-stat-val" id="statFriends">—</span><span class="pf-stat-lbl">Friends</span></div>
+            <div class="pf-stat"><span class="pf-stat-val" id="statJoinedShort">—</span><span class="pf-stat-lbl">Since</span></div>
           </div>
         </div>
 
       </aside>
 
       <main class="pf-main">
-
         <div class="pf-tabs">
-          <button class="pf-tab active" onclick="switchTab('Feedback', this)">
+          <button class="pf-tab active" onclick="switchTab('Posts', this)">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            Feedback
-            <span class="pf-tab-count" id="tabCountFeedback">—</span>
+            Posts
+            <span class="pf-tab-count" id="tabCountPosts">—</span>
           </button>
         </div>
-
-        <div id="tabFeedback" class="pf-tab-content">
-          <div id="pubFeedbackList" class="profile-activity-list">
-            <div class="profile-activity-loading"><div class="auth-loading-spinner"></div></div>
-          </div>
+        <div id="tabPosts" class="pf-tab-content">
+          <div id="postsFeed"><div class="profile-activity-loading"><div class="auth-loading-spinner"></div></div></div>
         </div>
-
       </main>
     </div>
   </div>

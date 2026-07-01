@@ -1,58 +1,89 @@
 // =============================================
 // WHUB — Public User Profile
-// URL: /user.html?u=username
 // =============================================
-import { auth, db, getUserByUsername, initNavAuth, onAuthStateChanged }
-  from './firebase.js';
-
-import { collection, query, where, getDocs }
+import { auth, db, initNavAuth, onAuthStateChanged } from './firebase.js';
+import { doc, getDoc, collection, query, orderBy, getDocs }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import {
+  sendFriendRequest, getFriendStatus,
+  subscribeToUserPosts, toggleLike, addComment, escHtml, timeAgo
+} from './social.js';
 
 initNavAuth();
 
+let currentUser = null;
+let currentData = null;
+let viewData    = null;
+
+const params   = new URLSearchParams(window.location.search);
+const username = params.get('u');
+
 document.addEventListener('DOMContentLoaded', async () => {
-  const params   = new URLSearchParams(window.location.search);
-  const username = params.get('u');
   const loading  = document.getElementById('pageLoading');
   const notFound = document.getElementById('notFound');
   const page     = document.getElementById('profilePage');
 
-  if (!username) {
-    loading.style.display = 'none';
-    notFound.style.display = 'block';
-    return;
-  }
-
+  if (!username) { loading.style.display='none'; notFound.style.display='block'; return; }
   document.title = `@${username} — WHUB`;
 
   try {
-    const data = await getUserByUsername(username);
+    viewData = await getUserByUsernameRest(username);
     loading.style.display = 'none';
+    if (!viewData) { notFound.style.display='block'; return; }
 
-    if (!data) { notFound.style.display = 'block'; return; }
-
-    renderProfile(data);
+    renderProfile(viewData);
     page.style.display = 'block';
+    loadPosts(viewData.uid);
 
-    loadFeedback(data.uid);
-
-    // Own profile — show edit button
-    onAuthStateChanged(auth, (user) => {
-      if (user && user.uid === data.uid) {
-        document.getElementById('pubActions').innerHTML =
-          `<a href="profile.html" class="pf-btn pf-btn--ghost">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
-            Edit Profile
-          </a>`;
+    onAuthStateChanged(auth, async (user) => {
+      currentUser = user;
+      if (user) {
+        const snap = await getDoc(doc(db, 'users', user.uid));
+        currentData = snap.exists() ? snap.data() : null;
+        if (user.uid === viewData.uid) {
+          document.getElementById('pubActions').innerHTML =
+            `<a href="profile.html" class="pf-btn pf-btn--ghost">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+              Edit Profile
+            </a>`;
+        } else {
+          renderFriendBtn(user.uid, viewData.uid);
+        }
       }
     });
-
   } catch(e) {
     console.error(e);
-    loading.style.display  = 'none';
+    loading.style.display = 'none';
     notFound.style.display = 'block';
   }
 });
+
+async function getUserByUsernameRest(username) {
+  const projectId = 'whub-7f24b';
+  const apiKey    = 'AIzaSyC5X9rt_sGUBpEANBw9HIcNkELxRRxmEkQ';
+  const url = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents:runQuery?key=${apiKey}`;
+  const res  = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ structuredQuery: {
+      from: [{ collectionId: 'users' }],
+      where: { fieldFilter: { field: { fieldPath: 'username' }, op: 'EQUAL', value: { stringValue: username } } },
+      limit: 1
+    }})
+  });
+  const data = await res.json();
+  if (!Array.isArray(data) || !data[0]?.document) return null;
+  const fields = data[0].document.fields || {};
+  const obj = {};
+  for (const [k, v] of Object.entries(fields)) {
+    if      ('stringValue'  in v) obj[k] = v.stringValue;
+    else if ('integerValue' in v) obj[k] = parseInt(v.integerValue);
+    else if ('booleanValue' in v) obj[k] = v.booleanValue;
+    else                          obj[k] = null;
+  }
+  obj.uid = data[0].document.name.split('/').pop();
+  return obj;
+}
 
 function renderProfile(data) {
   const initial = data.username.charAt(0).toUpperCase();
@@ -63,80 +94,141 @@ function renderProfile(data) {
   document.getElementById('pubUsername').textContent = data.username;
   document.getElementById('pubBio').textContent      = data.bio || '';
 
+  const cover = document.getElementById('pfCover');
+  const coverColors = { admin:'linear-gradient(135deg,rgba(232,69,60,.3) 0%,rgba(232,69,60,.05) 60%,transparent)', mod:'linear-gradient(135deg,rgba(0,200,100,.2) 0%,rgba(0,200,100,.04) 60%,transparent)', member:'linear-gradient(135deg,rgba(60,100,232,.15) 0%,rgba(60,100,232,.03) 60%,transparent)' };
+  cover.style.background = coverColors[role] || coverColors.member;
+
   const roleBadge = document.getElementById('pubRole');
   roleBadge.textContent = capitalize(role);
   roleBadge.className   = 'profile-role-badge role--' + role;
 
-  // Cover gradient
-  const cover = document.getElementById('pfCover');
-  const coverColors = {
-    admin:  'linear-gradient(135deg, rgba(232,69,60,0.3) 0%, rgba(232,69,60,0.05) 60%, transparent)',
-    mod:    'linear-gradient(135deg, rgba(0,200,100,0.2) 0%, rgba(0,200,100,0.04) 60%, transparent)',
-    member: 'linear-gradient(135deg, rgba(60,100,232,0.15) 0%, rgba(60,100,232,0.03) 60%, transparent)',
-  };
-  cover.style.background = coverColors[role] || coverColors.member;
-
-  if (data.createdAt?.seconds) {
-    const date = new Date(data.createdAt.seconds * 1000);
-    document.getElementById('pubJoined').textContent =
-      'Joined ' + date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-    document.getElementById('pfJoinedWrap').style.display = 'flex';
-    document.getElementById('statJoinedShort').textContent =
-      date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
-  }
-
-  if (data.robloxUser) {
-    document.getElementById('pfRobloxVal').textContent = data.robloxUser;
-    document.getElementById('pfRobloxWrap').style.display = 'flex';
-  }
-  if (data.discordUser) {
-    document.getElementById('pfDiscordVal').textContent = data.discordUser;
-    document.getElementById('pfDiscordWrap').style.display = 'flex';
-  }
+  if (data.robloxUser)  { document.getElementById('pfRobloxVal').textContent = data.robloxUser;  document.getElementById('pfRobloxWrap').style.display='flex'; }
+  if (data.discordUser) { document.getElementById('pfDiscordVal').textContent = data.discordUser; document.getElementById('pfDiscordWrap').style.display='flex'; }
 
   document.title = `@${data.username} — WHUB`;
 }
 
-async function loadFeedback(uid) {
-  const el = document.getElementById('pubFeedbackList');
-  const TYPE_ICONS = { suggestion:'<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>', question:'<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>', bug:'<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 2 1.88 1.88"/><path d="M14.12 3.88 16 2"/><path d="M9 7.13v-1a3.003 3.003 0 1 1 6 0v1"/><path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6z"/><path d="M12 20v-9"/><path d="M6.53 9C4.6 8.8 3 7.1 3 5"/><path d="M6 13H2"/><path d="M3 21c0-2.1 1.7-3.9 3.8-4"/><path d="M20.97 5c0 2.1-1.6 3.8-3.5 4"/><path d="M22 13h-4"/><path d="M17.2 17c2.1.1 3.8 1.9 3.8 4"/></svg>', other:'<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>' };
-  try {
-    const q    = query(collection(db, 'feedback'), where('uid', '==', uid));
-    const snap = await getDocs(q);
-    const posts = snap.docs
-      .map(d => ({ id: d.id, ...d.data() }))
-      .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+async function renderFriendBtn(myUid, otherUid) {
+  const actions = document.getElementById('pubActions');
+  const result   = await getFriendStatus(myUid, otherUid);
 
-    document.getElementById('statPosts').textContent         = posts.length;
-    document.getElementById('statFeedback').textContent      = posts.length;
-    document.getElementById('tabCountFeedback').textContent  = posts.length;
-
-    if (posts.length === 0) {
-      el.innerHTML = `<div class="profile-empty"><span style="color:var(--text-dim)"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><p>No feedback posts yet.</p></div>`;
-      return;
-    }
-
-    el.innerHTML = posts.map(p => {
-      const date = p.createdAt?.seconds
-        ? new Date(p.createdAt.seconds * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-        : '';
-      const icon = TYPE_ICONS[p.type] || TYPE_ICONS.other;
-      return `
-        <a class="pact-item" href="feedback.html">
-          <div class="pact-main">
-            <div class="pact-fb-title">${icon} ${escHtml(p.title || '—')}</div>
-            <div class="pact-meta">
-              <span class="pact-type-badge pact-type--${p.type||'other'}">${capitalize(p.type||'other')}</span>
-              ${p.upvotes ? `<span>▲ ${p.upvotes}</span>` : ''}
-              ${date ? `<span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg> ${date}</span>` : ''}
-            </div>
-          </div>
-        </a>`;
-    }).join('');
-  } catch(e) {
-    el.innerHTML = `<div class="profile-empty"><p>Failed to load posts.</p></div>`;
+  let btn = '';
+  if (result.status === 'friends') {
+    btn = `<button class="add-friend-btn friends" disabled>
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg>
+      Friends
+    </button>
+    <button class="pf-btn pf-btn--ghost" onclick="window.location.href='messages.html?with=${otherUid}'">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
+      Message
+    </button>`;
+  } else if (result.status === 'pending_sent') {
+    btn = `<button class="add-friend-btn pending" disabled>Request Sent</button>`;
+  } else if (result.status === 'pending_received') {
+    btn = `<button class="add-friend-btn" onclick="window.location.href='profile.html'">Respond to Request</button>`;
+  } else {
+    btn = `<button class="add-friend-btn" id="addFriendBtn" onclick="handleAddFriend()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+      Add Friend
+    </button>`;
   }
+  actions.innerHTML = btn;
 }
 
+window.handleAddFriend = async function() {
+  if (!currentUser || !viewData) return;
+  const btn = document.getElementById('addFriendBtn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Sending...'; }
+  await sendFriendRequest(currentUser.uid, currentData?.username || 'Unknown', viewData.uid);
+  renderFriendBtn(currentUser.uid, viewData.uid);
+};
+
+function loadPosts(uid) {
+  subscribeToUserPosts(uid, (posts) => {
+    document.getElementById('tabCountPosts').textContent = posts.length;
+    document.getElementById('statPosts').textContent     = posts.length;
+    const el = document.getElementById('postsFeed');
+    if (posts.length === 0) {
+      el.innerHTML = `<div class="feed-empty"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-dim)"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><p>No posts yet.</p></div>`;
+      return;
+    }
+    el.innerHTML = posts.map(p => postCard(p)).join('');
+  });
+}
+
+function postCard(p) {
+  const initial = p.username.charAt(0).toUpperCase();
+  const role    = p.role || 'member';
+  const liked   = currentUser && (p.likes || []).includes(currentUser.uid);
+  const tags    = (p.tags || []).map(t => `<span class="post-tag">${escHtml(t)}</span>`).join('');
+  const time    = p.createdAt?.seconds ? timeAgo(p.createdAt.seconds) : '';
+
+  return `<div class="post-card" id="post-${p.id}">
+    <div class="post-card-header">
+      <div class="post-card-avatar pf-avatar--${role}">${initial}</div>
+      <div class="post-card-meta">
+        <div class="post-card-author">${escHtml(p.username)}</div>
+        <div class="post-card-time">${time}</div>
+      </div>
+    </div>
+    <div class="post-card-text">${escHtml(p.text)}</div>
+    ${tags ? `<div class="post-card-tags">${tags}</div>` : ''}
+    <div class="post-card-actions">
+      <button class="post-action-btn ${liked ? 'liked' : ''}" onclick="handleLike('${p.id}')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="${liked ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        ${(p.likes || []).length}
+      </button>
+      <button class="post-action-btn" onclick="toggleComments('${p.id}')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        ${p.commentCount || 0}
+      </button>
+    </div>
+    <div class="post-comments" id="comments-${p.id}">
+      <div id="comments-list-${p.id}"></div>
+      ${currentUser ? `<div class="post-comment-input-wrap">
+        <input type="text" class="post-comment-input" id="comment-input-${p.id}" placeholder="Write a comment..." maxlength="200"
+          onkeydown="if(event.key==='Enter')handleComment('${p.id}')" />
+        <button class="post-comment-send" onclick="handleComment('${p.id}')">Reply</button>
+      </div>` : ''}
+    </div>
+  </div>`;
+}
+
+window.handleLike = async function(postId) {
+  if (!currentUser) return;
+  await toggleLike(postId, currentUser.uid);
+};
+
+window.toggleComments = async function(postId) {
+  const el = document.getElementById('comments-' + postId);
+  if (!el.classList.contains('open')) {
+    el.classList.add('open');
+    const q = query(collection(db, 'posts', postId, 'comments'), orderBy('createdAt', 'asc'));
+    const snap = await getDocs(q);
+    document.getElementById('comments-list-' + postId).innerHTML = snap.docs.map(d => {
+      const c = d.data();
+      return `<div class="post-comment">
+        <div class="post-comment-avatar pf-avatar--${c.role||'member'}">${c.username.charAt(0).toUpperCase()}</div>
+        <div class="post-comment-bubble">
+          <div class="post-comment-author">${escHtml(c.username)}</div>
+          <div class="post-comment-text">${escHtml(c.text)}</div>
+        </div>
+      </div>`;
+    }).join('');
+  } else {
+    el.classList.remove('open');
+  }
+};
+
+window.handleComment = async function(postId) {
+  if (!currentUser) return;
+  const input = document.getElementById('comment-input-' + postId);
+  const text  = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  await addComment(postId, currentUser.uid, currentData?.username || 'Unknown', currentData?.role || 'member', text);
+  document.getElementById('comments-' + postId).classList.remove('open');
+  window.toggleComments(postId);
+};
+
 function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
-function escHtml(str)  { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }

@@ -31,6 +31,7 @@ async function createUserDoc(user, username) {
     createdAt: serverTimestamp(),
     role:      'member',
     bio:       '',
+    friends:   [],
   });
 }
 
@@ -183,6 +184,12 @@ function initNavAuth() {
       profileRow.className  = 'settings-auth-row settings-row settings-row--link';
       profileRow.innerHTML  = `<span class="settings-row-label">Profile</span><span class="settings-row-arrow">→</span>`;
       body.appendChild(profileRow);
+
+      const messagesRow = document.createElement('a');
+      messagesRow.href       = 'messages.html';
+      messagesRow.className  = 'settings-auth-row settings-row settings-row--link';
+      messagesRow.innerHTML  = `<span class="settings-row-label">Messages</span><span class="settings-row-arrow">→</span>`;
+      body.appendChild(messagesRow);
 
       // Admin link
       if (isAdmin) {
