@@ -302,9 +302,44 @@ async function searchAnime(q) {
   document.getElementById('searchPanel').style.display = 'block';
 
   try {
-    const res  = await fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(q)}&limit=8&sfw=true`);
-    const data = await res.json();
-    const results = data.data || [];
+    // Primary: AniList GraphQL (more reliable, no rate limit issues)
+    const anilistQuery = `
+      query ($search: String) {
+        Page(page: 1, perPage: 8) {
+          media(search: $search, type: ANIME, sort: SEARCH_MATCH) {
+            id
+            title { english romaji }
+            coverImage { medium large }
+            averageScore
+            episodes
+            status
+            format
+          }
+        }
+      }
+    `;
+    const res = await fetch('https://graphql.anilist.co', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ query: anilistQuery, variables: { search: q } })
+    });
+    const json = await res.json();
+    const rawResults = json?.data?.Page?.media || [];
+    
+    // Normalize AniList format to our format
+    const results = rawResults.map(a => ({
+      mal_id: a.id,
+      title_english: a.title.english,
+      title: a.title.romaji || a.title.english,
+      images: { jpg: { image_url: a.coverImage?.large || a.coverImage?.medium || '' } },
+      score: a.averageScore ? (a.averageScore / 10).toFixed(1) : null,
+      episodes: a.episodes,
+    }));
+
+    if (results.length === 0) {
+      el.innerHTML = `<div class="anime-search-empty">No results for "${escHtml(q)}"</div>`;
+      return;
+    }
 
     if (results.length === 0) {
       el.innerHTML = `<div class="anime-search-empty">No results for "${escHtml(q)}"</div>`;

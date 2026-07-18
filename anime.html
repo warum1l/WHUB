@@ -88,6 +88,19 @@
         </div>
 
         <!-- Login prompt -->
+        <!-- Catalog link -->
+        <div class="anime-card" id="catalogLinkCard">
+          <div class="anime-card-label">Browse</div>
+          <a href="anime-catalog.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);background:var(--bg-2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;transition:border-color 0.18s" onmouseover="this.style.borderColor='rgba(236,72,153,0.35)'" onmouseout="this.style.borderColor='var(--border)'">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#ec4899;flex-shrink:0"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" x2="7" y1="2" y2="22"/><line x1="17" x2="17" y1="2" y2="22"/><line x1="2" x2="22" y1="12" y2="12"/><line x1="2" x2="7" y1="7" y2="7"/><line x1="2" x2="7" y1="17" y2="17"/><line x1="17" x2="22" y1="17" y2="17"/><line x1="17" x2="22" y1="7" y2="7"/></svg>
+            <div>
+              <div style="font-family:var(--font-display);font-weight:700;font-size:0.82rem">Anime Catalog</div>
+              <div style="font-size:0.72rem;color:var(--text-dim)">Browse trending, seasonal & more</div>
+            </div>
+            <span style="color:var(--text-dim);margin-left:auto">→</span>
+          </a>
+        </div>
+
         <div class="anime-card anime-login-prompt" id="loginPrompt" style="display:none">
           <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent-anime)"><path d="M15 8a3 3 0 1 0-6 0v4H6l2 4h8l2-4h-3V8Z"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
           <p>Sign in to create your anime list and share it with others.</p>

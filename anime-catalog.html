@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Browse anime — seasonal, popular, top rated. Add to your watchlist." />
+  <title>Anime Catalog — WHUB</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="auth.css" />
+  <link rel="stylesheet" href="anime.css" />
+  <link rel="stylesheet" href="anime-catalog.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="logo">W<span>HUB</span></a>
+    <div class="nav-right"></div>
+  </nav>
+
+  <div class="page-wrapper">
+    <div class="page-hero">
+      <div class="catalog-hero-bg"></div>
+      <div class="page-hero-content">
+        <div class="breadcrumb">
+          <a href="index.html">Home</a><span>›</span>
+          <a href="useful.html">Useful</a><span>›</span>
+          <a href="anime.html">Anime List</a><span>›</span>
+          <span>Catalog</span>
+        </div>
+        <h1 class="page-title"><span class="anime-accent">Anime</span> Catalog</h1>
+        <p class="page-subtitle">Browse, discover, add to your list.</p>
+      </div>
+    </div>
+
+    <div class="catalog-page">
+
+      <!-- SEARCH BAR -->
+      <div class="catalog-search-wrap">
+        <div class="catalog-search-inner">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" class="catalog-search-input" id="catalogSearch" placeholder="Search any anime..." autocomplete="off" />
+          <button class="catalog-search-btn" onclick="triggerSearch()">Search</button>
+        </div>
+      </div>
+
+      <!-- FILTER TABS -->
+      <div class="catalog-filter-tabs">
+        <button class="catalog-filter-tab active" data-filter="trending" onclick="setFilter('trending',this)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+          Trending
+        </button>
+        <button class="catalog-filter-tab" data-filter="popular" onclick="setFilter('popular',this)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+          Popular
+        </button>
+        <button class="catalog-filter-tab" data-filter="top" onclick="setFilter('top',this)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          Top Rated
+        </button>
+        <button class="catalog-filter-tab" data-filter="seasonal" onclick="setFilter('seasonal',this)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
+          This Season
+        </button>
+        <button class="catalog-filter-tab" data-filter="movies" onclick="setFilter('movies',this)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" x2="7" y1="2" y2="22"/><line x1="17" x2="17" y1="2" y2="22"/><line x1="2" x2="22" y1="12" y2="12"/></svg>
+          Movies
+        </button>
+      </div>
+
+      <!-- GENRE FILTERS -->
+      <div class="catalog-genres" id="genreFilters">
+        <button class="catalog-genre-btn active" data-genre="" onclick="setGenre('',this)">All</button>
+        <button class="catalog-genre-btn" data-genre="1" onclick="setGenre('1',this)">Action</button>
+        <button class="catalog-genre-btn" data-genre="4" onclick="setGenre('4',this)">Comedy</button>
+        <button class="catalog-genre-btn" data-genre="8" onclick="setGenre('8',this)">Drama</button>
+        <button class="catalog-genre-btn" data-genre="10" onclick="setGenre('10',this)">Fantasy</button>
+        <button class="catalog-genre-btn" data-genre="14" onclick="setGenre('14',this)">Horror</button>
+        <button class="catalog-genre-btn" data-genre="7" onclick="setGenre('7',this)">Mystery</button>
+        <button class="catalog-genre-btn" data-genre="22" onclick="setGenre('22',this)">Romance</button>
+        <button class="catalog-genre-btn" data-genre="24" onclick="setGenre('24',this)">Sci-Fi</button>
+        <button class="catalog-genre-btn" data-genre="36" onclick="setGenre('36',this)">Slice of Life</button>
+        <button class="catalog-genre-btn" data-genre="30" onclick="setGenre('30',this)">Sports</button>
+        <button class="catalog-genre-btn" data-genre="37" onclick="setGenre('37',this)">Supernatural</button>
+      </div>
+
+      <!-- RESULTS LABEL -->
+      <div class="catalog-section-label" id="catalogLabel">
+        <span id="catalogLabelText">Trending Now</span>
+        <span class="catalog-count" id="catalogCount"></span>
+      </div>
+
+      <!-- GRID -->
+      <div class="catalog-grid" id="catalogGrid">
+        <div class="catalog-loading"><div class="auth-loading-spinner"></div><span>Loading...</span></div>
+      </div>
+
+      <!-- LOAD MORE -->
+      <div class="catalog-load-more" id="loadMoreWrap" style="display:none">
+        <button class="catalog-load-btn" id="loadMoreBtn" onclick="loadMore()">Load More</button>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-logo">W<span>HUB</span></div>
+    <p class="footer-text">Built for the community, by the community.</p>
+  </footer>
+
+  <!-- ADD TO LIST MODAL -->
+  <div class="catalog-modal-overlay" id="modalOverlay" onclick="closeModal()" style="display:none"></div>
+  <div class="catalog-modal" id="addModal" style="display:none">
+    <div class="catalog-modal-header">
+      <div class="catalog-modal-title" id="modalTitle">Add to List</div>
+      <button class="catalog-modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="catalog-modal-poster-wrap">
+      <img id="modalPoster" src="" class="catalog-modal-poster" />
+      <div class="catalog-modal-info">
+        <div class="catalog-modal-anime-title" id="modalAnimeTitle"></div>
+        <div class="catalog-modal-meta" id="modalMeta"></div>
+      </div>
+    </div>
+    <div id="modalAuthPrompt" style="display:none;text-align:center;padding:16px">
+      <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:12px">Sign in to add to your list</p>
+      <a href="login.html" class="anime-login-btn" style="background:var(--accent-anime)">Sign In</a>
+    </div>
+    <div id="modalBtns" style="display:none">
+      <p class="catalog-modal-label">Add to:</p>
+      <div class="catalog-modal-actions">
+        <button class="catalog-modal-btn catalog-modal-btn--watch" onclick="addFromModal('watched')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+          Watched
+        </button>
+        <button class="catalog-modal-btn catalog-modal-btn--plan" onclick="addFromModal('plan')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
+          Plan to Watch
+        </button>
+        <button class="catalog-modal-btn catalog-modal-btn--fav" onclick="addFromModal('favorites')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          Favorites
+        </button>
+      </div>
+      <div id="modalStatus" style="text-align:center;margin-top:12px;font-size:0.82rem;color:var(--text-dim)"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script type="module" src="anime-catalog.js"></script>
+</body>
+</html>
