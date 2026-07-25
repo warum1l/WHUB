@@ -239,6 +239,11 @@ async function searchMedia(q) {
 
     results = results.slice(0, 8);
 
+    if (!res.ok) {
+      el.innerHTML = `<div class="anime-search-empty">Search unavailable — TMDB API key not configured.<br><a href="https://www.themoviedb.org/settings/api" target="_blank" style="color:var(--accent-roblox)">Get free key →</a></div>`;
+      return;
+    }
+
     if (results.length === 0) {
       el.innerHTML = `<div class="anime-search-empty">No results for "${escHtml(q)}"</div>`;
       return;
@@ -304,7 +309,8 @@ async function searchMedia(q) {
       </div>`;
     }).join('');
   } catch(e) {
-    el.innerHTML = `<div class="anime-search-empty">Search failed. Try again.</div>`;
+    console.error('Media search error:', e);
+    el.innerHTML = `<div class="anime-search-empty">Search failed — check your TMDB API key in media.js</div>`;
   }
 }
 

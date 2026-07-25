@@ -227,8 +227,22 @@ window.handleComment = async function(postId) {
   if (!text) return;
   input.value = '';
   await addComment(postId, currentUser.uid, currentData?.username || 'Unknown', currentData?.role || 'member', text);
-  document.getElementById('comments-' + postId).classList.remove('open');
-  window.toggleComments(postId);
+  // Reload comments without toggling open state
+  const el = document.getElementById('comments-' + postId);
+  if (el.classList.contains('open')) {
+    const q = query(collection(db, 'posts', postId, 'comments'), orderBy('createdAt', 'asc'));
+    const snap = await getDocs(q);
+    document.getElementById('comments-list-' + postId).innerHTML = snap.docs.map(d => {
+      const cm = d.data();
+      return \`<div class="post-comment">
+        <div class="post-comment-avatar pf-avatar--\${cm.role||'member'}">\${cm.username.charAt(0).toUpperCase()}</div>
+        <div class="post-comment-bubble">
+          <div class="post-comment-author">\${escHtml(cm.username)}</div>
+          <div class="post-comment-text">\${escHtml(cm.text)}</div>
+        </div>
+      </div>\`;
+    }).join('');
+  }
 };
 
 function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }

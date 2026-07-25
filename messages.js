@@ -53,7 +53,10 @@ async function renderConvoList(convos) {
     } catch(e) {}
     const initial = otherName.charAt(0).toUpperCase();
     const isActive = c.id === activeConvoId;
-    return `<div class="msg-convo-item ${isActive ? 'active' : ''}" onclick="selectConvo('${c.id}','${otherUid}','${escHtml(otherName)}','${otherRole}')">
+    return `<div class="msg-convo-item ${isActive ? 'active' : ''}"
+      data-convoid="${c.id}" data-uid="${otherUid}"
+      data-name="${escHtml(otherName)}" data-role="${otherRole}"
+      onclick="selectConvoFromEl(this)">
       <div class="msg-convo-avatar pf-avatar--${otherRole}">${initial}</div>
       <div class="msg-convo-info">
         <div class="msg-convo-name">${escHtml(otherName)}</div>
@@ -82,6 +85,10 @@ async function openOrCreateConvo(otherUid) {
   const otherRole = otherSnap.exists() ? (otherSnap.data().role || 'member') : 'member';
   selectConvo(convoId, otherUid, otherName, otherRole);
 }
+
+window.selectConvoFromEl = function(el) {
+  selectConvo(el.dataset.convoid, el.dataset.uid, el.dataset.name, el.dataset.role);
+};
 
 window.selectConvo = function(convoId, otherUid, otherName, otherRole) {
   activeConvoId = convoId;

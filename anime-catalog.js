@@ -78,6 +78,19 @@ window.loadMore = function() {
   loadCatalog(true);
 };
 
+
+// ── Dynamic season detection ───────────────────
+function getCurrentSeason() {
+  const month = new Date().getMonth() + 1;
+  const year  = new Date().getFullYear();
+  let season;
+  if (month >= 1  && month <= 3)  season = 'WINTER';
+  else if (month >= 4  && month <= 6)  season = 'SPRING';
+  else if (month >= 7  && month <= 9)  season = 'SUMMER';
+  else                                  season = 'FALL';
+  return { season, year };
+}
+
 // ── Build AniList query ────────────────────────
 function buildQuery() {
   if (isSearchMode) {
@@ -105,7 +118,7 @@ function buildQuery() {
   };
 
   let extra = '';
-  if (currentFilter === 'seasonal') extra = ', season: SPRING, seasonYear: 2025';
+  if (currentFilter === 'seasonal') { const s = getCurrentSeason(); extra = `, season: ${s.season}, seasonYear: ${s.year}`; }
   if (currentFilter === 'movies')   extra = ', format: MOVIE';
 
   return {
@@ -184,16 +197,16 @@ function catalogCard(a) {
   const inList = isInList(a.id);
   const statusDot = inList ? `<div class="catalog-card-in-list-dot" title="In your list"></div>` : '';
 
-  return `<div class="catalog-card" onclick="openModal(${JSON.stringify({
-    id: a.id,
-    title,
-    poster,
-    score,
-    episodes: a.episodes,
-    format: a.format,
-    year,
-    genres: (a.genres || []).slice(0, 3).join(', ')
-  }).replace(/"/g, '&quot;')})">
+  return `<div class="catalog-card"
+    data-id="${a.id}"
+    data-title="${escHtml(title)}"
+    data-poster="${escHtml(poster)}"
+    data-score="${score}"
+    data-episodes="${a.episodes || ''}"
+    data-format="${a.format || ''}"
+    data-year="${year}"
+    data-genres="${escHtml((a.genres || []).slice(0, 3).join(', '))}"
+    onclick="openModalFromCard(this)">
     ${poster
       ? `<img src="${escHtml(poster)}" class="catalog-card-poster" loading="lazy" onerror="this.style.display='none'" />`
       : `<div class="catalog-card-poster-ph">${title.charAt(0)}</div>`}
@@ -215,8 +228,20 @@ function catalogCard(a) {
 }
 
 // ── Modal ──────────────────────────────────────
-window.openModal = function(animeStr) {
-  const anime = typeof animeStr === 'string' ? JSON.parse(animeStr.replace(/&quot;/g, '"')) : animeStr;
+window.openModalFromCard = function(el) {
+  openModal({
+    id:       parseInt(el.dataset.id),
+    title:    el.dataset.title,
+    poster:   el.dataset.poster,
+    score:    el.dataset.score,
+    episodes: el.dataset.episodes ? parseInt(el.dataset.episodes) : null,
+    format:   el.dataset.format,
+    year:     el.dataset.year,
+    genres:   el.dataset.genres,
+  });
+};
+
+window.openModal = function(anime) {
   modalAnime = anime;
 
   document.getElementById('modalAnimeTitle').textContent = anime.title;
