@@ -4,6 +4,8 @@
 // =============================================
 import { auth, db, initNavAuth, onAuthStateChanged }
   from './firebase.js';
+import { getUserByUsernameRest, escHtml } from './utils.js';
+import { toastSuccess } from './toast.js';
 import {
   doc, getDoc, setDoc, serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
@@ -196,7 +198,7 @@ function mediaCard(item, tab) {
       <button class="anime-act-btn anime-act--del" onclick="removeMedia(${item.id},'${item.type}','${tab}')" title="Remove"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg></button>
     </div>`;
 
-  return `<div class="anime-card">
+  return `<div class="anime-card fade-in-up">
     <div class="anime-card-link" style="display:block;text-decoration:none;color:inherit">
       ${img}
       <div class="anime-card-body">
@@ -391,31 +393,7 @@ function typeLabel(type) {
   return type === 'movie' ? 'Movie' : type === 'tv' ? 'TV Show' : 'Drama';
 }
 
-async function getUserByUsernameRest(username) {
-  const projectId = 'whub-7f24b';
-  const apiKey    = 'AIzaSyC5X9rt_sGUBpEANBw9HIcNkELxRRxmEkQ';
-  const url = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents:runQuery?key=${apiKey}`;
-  const res  = await fetch(url, {
-    method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ structuredQuery: {
-      from: [{ collectionId: 'users' }],
-      where: { fieldFilter: { field: { fieldPath: 'username' }, op: 'EQUAL', value: { stringValue: username } } },
-      limit: 1
-    }})
-  });
-  const data = await res.json();
-  if (!Array.isArray(data) || !data[0]?.document) return null;
-  const fields = data[0].document.fields || {};
-  const obj = {};
-  for (const [k, v] of Object.entries(fields)) {
-    if      ('stringValue'  in v) obj[k] = v.stringValue;
-    else if ('integerValue' in v) obj[k] = parseInt(v.integerValue);
-    else if ('booleanValue' in v) obj[k] = v.booleanValue;
-    else                          obj[k] = null;
-  }
-  obj.uid = data[0].document.name.split('/').pop();
-  return obj;
-}
+// getUserByUsernameRest imported from utils.js
 
 function renderError(msg) {
   ['watched','plan','favorites'].forEach(t => {
@@ -423,4 +401,3 @@ function renderError(msg) {
   });
 }
 
-function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }

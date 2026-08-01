@@ -10,6 +10,8 @@ import {
   subscribeToUserPosts, acceptFriendRequest,
   declineFriendRequest, getIncomingRequests, escHtml, timeAgo
 } from './social.js';
+import { toastError, toastSuccess } from './toast.js';
+import { validateUsername, moderateContent } from './utils.js';
 
 let currentUser = null;
 let currentData = null;
@@ -90,7 +92,7 @@ function postCard(p, isOwn) {
   const tags    = (p.tags || []).map(t => `<span class="post-tag">${escHtml(t)}</span>`).join('');
   const time    = p.createdAt?.seconds ? timeAgo(p.createdAt.seconds) : '';
 
-  return `<div class="post-card" id="post-${p.id}">
+  return `<div class="post-card fade-in-up" id="post-${p.id}">
     <div class="post-card-header">
       <div class="post-card-avatar pf-avatar--${role}">${initial}</div>
       <div class="post-card-meta">
@@ -112,6 +114,10 @@ function postCard(p, isOwn) {
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         ${p.commentCount || 0}
       </button>
+      ${!isOwn ? `<button class="post-report-btn" onclick="handleReport('${p.id}','post')" title="Report">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg>
+        Report
+      </button>` : ''}
     </div>
     <div class="post-comments" id="comments-${p.id}">
       <div id="comments-list-${p.id}"></div>
@@ -138,7 +144,7 @@ window.submitPost = async function() {
     document.getElementById('postText').value = '';
     document.getElementById('postTags').value = '';
     document.getElementById('postCharCount').textContent = '0';
-  } catch(e) { errEl.textContent = 'Failed to post.'; }
+  } catch(e) { toastError(e.message || 'Failed to post.'); }
   btn.disabled = false; btn.textContent = 'Post';
 };
 
@@ -179,8 +185,13 @@ window.handleComment = async function(postId) {
   const text  = input.value.trim();
   if (!text || !currentUser) return;
   input.value = '';
-  await addComment(postId, currentUser.uid, currentData.username, currentData.role || 'member', text);
-  loadComments(postId);
+  try {
+    await addComment(postId, currentUser.uid, currentData.username, currentData.role || 'member', text);
+    loadComments(postId);
+  } catch(e) {
+    document.getElementById('comment-input-' + postId).value = text;
+    toastError(e.message || 'Failed to post comment.');
+  }
 };
 
 async function loadFriends() {
@@ -288,9 +299,8 @@ window.handleSave = async function() {
   const discordUser = document.getElementById('editDiscord').value.trim();
   const errEl = document.getElementById('editError');
   const btn   = document.getElementById('saveBtn');
-  if (!username)           return errEl.textContent = 'Username cannot be empty.';
-  if (username.length < 3) return errEl.textContent = 'At least 3 characters.';
-  if (!/^[a-zA-Z0-9_]+$/.test(username)) return errEl.textContent = 'Letters, numbers and _ only.';
+  const unErr = validateUsername(username);
+  if (unErr) return errEl.textContent = unErr;
   btn.disabled = true;
   btn.querySelector('.auth-btn-text').textContent = 'Saving...';
   try {
@@ -298,7 +308,8 @@ window.handleSave = async function() {
     currentData = { ...currentData, username, bio, robloxUser, discordUser };
     renderProfile(currentData, currentUser);
     closeEdit();
-  } catch(e) { errEl.textContent = 'Failed to save.'; }
+    toastSuccess('Profile updated');
+  } catch(e) { toastError('Failed to save changes.'); }
   btn.disabled = false;
   btn.querySelector('.auth-btn-text').textContent = 'Save Changes';
 };
@@ -309,3 +320,17 @@ window.handleSignOut = async function() {
 };
 
 function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
+
+window.handleReport = async function(contentId, type) {
+  if (!currentUser) return;
+  const btn = document.querySelector(`[onclick="handleReport('${contentId}','${type}')"]`);
+  if (btn) { btn.classList.add('reported'); btn.textContent = 'Reported'; }
+  try {
+    await addDoc(collection(db, 'reports'), {
+      contentId, type,
+      reportedBy: currentUser.uid,
+      reporterUsername: currentData?.username || 'Unknown',
+      createdAt: serverTimestamp(),
+    });
+  } catch(e) { console.error('Report failed:', e); }
+};

@@ -10,7 +10,7 @@ async function initWidget() {
 
   try {
     const [usersSnap] = await Promise.all([
-      getDocs(collection(db, 'users'))
+      getDocs(query(collection(db, 'users'), limit(500)))
     ]);
 
     const users = usersSnap.docs

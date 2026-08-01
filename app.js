@@ -25,3 +25,48 @@
   style.textContent = `.visible { opacity: 1 !important; transform: translateY(0) !important; }`;
   document.head.appendChild(style);
 })();
+
+// ── Escape key — close all modals/panels ────────────
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape') return;
+  const checks = [
+    ['settings-panel', 'open', () => {
+      document.getElementById('settings-panel')?.classList.remove('open');
+      document.getElementById('settings-overlay')?.classList.remove('open');
+    }],
+    ['addModal', 'block', () => {
+      document.getElementById('addModal').style.display = 'none';
+      const o = document.getElementById('modalOverlay');
+      if (o) o.style.display = 'none';
+    }],
+    ['editPanel', 'block', () => { document.getElementById('editPanel').style.display = 'none'; }],
+    ['searchPanel', 'block', () => {
+      document.getElementById('searchPanel').style.display = 'none';
+      const si = document.getElementById('animeSearchInput') || document.getElementById('mediaSearchInput');
+      if (si) si.value = '';
+    }],
+  ];
+  for (const [id, state, fn] of checks) {
+    const el = document.getElementById(id);
+    if (!el) continue;
+    const active = state === 'open' ? el.classList.contains('open') : el.style.display === state;
+    if (active) { fn(); break; }
+  }
+});
+
+// ── OS theme auto-detect ────────────────────────────
+(function() {
+  if (!localStorage.getItem('nexushub-theme')) {
+    const dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+  }
+})();
+
+// ── Navbar shadow on scroll ──────────────────────────
+(function() {
+  const nav = document.querySelector('.navbar');
+  if (!nav) return;
+  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 8);
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();

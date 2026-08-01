@@ -4,6 +4,8 @@
 import { auth, db, initNavAuth, onAuthStateChanged } from './firebase.js';
 import { doc, getDoc, collection, query, orderBy, getDocs }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { getUserByUsernameRest, escHtml } from './utils.js';
+import { toastError, toastSuccess } from './toast.js';
 import {
   sendFriendRequest, getFriendStatus,
   subscribeToUserPosts, toggleLike, addComment, escHtml, timeAgo
@@ -58,32 +60,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 });
 
-async function getUserByUsernameRest(username) {
-  const projectId = 'whub-7f24b';
-  const apiKey    = 'AIzaSyC5X9rt_sGUBpEANBw9HIcNkELxRRxmEkQ';
-  const url = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents:runQuery?key=${apiKey}`;
-  const res  = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ structuredQuery: {
-      from: [{ collectionId: 'users' }],
-      where: { fieldFilter: { field: { fieldPath: 'username' }, op: 'EQUAL', value: { stringValue: username } } },
-      limit: 1
-    }})
-  });
-  const data = await res.json();
-  if (!Array.isArray(data) || !data[0]?.document) return null;
-  const fields = data[0].document.fields || {};
-  const obj = {};
-  for (const [k, v] of Object.entries(fields)) {
-    if      ('stringValue'  in v) obj[k] = v.stringValue;
-    else if ('integerValue' in v) obj[k] = parseInt(v.integerValue);
-    else if ('booleanValue' in v) obj[k] = v.booleanValue;
-    else                          obj[k] = null;
-  }
-  obj.uid = data[0].document.name.split('/').pop();
-  return obj;
-}
+// getUserByUsernameRest from utils.js
 
 function renderProfile(data) {
   const initial = data.username.charAt(0).toUpperCase();
@@ -163,7 +140,7 @@ function postCard(p) {
   const tags    = (p.tags || []).map(t => `<span class="post-tag">${escHtml(t)}</span>`).join('');
   const time    = p.createdAt?.seconds ? timeAgo(p.createdAt.seconds) : '';
 
-  return `<div class="post-card" id="post-${p.id}">
+  return `<div class="post-card fade-in-up" id="post-${p.id}">
     <div class="post-card-header">
       <div class="post-card-avatar pf-avatar--${role}">${initial}</div>
       <div class="post-card-meta">
@@ -177,6 +154,9 @@ function postCard(p) {
       <button class="post-action-btn ${liked ? 'liked' : ''}" onclick="handleLike('${p.id}')">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="${liked ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
         ${(p.likes || []).length}
+      </button>
+      <button class="post-action-btn" onclick="handleReport('${p.id}','post')" title="Report" style="margin-left:auto" id="report-${p.id}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg>
       </button>
       <button class="post-action-btn" onclick="toggleComments('${p.id}')">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>

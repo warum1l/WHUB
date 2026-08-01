@@ -162,7 +162,7 @@ window.deleteUser = async function(uid, username) {
   try {
     await deleteDoc(doc(db, 'users', uid));
     await loadUsers();
-  } catch(e) { alert('Failed: ' + e.message); }
+  } catch(e) { toastError('Failed: ' + e.message); }
 };
 
 // FEEDBACK
@@ -210,7 +210,7 @@ window.deleteFeedback = async function(id) {
   try {
     await deleteDoc(doc(db, 'feedback', id));
     await loadFeedback();
-  } catch(e) { alert('Failed: ' + e.message); }
+  } catch(e) { toastError('Failed: ' + e.message); }
 };
 
 // -----------------------------------------------

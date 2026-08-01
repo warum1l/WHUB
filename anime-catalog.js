@@ -3,6 +3,7 @@
 // =============================================
 import { auth, db, initNavAuth, onAuthStateChanged, getUserDoc }
   from './firebase.js';
+import { escHtml } from './utils.js';
 import { doc, getDoc, setDoc, serverTimestamp }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
@@ -142,7 +143,7 @@ async function loadCatalog(append = false) {
   const loadMoreWrap = document.getElementById('loadMoreWrap');
 
   if (!append) {
-    grid.innerHTML = `<div class="catalog-loading"><div class="auth-loading-spinner"></div><span>Loading...</span></div>`;
+    grid.innerHTML = `<div class="skeleton-grid"><div class="skeleton skeleton-poster"></div><div class="skeleton skeleton-poster"></div><div class="skeleton skeleton-poster"></div><div class="skeleton skeleton-poster"></div><div class="skeleton skeleton-poster"></div><div class="skeleton skeleton-poster"></div><div class="skeleton skeleton-poster"></div><div class="skeleton skeleton-poster"></div><div class="skeleton skeleton-poster"></div><div class="skeleton skeleton-poster"></div><div class="skeleton skeleton-poster"></div><div class="skeleton skeleton-poster"></div></div>`;
     loadMoreWrap.style.display = 'none';
   } else {
     document.getElementById('loadMoreBtn').textContent = 'Loading...';
@@ -197,7 +198,7 @@ function catalogCard(a) {
   const inList = isInList(a.id);
   const statusDot = inList ? `<div class="catalog-card-in-list-dot" title="In your list"></div>` : '';
 
-  return `<div class="catalog-card"
+  return `<div class="catalog-card pop-in"
     data-id="${a.id}"
     data-title="${escHtml(title)}"
     data-poster="${escHtml(poster)}"
@@ -325,7 +326,6 @@ function formatLabel(fmt) {
   return map[fmt] || fmt || '';
 }
 
-function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 // ── Init ───────────────────────────────────────
 loadCatalog();

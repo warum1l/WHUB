@@ -3,6 +3,8 @@
 // =============================================
 import { auth, db, initNavAuth, onAuthStateChanged }
   from './firebase.js';
+import { getUserByUsernameRest, escHtml } from './utils.js';
+import { toastSuccess } from './toast.js';
 import {
   doc, getDoc, setDoc, collection,
   query, where, getDocs, serverTimestamp
@@ -268,6 +270,7 @@ function emptyState(tab) {
 }
 
 function animeCard(anime, tab) {
+  // wrapped with fade-in-up below
   const img = anime.image
     ? `<img src="${escHtml(anime.image)}" alt="${escHtml(anime.title)}" class="anime-card-img" loading="lazy" onerror="this.style.display='none'" />`
     : `<div class="anime-card-img anime-card-img--placeholder">${escHtml(anime.title.charAt(0))}</div>`;
@@ -283,7 +286,7 @@ function animeCard(anime, tab) {
       <button class="anime-act-btn anime-act--del" onclick="removeAnime(${anime.id},'${tab}')" title="Remove"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg></button>
     </div>`;
 
-  return `<div class="anime-card" data-id="${anime.id}" data-tab="${tab}">
+  return `<div class="anime-card fade-in-up" data-id="${anime.id}" data-tab="${tab}">
     <a href="https://myanimelist.net/anime/${anime.id}" target="_blank" rel="noopener" class="anime-card-link">
       ${img}
       <div class="anime-card-body">

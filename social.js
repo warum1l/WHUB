@@ -9,12 +9,15 @@ import {
 } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 export { auth, db };
+import { moderateContent, escHtml, timeAgo, capitalize } from './utils.js';
 export { collection, doc, getDoc, addDoc, deleteDoc, updateDoc,
          query, where, orderBy, getDocs, onSnapshot,
          serverTimestamp, arrayUnion, arrayRemove };
 
 // ── POSTS ─────────────────────────────────────
 export async function createPost(authorUid, username, role, text, tags) {
+  const mod = moderateContent(text);
+  if (!mod.ok) throw new Error(mod.reason);
   return await addDoc(collection(db, 'posts'), {
     authorUid, username, role,
     text, tags,
@@ -41,12 +44,19 @@ export async function toggleLike(postId, uid) {
 }
 
 export async function addComment(postId, uid, username, role, text) {
+  const mod = moderateContent(text);
+  if (!mod.ok) throw new Error(mod.reason);
   const ref = await addDoc(collection(db, 'posts', postId, 'comments'), {
     uid, username, role, text, createdAt: serverTimestamp(),
   });
-  const postSnap = await getDoc(doc(db, 'posts', postId));
-  const current  = postSnap.exists() ? (postSnap.data().commentCount || 0) : 0;
-  await updateDoc(doc(db, 'posts', postId), { commentCount: current + 1 });
+  // Use increment to avoid race condition
+  try {
+    const { increment } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    await updateDoc(doc(db, 'posts', postId), { commentCount: increment(1) });
+  } catch(e) {
+    const snap = await getDoc(doc(db, 'posts', postId));
+    await updateDoc(doc(db, 'posts', postId), { commentCount: (snap.data()?.commentCount || 0) + 1 });
+  }
   return ref;
 }
 
@@ -129,16 +139,4 @@ export async function getIncomingRequests(uid) {
   return snap.docs.map(d => ({ id: d.id, ...d.data() }));
 }
 
-export function escHtml(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-export function timeAgo(seconds) {
-  const diff = Date.now() - seconds * 1000;
-  const mins = Math.floor(diff / 60000);
-  if (mins < 1)  return 'just now';
-  if (mins < 60) return `${mins}m ago`;
-  const hrs = Math.floor(mins / 60);
-  if (hrs < 24)  return `${hrs}h ago`;
-  return `${Math.floor(hrs / 24)}d ago`;
-}
+// escHtml, timeAgo, capitalize re-exported from utils.js above

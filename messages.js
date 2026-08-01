@@ -3,6 +3,8 @@
 // =============================================
 import { auth, db, initNavAuth, onAuthStateChanged, getUserDoc }
   from './firebase.js';
+import { moderateContent, escHtml } from './utils.js';
+import { toastWarning } from './toast.js';
 import {
   collection, doc, getDoc, getDocs, addDoc, updateDoc,
   query, where, orderBy, onSnapshot, serverTimestamp
@@ -134,8 +136,14 @@ function renderMessages(msgs, otherName, otherRole) {
 window.sendMessage = async function() {
   if (!currentUser || !activeConvoId) return;
   const input = document.getElementById('msgInput');
+  const errEl = document.getElementById('msgError');
   const text  = input.value.trim();
   if (!text) return;
+
+  // Content moderation
+  const mod = moderateContent(text);
+  if (!mod.ok) { toastWarning(mod.reason); return; }
+
   input.value = '';
   await addDoc(collection(db, 'conversations', activeConvoId, 'messages'), {
     text, uid: currentUser.uid, username: currentData?.username || 'Unknown',
@@ -144,4 +152,3 @@ window.sendMessage = async function() {
   await updateDoc(doc(db, 'conversations', activeConvoId), { lastMsg: text, lastAt: serverTimestamp() });
 };
 
-function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }

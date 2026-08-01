@@ -9,7 +9,7 @@ let fbCount    = {};
 
 async function init() {
   const [usersSnap, fbSnap] = await Promise.all([
-    getDocs(collection(db, 'users')),
+    getDocs(query(collection(db, 'users'), limit(500))),
         getDocs(collection(db, 'feedback'))
   ]);
 

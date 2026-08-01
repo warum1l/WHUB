@@ -1246,3 +1246,28 @@
   .pf-edit-grid { grid-template-columns: 1fr; }
   .pf-edit-full { grid-column: 1; }
 }
+
+/* ── Loading state ───────────────────────────────── */
+.btn-loading { position:relative; color:transparent !important; pointer-events:none; }
+.btn-loading::after {
+  content:''; position:absolute; top:50%; left:50%;
+  width:16px; height:16px; margin:-8px 0 0 -8px;
+  border:2px solid rgba(255,255,255,.3); border-top-color:#fff;
+  border-radius:50%; animation:btn-spin .7s linear infinite;
+}
+@keyframes btn-spin { to { transform:rotate(360deg); } }
+
+/* ── Focus styles (a11y) ─────────────────────────── */
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible {
+  outline:2px solid var(--accent-roblox); outline-offset:2px;
+}
+
+/* ── Report button ───────────────────────────────── */
+.post-report-btn {
+  background:none; border:none; color:var(--text-dim); cursor:pointer;
+  padding:4px; border-radius:6px; font-size:.72rem;
+  display:flex; align-items:center; gap:4px;
+  transition:color .15s; font-family:var(--font-body);
+}
+.post-report-btn:hover { color:#f59e0b; }
+.post-report-btn.reported { color:#f59e0b; pointer-events:none; }

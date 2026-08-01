@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Messages — WHUB</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="toast.css" />
   <link rel="stylesheet" href="auth.css" />
   <link rel="stylesheet" href="social.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -40,6 +41,7 @@
             <a id="chatProfileLink" href="#" style="margin-left:auto;font-size:0.75rem;color:var(--text-dim)">View profile →</a>
           </div>
           <div class="msg-messages" id="msgMessages"></div>
+          <div id="msgError" style="padding:0 16px 4px;font-size:0.75rem;color:var(--accent-roblox);min-height:18px"></div>
           <div class="msg-input-wrap">
             <input type="text" class="msg-input" id="msgInput" placeholder="Write a message..." maxlength="500"
               onkeydown="if(event.key==='Enter')sendMessage()" />
