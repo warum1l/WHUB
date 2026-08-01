@@ -2,7 +2,7 @@
 // WHUB — Leaderboard Widget (index.html)
 // =============================================
 import { db } from './firebase.js';
-import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { collection, getDocs, query, limit } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 async function initWidget() {
   const el = document.getElementById('lbWidget');
@@ -34,7 +34,7 @@ async function initWidget() {
           <span class="lb-widget-avatar lb-avatar--${u.role || 'member'}">${initial}</span>
           <span class="lb-widget-info">
             <span class="lb-widget-name">${escHtml(u.username)}</span>
-            <span class="lb-widget-sub">${trades} trade${trades !== 1 ? 's' : ''}</span>
+            <span class="lb-widget-sub">Member</span>
           </span>
           <span class="lb-widget-badge profile-role-badge role--${u.role || 'member'}">${capitalize(u.role || 'member')}</span>
         </a>`;

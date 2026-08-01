@@ -70,3 +70,20 @@ document.addEventListener('keydown', (e) => {
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 })();
+
+// ── Loading watchdog — if a page's loading spinner never resolves, show a hint ──
+(function() {
+  const loadingIds = ['authLoading', 'pageLoading'];
+  loadingIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    setTimeout(() => {
+      if (el.style.display !== 'none' && getComputedStyle(el).display !== 'none') {
+        const hint = document.createElement('div');
+        hint.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:12px 20px;font-size:0.8rem;color:var(--text-muted);z-index:400;box-shadow:var(--shadow-lg)';
+        hint.innerHTML = 'This is taking longer than usual. <a href="javascript:location.reload()" style="color:var(--accent-roblox)">Reload page</a>';
+        document.body.appendChild(hint);
+      }
+    }, 8000);
+  });
+})();

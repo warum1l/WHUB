@@ -139,4 +139,4 @@ export async function getIncomingRequests(uid) {
   return snap.docs.map(d => ({ id: d.id, ...d.data() }));
 }
 
-// escHtml, timeAgo, capitalize re-exported from utils.js above
+export { escHtml, timeAgo, capitalize };
