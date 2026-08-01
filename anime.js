@@ -482,7 +482,3 @@ function renderError(msg) {
     document.getElementById('tab-' + t).innerHTML = `<div class="anime-empty"><p>${msg}</p></div>`;
   });
 }
-
-function escHtml(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
