@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://warum1l.github.io/WHUB/index.html</loc><priority>1.0</priority><changefreq>weekly</changefreq></url>
-  <url><loc>https://warum1l.github.io/WHUB/aotr.html</loc><priority>0.9</priority><changefreq>weekly</changefreq></url>
-  <url><loc>https://warum1l.github.io/WHUB/aotr-guides.html</loc><priority>0.7</priority><changefreq>weekly</changefreq></url>
-  <url><loc>https://warum1l.github.io/WHUB/windows.html</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://warum1l.github.io/WHUB/community.html</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://warum1l.github.io/WHUB/feedback.html</loc><priority>0.6</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://warum1l.github.io/kittens.ez/index.html</loc><priority>1.0</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://warum1l.github.io/kittens.ez/gacha.html</loc><priority>0.9</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://warum1l.github.io/kittens.ez/genshin.html</loc><priority>0.7</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://warum1l.github.io/kittens.ez/windows.html</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://warum1l.github.io/kittens.ez/wtweaker.html</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://warum1l.github.io/kittens.ez/useful.html</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://warum1l.github.io/kittens.ez/anime.html</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://warum1l.github.io/kittens.ez/anime-catalog.html</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://warum1l.github.io/kittens.ez/media.html</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://warum1l.github.io/kittens.ez/about.html</loc><priority>0.6</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://warum1l.github.io/kittens.ez/support.html</loc><priority>0.5</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://warum1l.github.io/kittens.ez/feedback.html</loc><priority>0.6</priority><changefreq>weekly</changefreq></url>
 </urlset>

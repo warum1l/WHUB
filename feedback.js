@@ -1,5 +1,5 @@
 // =============================================
-// WHUB — Feedback Page
+// kittens.ez — Feedback Page
 // =============================================
 import { auth, db, getUserDoc, initNavAuth, onAuthStateChanged }
   from './firebase.js';

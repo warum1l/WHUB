@@ -1,5 +1,5 @@
 // =============================================
-// WHUB — Anime List
+// kittens.ez — Anime List
 // =============================================
 import { auth, db, initNavAuth, onAuthStateChanged }
   from './firebase.js';
@@ -116,8 +116,8 @@ async function initViewModeByUid(uid) {
   isViewMode = true;
   document.getElementById('heroUsername').textContent   = displayName + "'s";
   document.getElementById('heroSuffix').textContent     = 'Anime List';
-  document.getElementById('heroSub').textContent        = `${displayName}'s anime tracker on WHUB.`;
-  document.title = `${displayName}'s Anime List — WHUB`;
+  document.getElementById('heroSub').textContent        = `${displayName}'s anime tracker on kittens.ez.`;
+  document.title = `${displayName}'s Anime List — kittens.ez`;
 
   const banner = document.getElementById('viewBanner');
   banner.style.display = 'flex';
@@ -147,8 +147,8 @@ async function initViewModePublic(username) {
   isViewMode = true;
   document.getElementById('heroUsername').textContent   = data.username + "'s";
   document.getElementById('heroSuffix').textContent     = 'Anime List';
-  document.getElementById('heroSub').textContent        = `${data.username}'s anime tracker on WHUB.`;
-  document.title = `${data.username}'s Anime List — WHUB`;
+  document.getElementById('heroSub').textContent        = `${data.username}'s anime tracker on kittens.ez.`;
+  document.title = `${data.username}'s Anime List — kittens.ez`;
 
   const banner = document.getElementById('viewBanner');
   banner.style.display = 'flex';

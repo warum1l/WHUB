@@ -1,0 +1,106 @@
+/* =============================================
+   kittens.ez — Game/Tool Listing Cards
+   ============================================= */
+
+/* === GAMES GRID === */
+.games-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 48px 100px;
+}
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+/* === GAME CARD === */
+.game-card {
+  position: relative;
+  display: block;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+.game-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(232,69,60,0.4);
+  box-shadow: 0 16px 48px rgba(232,69,60,0.08);
+}
+.game-card--soon { opacity: 0.4; cursor: default; }
+.game-card--soon:hover { transform: none; border-color: var(--border); box-shadow: none; }
+
+.game-card-accent {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-roblox), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.game-card:hover .game-card-accent { opacity: 1; }
+
+.game-card-inner {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 20px 24px;
+}
+
+.game-thumb {
+  width: 72px; height: 72px;
+  border-radius: 12px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; overflow: hidden;
+}
+.game-thumb-placeholder {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.7rem;
+  color: var(--accent-roblox);
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+.game-thumb--empty { font-size: 1.5rem; color: var(--text-dim); }
+.game-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+.game-info { flex: 1; }
+.game-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text);
+  margin-bottom: 5px;
+}
+.game-meta { font-size: 0.78rem; color: var(--text-muted); }
+
+.game-arrow {
+  font-size: 1.1rem; color: var(--accent-roblox);
+  opacity: 0; transform: translateX(-6px);
+  transition: opacity 0.3s, transform 0.3s;
+}
+.game-card:hover .game-arrow { opacity: 1; transform: translateX(0); }
+.game-lock { font-size: 1.1rem; color: var(--text-dim); }
+
+/* === EMPTY STATE === */
+.empty-state {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; padding: 80px 20px; gap: 14px;
+}
+.empty-icon { display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+.empty-title {
+  font-family: var(--font-display); font-size: 1.4rem;
+  font-weight: 700; color: var(--text);
+}
+.empty-desc { color: var(--text-muted); font-size: 0.9rem; max-width: 380px; line-height: 1.6; }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .games-section { padding-left: 20px; padding-right: 20px; }
+}

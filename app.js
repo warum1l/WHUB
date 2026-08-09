@@ -1,4 +1,4 @@
-// WHUB — misc interactions
+// kittens.ez — misc interactions
 
 (function () {
 

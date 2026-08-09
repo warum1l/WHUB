@@ -1,5 +1,5 @@
 // =============================================
-// WHUB — Firebase Config & Auth Helpers
+// kittens.ez — Firebase Config & Auth Helpers
 // =============================================
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -31,7 +31,6 @@ async function createUserDoc(user, username) {
     createdAt: serverTimestamp(),
     role:      'member',
     bio:       '',
-    friends:   [],
   });
 }
 
@@ -86,7 +85,7 @@ function initSettingsPanel() {
       <div class="settings-divider"></div>
       <div class="settings-section-label">GENERAL</div>
       <a href="support.html" class="settings-row settings-row--link settings-row--support">
-        <span class="settings-row-label"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg> Support WHUB</span>
+        <span class="settings-row-label"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg> Support kittens.ez</span>
         <span class="settings-row-arrow">→</span>
       </a>
     </div>
@@ -184,12 +183,6 @@ function initNavAuth() {
       profileRow.className  = 'settings-auth-row settings-row settings-row--link';
       profileRow.innerHTML  = `<span class="settings-row-label">Profile</span><span class="settings-row-arrow">→</span>`;
       body.appendChild(profileRow);
-
-      const messagesRow = document.createElement('a');
-      messagesRow.href       = 'messages.html';
-      messagesRow.className  = 'settings-auth-row settings-row settings-row--link';
-      messagesRow.innerHTML  = `<span class="settings-row-label">Messages</span><span class="settings-row-arrow">→</span>`;
-      body.appendChild(messagesRow);
 
       // Admin link
       if (isAdmin) {

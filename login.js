@@ -1,5 +1,5 @@
 // =============================================
-// WHUB — Login / Register Logic
+// kittens.ez — Login / Register Logic
 // =============================================
 import { auth, db, createUserDoc, initNavAuth,
          createUserWithEmailAndPassword, signInWithEmailAndPassword,

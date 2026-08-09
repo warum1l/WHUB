@@ -1,5 +1,5 @@
 // =============================================
-// WHUB — Admin Panel
+// kittens.ez — Admin Panel
 // =============================================
 import { auth, db, getUserDoc, initNavAuth, onAuthStateChanged, updateDoc, doc }
   from './firebase.js';
@@ -89,7 +89,7 @@ function renderUsers(users) {
             <div class="admin-avatar">${(u.username || '?').charAt(0).toUpperCase()}</div>
             <div>
               <div class="admin-username">
-                <a href="user.html?u=${encodeURIComponent(u.username)}" target="_blank">${escHtml(u.username)}</a>
+                ${escHtml(u.username)}
               </div>
             </div>
           </div>

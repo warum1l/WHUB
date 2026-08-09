@@ -1,5 +1,5 @@
 // =============================================
-// WHUB — Media List (Movies, TV, Dramas)
+// kittens.ez — Media List (Movies, TV, Dramas)
 // Uses TMDB API (free, no key needed for basic search)
 // =============================================
 import { auth, db, initNavAuth, onAuthStateChanged }
@@ -80,8 +80,8 @@ function setViewUI(name) {
   isViewMode = true;
   document.getElementById('heroUsername').textContent = name + "'s";
   document.getElementById('heroSuffix').textContent   = 'Media List';
-  document.getElementById('heroSub').textContent      = `${name}'s watchlist on WHUB.`;
-  document.title = `${name}'s Media List — WHUB`;
+  document.getElementById('heroSub').textContent      = `${name}'s watchlist on kittens.ez.`;
+  document.title = `${name}'s Media List — kittens.ez`;
   const banner = document.getElementById('viewBanner');
   banner.style.display = 'flex';
   document.getElementById('viewBannerName').textContent = name;

@@ -1,5 +1,5 @@
 // =============================================
-// WHUB — Shared Utilities
+// kittens.ez — Shared Utilities
 // =============================================
 
 export function escHtml(s) {

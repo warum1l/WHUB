@@ -1,5 +1,5 @@
 // =============================================
-// WHUB — Anime Catalog (AniList GraphQL)
+// kittens.ez — Anime Catalog (AniList GraphQL)
 // =============================================
 import { auth, db, initNavAuth, onAuthStateChanged, getUserDoc }
   from './firebase.js';

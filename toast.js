@@ -1,5 +1,5 @@
 // =============================================
-// WHUB — Toast Notification System
+// kittens.ez — Toast Notification System
 // =============================================
 
 let toastContainer = null;
